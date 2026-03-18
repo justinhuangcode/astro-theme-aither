@@ -297,6 +297,8 @@ pnpm build
 
 Вдохновлено [yinwang.org](https://www.yinwang.org).
 
+Система тем вдохновлена проектом [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
+
 ## Вклад
 
 Мы приветствуем вклад. Пожалуйста, сначала откройте issue для обсуждения желаемых изменений.

@@ -25,14 +25,23 @@ export const ru = {
   footer: {
     tagline: 'AI-нативная тема Astro, которая верит в красоту текста.',
     rightsReserved: 'Все права защищены.',
+    navigate: 'Навигация',
+    subscribe: 'Подписка',
+    source: 'Исходный код',
   },
   common: {
     mode: {
       light: 'Светлая',
       dark: 'Тёмная',
       system: 'Системная',
+      moreThemes: 'Больше тем',
+      classic: 'Классика',
+      modern: 'Модерн',
+      extra: 'Экстра',
+      scifi: 'Фантастика',
     },
     language: 'Язык',
+    builtWith: 'Создано с',
   },
   about: {
     title: 'О нас',

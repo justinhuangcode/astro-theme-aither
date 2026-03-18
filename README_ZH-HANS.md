@@ -296,6 +296,8 @@ pnpm build
 
 灵感来自 [yinwang.org](https://www.yinwang.org)。
 
+主题系统灵感来自 [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish)。
+
 ## 贡献
 
 欢迎贡献。请先开 issue 讨论你想要的改动。

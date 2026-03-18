@@ -63,10 +63,11 @@ pnpm install
 4. Configure your site:
 
 ```bash
-# astro.config.mjs -- set your site URL
+# astro.config.mjs -- set your site URL (only place you need to set it)
 site: 'https://your-domain.com'
 
 # src/config/site.ts -- set name, description, social links, nav, footer
+# (url is automatically read from astro.config.mjs)
 ```
 
 5. Set up environment variables (optional):
@@ -143,7 +144,7 @@ export const siteConfig = {
     name: 'Aither',
     avatar: '', // Import from src/assets/ for optimization, or use URL string
   },
-  url: 'https://your-domain.com',
+  // url is automatically read from astro.config.mjs — no need to set it here
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
@@ -299,7 +300,8 @@ pnpm build
 
 ## Acknowledgments
 
-Inspired by [yinwang.org](https://www.yinwang.org).
+- Inspired by [yinwang.org](https://www.yinwang.org).
+- Theme system inspired by [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
 
 ## Contributing
 

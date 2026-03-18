@@ -25,14 +25,23 @@ export const ptBr = {
   footer: {
     tagline: 'Um tema Astro AI-nativo que acredita que o texto em si é belo.',
     rightsReserved: 'Todos os direitos reservados.',
+    navigate: 'Navegação',
+    subscribe: 'Assinar',
+    source: 'Código-fonte',
   },
   common: {
     mode: {
       light: 'Claro',
       dark: 'Escuro',
       system: 'Sistema',
+      moreThemes: 'Mais temas',
+      classic: 'Clássico',
+      modern: 'Moderno',
+      extra: 'Extra',
+      scifi: 'Sci-Fi',
     },
     language: 'Idioma',
+    builtWith: 'Feito com',
   },
   about: {
     title: 'Sobre',

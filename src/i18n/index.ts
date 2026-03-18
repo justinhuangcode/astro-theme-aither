@@ -65,6 +65,36 @@ export function translateCategory(key: string, locale: string = 'en'): string {
   return m.categories[key] ?? key;
 }
 
+/** Map internal locale to Intl/BCP-47 locale for date formatting etc. */
+export const intlLocales: Record<Locale, string> = {
+  en: 'en-US',
+  'zh-hans': 'zh-CN',
+  'zh-hant': 'zh-TW',
+  ko: 'ko-KR',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  it: 'it-IT',
+  es: 'es-ES',
+  ru: 'ru-RU',
+  id: 'id-ID',
+  'pt-br': 'pt-BR',
+};
+
+/** Map internal locale to HTML lang attribute / inLanguage value */
+export const htmlLangs: Record<Locale, string> = {
+  en: 'en',
+  'zh-hans': 'zh-CN',
+  'zh-hant': 'zh-TW',
+  ko: 'ko',
+  fr: 'fr',
+  de: 'de',
+  it: 'it',
+  es: 'es',
+  ru: 'ru',
+  id: 'id',
+  'pt-br': 'pt-BR',
+};
+
 export function getLocalizedPath(path: string, locale: Locale): string {
   // Remove any existing locale prefix
   const localePattern = locales.filter(l => l !== 'en').join('|');

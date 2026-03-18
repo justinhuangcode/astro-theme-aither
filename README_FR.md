@@ -297,6 +297,8 @@ pnpm build
 
 Inspiré par [yinwang.org](https://www.yinwang.org).
 
+Système de thèmes inspiré par [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
+
 ## Contribuer
 
 Les contributions sont les bienvenues. Veuillez d'abord ouvrir une issue pour discuter de ce que vous souhaitez modifier.

@@ -25,14 +25,23 @@ export const de = {
   footer: {
     tagline: 'Ein AI-natives Astro-Theme, das an die Schönheit des Textes glaubt.',
     rightsReserved: 'Alle Rechte vorbehalten.',
+    navigate: 'Navigation',
+    subscribe: 'Abonnieren',
+    source: 'Quelle',
   },
   common: {
     mode: {
       light: 'Hell',
       dark: 'Dunkel',
       system: 'System',
+      moreThemes: 'Mehr Themen',
+      classic: 'Klassisch',
+      modern: 'Modern',
+      extra: 'Extra',
+      scifi: 'Sci-Fi',
     },
     language: 'Sprache',
+    builtWith: 'Erstellt mit',
   },
   about: {
     title: 'Über',

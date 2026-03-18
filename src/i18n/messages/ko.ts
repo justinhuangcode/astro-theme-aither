@@ -25,14 +25,23 @@ export const ko = {
   footer: {
     tagline: '텍스트 자체가 아름답다고 믿는 AI 네이티브 Astro 테마.',
     rightsReserved: 'All Rights Reserved.',
+    navigate: '탐색',
+    subscribe: '구독',
+    source: '소스',
   },
   common: {
     mode: {
       light: '라이트',
       dark: '다크',
       system: '시스템',
+      moreThemes: '더 많은 테마',
+      classic: '클래식',
+      modern: '모던',
+      extra: '추가',
+      scifi: 'SF',
     },
     language: '언어',
+    builtWith: '제작',
   },
   about: {
     title: '소개',

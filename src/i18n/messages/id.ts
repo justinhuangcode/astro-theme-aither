@@ -25,14 +25,23 @@ export const id = {
   footer: {
     tagline: 'Tema Astro AI-native yang percaya bahwa teks itu sendiri adalah keindahan.',
     rightsReserved: 'Hak Cipta Dilindungi.',
+    navigate: 'Navigasi',
+    subscribe: 'Langganan',
+    source: 'Sumber',
   },
   common: {
     mode: {
       light: 'Terang',
       dark: 'Gelap',
       system: 'Sistem',
+      moreThemes: 'Tema lainnya',
+      classic: 'Klasik',
+      modern: 'Modern',
+      extra: 'Ekstra',
+      scifi: 'Sci-Fi',
     },
     language: 'Bahasa',
+    builtWith: 'Dibuat dengan',
   },
   about: {
     title: 'Tentang',

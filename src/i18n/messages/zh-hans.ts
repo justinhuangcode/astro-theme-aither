@@ -25,14 +25,23 @@ export const zhHans = {
   footer: {
     tagline: '一个相信文字本身就很美的 AI 原生 Astro 主题。',
     rightsReserved: '保留所有权利。',
+    navigate: '导航',
+    subscribe: '订阅',
+    source: '源码',
   },
   common: {
     mode: {
       light: '浅色',
       dark: '深色',
       system: '系统',
+      moreThemes: '更多主题',
+      classic: '经典',
+      modern: '现代',
+      extra: '额外',
+      scifi: '科幻',
     },
     language: '语言',
+    builtWith: '构建于',
   },
   about: {
     title: '关于',
