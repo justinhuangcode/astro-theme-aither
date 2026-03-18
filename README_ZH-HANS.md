@@ -36,11 +36,11 @@ An AI-native Astro theme that believes text itself is beautiful.  ✍️
 - **AI 端点** -- `/llms.txt`、`/llms-full.txt`、`/skill.md`、`/api/posts.json`、每篇文章的 `.md` 端点，LLM 友好
 - **RSS 订阅** -- 内置 `/rss.xml`，基于 `@astrojs/rss`
 - **Sitemap** -- 通过 `@astrojs/sitemap` 自动生成
-- **SEO** -- Open Graph 标签、canonical URL、每篇文章独立 description、OpenSearch
+- **SEO** -- Open Graph 标签、canonical URL、每篇文章独立 description
 - **响应式** -- 移动端友好，在不同屏幕尺寸下保持阅读节奏
 - **Google Analytics** -- 可选，通过 `PUBLIC_GA_ID` 环境变量零配置启用
 - **Astro Content Collections** -- 类型安全的 Markdown 文章，frontmatter 自动校验
-- **GitHub Pages** -- 内置部署工作流，自动部署
+- **Cloudflare Pages** -- 内置部署工作流，自动部署
 
 ## 快速开始
 
@@ -151,7 +151,7 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'dark', enableModeSwitch: true },
+  ui: { defaultMode: 'system', enableModeSwitch: true },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -166,10 +166,10 @@ export const siteConfig = {
 ```javascript
 export default defineConfig({
   site: 'https://your-domain.com', // RSS 和 sitemap 必需
-  integrations: [react(), sitemap()],
+  integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-cn', 'zh-tw', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
+    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
     routing: { prefixDefaultLocale: false },
   },
   vite: { plugins: [tailwindcss()] },
@@ -199,8 +199,8 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | 代码 | 语言 |
 |---|---|
 | `en` | English（默认） |
-| `zh-cn` | 简体中文 |
-| `zh-tw` | 繁體中文 |
+| `zh-hans` | 简体中文 |
+| `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -210,7 +210,7 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | `id` | Bahasa Indonesia |
 | `pt-br` | Português (BR) |
 
-默认语言（`en`）不带 URL 前缀，其他语言使用各自的前缀路由（如 `/zh-cn/`、`/ko/`）。
+默认语言（`en`）不带 URL 前缀，其他语言使用各自的前缀路由（如 `/zh-hans/`、`/ko/`）。
 
 ## 项目结构
 
@@ -221,7 +221,7 @@ src/
 ├── content.config.ts         # Content Collections 模式定义（Zod）
 ├── i18n/
 │   ├── index.ts              # 语言定义、工具函数
-│   └── messages/             # 各语言翻译文件（en.ts、zh-cn.ts、ko.ts...）
+│   └── messages/             # 各语言翻译文件（en.ts、zh-hans.ts、ko.ts...）
 ├── layouts/
 │   └── Layout.astro          # 全局布局（head、导航、主题切换、分析）
 ├── components/
@@ -249,7 +249,7 @@ src/
 │   ├── skill.md.ts           # AI skill 端点
 │   ├── api/
 │   │   └── posts.json.ts     # 文章 JSON API
-│   └── {locale}/             # 各语言页面
+│   └── [locale]/             # 各语言页面
 ├── content/
 │   └── posts/
 │       └── {locale}/*.md     # 各语言文章
@@ -258,21 +258,20 @@ src/
 public/
 ├── favicon.svg
 ├── robots.txt
-├── opensearch.xml
 └── .well-known/
 .github/
 └── workflows/
-    └── deploy-cloudflare-pages.yml     # GitHub Pages 部署（默认）
+    └── deploy-cloudflare-pages.yml     # Cloudflare Pages 部署（默认）
 ```
 
 ## 部署
 
-### GitHub Pages（默认）
+### Cloudflare Pages（默认）
 
 内置工作流自动部署：
 
 1. 在仓库 **Settings** > **Pages** 中，Source 选择 **GitHub Actions**
-2. 在 `astro.config.mjs` 中设置 `site` 为你的 GitHub Pages URL
+2. 在 `astro.config.mjs` 中设置 `site` 为你的 Cloudflare Pages URL
 3. 推送到 `main` 分支——站点自动部署
 
 ### 其他平台

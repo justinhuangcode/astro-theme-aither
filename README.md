@@ -36,11 +36,11 @@ Clean sans-serif typography with Bricolage Grotesque headings, a carefully tuned
 - **AI-native endpoints** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json`, and per-post `.md` endpoints for LLM discoverability
 - **RSS feed** -- Built-in `/rss.xml` via `@astrojs/rss`
 - **Sitemap** -- Auto-generated via `@astrojs/sitemap`
-- **SEO** -- Open Graph meta tags, canonical URLs, per-post descriptions, OpenSearch
+- **SEO** -- Open Graph meta tags, canonical URLs, per-post descriptions
 - **Responsive** -- Mobile-friendly layout that preserves reading rhythm across screen sizes
 - **Google Analytics** -- Optional, zero-config via `PUBLIC_GA_ID` env var
 - **Astro Content Collections** -- Type-safe Markdown posts with Zod schema validation
-- **GitHub Pages** -- CI/CD workflow included for automatic deployment
+- **Cloudflare Pages** -- CI/CD workflow included for automatic deployment
 
 ## Quick Start
 
@@ -128,8 +128,10 @@ Your content here.
 | Command | Description |
 |---|---|
 | `pnpm dev` | Start local dev server |
+| `pnpm check` | Run Astro type and content checks |
 | `pnpm build` | Build static site to `dist/` |
 | `pnpm preview` | Preview production build locally |
+| `pnpm validate` | Run `check` and `build` together |
 
 ## Configuration
 
@@ -152,7 +154,7 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'dark', enableModeSwitch: true },
+  ui: { defaultMode: 'system', enableModeSwitch: true },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -167,10 +169,10 @@ export const siteConfig = {
 ```javascript
 export default defineConfig({
   site: 'https://your-domain.com',
-  integrations: [react(), sitemap()],
+  integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-cn', 'zh-tw', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
+    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
     routing: { prefixDefaultLocale: false },
   },
   vite: { plugins: [tailwindcss()] },
@@ -200,8 +202,8 @@ Language config is in `src/i18n/index.ts`, translations in `src/i18n/messages/*.
 | Code | Language |
 |---|---|
 | `en` | English (default) |
-| `zh-cn` | 简体中文 |
-| `zh-tw` | 繁體中文 |
+| `zh-hans` | 简体中文 |
+| `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -211,7 +213,7 @@ Language config is in `src/i18n/index.ts`, translations in `src/i18n/messages/*.
 | `id` | Bahasa Indonesia |
 | `pt-br` | Português (BR) |
 
-The default locale (`en`) has no URL prefix. Other locales use their code as prefix (e.g. `/zh-cn/`, `/ko/`).
+The default locale (`en`) has no URL prefix. Other locales use their code as prefix (e.g. `/zh-hans/`, `/ko/`).
 
 ## Project Structure
 
@@ -222,7 +224,7 @@ src/
 ├── content.config.ts         # Content Collections schema (Zod)
 ├── i18n/
 │   ├── index.ts              # Locale definitions, getMessages(), routing helpers
-│   └── messages/             # Translation files (en.ts, zh-cn.ts, ko.ts, fr.ts, ...)
+│   └── messages/             # Translation files (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Global layout (head, nav, theme switcher, analytics)
 ├── components/
@@ -252,9 +254,7 @@ src/
 │   ├── skill.md.ts           # AI skill descriptor
 │   ├── api/
 │   │   └── posts.json.ts     # JSON API for posts
-│   ├── zh-cn/              # Simplified Chinese pages
-│   ├── zh-tw/              # Traditional Chinese pages
-│   └── {locale}/             # Pages for each supported locale
+│   └── [locale]/             # Pages for each supported locale
 ├── content/
 │   └── posts/
 │       ├── en/*.md           # English posts (default locale)
@@ -264,7 +264,6 @@ src/
 public/
 ├── favicon.svg
 ├── robots.txt
-├── opensearch.xml
 └── .well-known/
 .github/
 └── workflows/

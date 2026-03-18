@@ -10,7 +10,13 @@ import Analytics from '@/components/Analytics.astro';
 import Crisp from '@/components/Crisp.astro';
 import LocaleBanner from '@/components/react/LocaleBanner';
 import { siteConfig } from '@/config/site';
-import { getLocaleFromUrl, getMessages, locales } from '@/i18n';
+import {
+  getLocaleFromUrl,
+  getMessages,
+  htmlLangs,
+  locales,
+  stripLocalePrefix,
+} from '@/i18n';
 
 interface Props {
   title?: string;
@@ -26,7 +32,6 @@ interface Props {
 }
 
 const locale = getLocaleFromUrl(Astro.url);
-const m = getMessages(locale);
 const allBannerMessages = Object.fromEntries(
   locales.map((l) => [l, getMessages(l).localeBanner])
 );
@@ -63,8 +68,7 @@ const hreflangMap: Record<string, string> = {
 };
 
 // Build the locale-independent path for hreflang alternates
-const localePattern = locales.filter(l => l !== 'en').join('|');
-const cleanPath = pathname.replace(new RegExp(`^\\/(${localePattern})`), '') || '/';
+const cleanPath = stripLocalePrefix(pathname);
 const alternateUrls = locales.map((l) => ({
   hreflang: hreflangMap[l],
   href: new URL(l === 'en' ? cleanPath : `/${l}${cleanPath}`, siteConfig.url).href,
@@ -72,7 +76,7 @@ const alternateUrls = locales.map((l) => ({
 
 ---
 
-<html lang={locale} class="no-transition">
+<html lang={htmlLangs[locale]} class="no-transition">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -83,7 +87,6 @@ const alternateUrls = locales.map((l) => ({
       <link rel="alternate" hreflang={hreflang} href={href} />
     ))}
     <link rel="alternate" hreflang="x-default" href={new URL(cleanPath, siteConfig.url).href} />
-    <link rel="search" type="application/opensearchdescription+xml" title={siteConfig.name} href="/opensearch.xml" />
     {alternateFormats?.map(({ type, href, title: t }) => (
       <link rel="alternate" type={type} href={href} title={t} />
     ))}
@@ -91,7 +94,9 @@ const alternateUrls = locales.map((l) => ({
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:type" content={article ? 'article' : 'website'} />
     {article && (
       <Fragment>
@@ -108,10 +113,10 @@ const alternateUrls = locales.map((l) => ({
     <meta name="twitter:image" content={ogImageUrl} />
     {jsonLd && Array.isArray(jsonLd) ? (
       jsonLd.map((item) => (
-        <script type="application/ld+json" set:html={JSON.stringify(item)} />
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />
       ))
     ) : jsonLd ? (
-      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     ) : null}
     <Analytics />
     <Crisp />
@@ -127,18 +132,6 @@ const alternateUrls = locales.map((l) => ({
           document.documentElement.classList.add(resolved);
         } catch (e) {
           document.documentElement.classList.add(defaultMode);
-        }
-      })();
-    </script>
-    <script is:inline define:vars={{ currentLocale: locale }}>
-      (function () {
-        // Auto-redirect if user previously selected a different locale
-        var preferred = localStorage.getItem('preferred-locale');
-        if (preferred && preferred !== currentLocale) {
-          var path = window.location.pathname;
-          var clean = path.replace(/^\/(en|zh-hans|zh-hant|ko|fr|de|it|es|ru|id|pt-br)/, '') || '/';
-          var newPath = preferred === 'en' ? clean : '/' + preferred + clean;
-          window.location.replace(newPath);
         }
       })();
     </script>

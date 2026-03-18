@@ -28,6 +28,18 @@ const messages: Record<string, Messages> = {
 
 export const locales = ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'] as const;
 export type Locale = (typeof locales)[number];
+export const defaultLocale: Locale = 'en';
+export const nonDefaultLocales = locales.filter(
+  (locale): locale is Exclude<Locale, typeof defaultLocale> => locale !== defaultLocale,
+);
+
+function escapeForRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+const localePrefixPattern = new RegExp(
+  `^\\/(${nonDefaultLocales.map(escapeForRegex).join('|')})(?=\\/|$)`,
+);
 
 export const localeLabels: Record<Locale, string> = {
   en: 'English',
@@ -52,7 +64,7 @@ export function getLocaleFromUrl(url: URL): Locale {
   if (segment && locales.includes(segment as Locale)) {
     return segment as Locale;
   }
-  return 'en';
+  return defaultLocale;
 }
 
 export function translateTag(key: string, locale: string = 'en'): string {
@@ -96,9 +108,15 @@ export const htmlLangs: Record<Locale, string> = {
 };
 
 export function getLocalizedPath(path: string, locale: Locale): string {
-  // Remove any existing locale prefix
-  const localePattern = locales.filter(l => l !== 'en').join('|');
-  const cleanPath = path.replace(new RegExp(`^\\/(${localePattern})`), '') || '/';
-  if (locale === 'en') return cleanPath;
-  return `/${locale}${cleanPath}`;
+  const cleanPath = stripLocalePrefix(path);
+  return locale === defaultLocale ? cleanPath : `${getLocaleBasePath(locale)}${cleanPath}`;
+}
+
+export function getLocaleBasePath(locale: Locale): string {
+  return locale === defaultLocale ? '' : `/${locale}`;
+}
+
+export function stripLocalePrefix(path: string): string {
+  const cleanPath = path.replace(localePrefixPattern, '');
+  return cleanPath || '/';
 }

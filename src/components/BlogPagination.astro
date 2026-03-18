@@ -33,11 +33,11 @@ const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
           class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           aria-label={m.blog.previous}
         >
-          <ArrowLeft class="size-4" />
+          <ArrowLeft className="size-4" />
         </a>
       ) : (
         <span class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground/30 cursor-not-allowed">
-          <ArrowLeft class="size-4" />
+          <ArrowLeft className="size-4" />
         </span>
       )}
 
@@ -62,11 +62,11 @@ const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
           class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           aria-label={m.blog.next}
         >
-          <ArrowRight class="size-4" />
+          <ArrowRight className="size-4" />
         </a>
       ) : (
         <span class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground/30 cursor-not-allowed">
-          <ArrowRight class="size-4" />
+          <ArrowRight className="size-4" />
         </span>
       )}
     </nav>

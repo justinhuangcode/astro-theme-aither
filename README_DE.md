@@ -36,11 +36,11 @@ Klare serifenlose Typografie mit Bricolage Grotesque-Überschriften, ein sorgfä
 - **AI-native Endpunkte** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json` und `.md`-Endpunkte pro Beitrag
 - **RSS-Feed** -- Integriertes `/rss.xml` via `@astrojs/rss`
 - **Sitemap** -- Automatisch generiert via `@astrojs/sitemap`
-- **SEO** -- Open Graph-Meta-Tags, kanonische URLs, Beschreibungen pro Beitrag, OpenSearch
+- **SEO** -- Open Graph-Meta-Tags, kanonische URLs, Beschreibungen pro Beitrag
 - **Responsive** -- Mobilfreundliches Layout, das den Lesefluss über alle Bildschirmgrößen bewahrt
 - **Google Analytics** -- Optional, Zero-Config via Umgebungsvariable `PUBLIC_GA_ID`
 - **Astro Content Collections** -- Typsichere Markdown-Beiträge mit Zod-Schema-Validierung
-- **GitHub Pages** -- CI/CD-Workflow für automatisches Deployment enthalten
+- **Cloudflare Pages** -- CI/CD-Workflow für automatisches Deployment enthalten
 
 ## Schnellstart
 
@@ -151,7 +151,7 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'dark', enableModeSwitch: true },
+  ui: { defaultMode: 'system', enableModeSwitch: true },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -166,10 +166,10 @@ export const siteConfig = {
 ```javascript
 export default defineConfig({
   site: 'https://your-domain.com', // Erforderlich für RSS und Sitemap
-  integrations: [react(), sitemap()],
+  integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-cn', 'zh-tw', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
+    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
     routing: { prefixDefaultLocale: false },
   },
   vite: { plugins: [tailwindcss()] },
@@ -199,8 +199,8 @@ Sprachkonfiguration in `src/i18n/index.ts`, Übersetzungen in `src/i18n/messages
 | Code | Sprache |
 |---|---|
 | `en` | English (Standard) |
-| `zh-cn` | 简体中文 |
-| `zh-tw` | 繁體中文 |
+| `zh-hans` | 简体中文 |
+| `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -221,7 +221,7 @@ src/
 ├── content.config.ts         # Content Collections Schema (Zod)
 ├── i18n/
 │   ├── index.ts              # Locale-Definitionen, getMessages(), Routing-Helpers
-│   └── messages/             # Übersetzungsdateien (en.ts, zh-cn.ts, ko.ts, fr.ts, ...)
+│   └── messages/             # Übersetzungsdateien (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Globales Layout (Head, Navigation, Theme-Wechsler, Analytics)
 ├── components/
@@ -249,7 +249,7 @@ src/
 │   ├── skill.md.ts           # AI-Skill-Deskriptor
 │   ├── api/
 │   │   └── posts.json.ts     # JSON-API für Beiträge
-│   └── {locale}/             # Seiten für jede unterstützte Locale
+│   └── [locale]/             # Seiten für jede unterstützte Locale
 ├── content/
 │   └── posts/
 │       ├── en/*.md           # English-Beiträge (Standard-Locale)
@@ -259,21 +259,20 @@ src/
 public/
 ├── favicon.svg
 ├── robots.txt
-├── opensearch.xml
 └── .well-known/
 .github/
 └── workflows/
-    └── deploy-cloudflare-pages.yml     # GitHub Pages Deployment (Standard)
+    └── deploy-cloudflare-pages.yml     # Cloudflare Pages Deployment (Standard)
 ```
 
 ## Deployment
 
-### GitHub Pages (Standard)
+### Cloudflare Pages (Standard)
 
 Der enthaltene Workflow (`.github/workflows/deploy-cloudflare-pages.yml`) deployed automatisch:
 
 1. Gehen Sie zu **Settings** > **Pages** > **Source**: wählen Sie **GitHub Actions**
-2. Aktualisieren Sie `site` in `astro.config.mjs` mit Ihrer GitHub Pages URL
+2. Aktualisieren Sie `site` in `astro.config.mjs` mit Ihrer Cloudflare Pages URL
 3. Pushen Sie nach `main` — die Seite wird automatisch deployed
 
 ### Andere Plattformen

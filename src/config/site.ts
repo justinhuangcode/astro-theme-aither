@@ -1,9 +1,10 @@
 import type { ImageMetadata } from 'astro';
+import type { CollectionKey } from 'astro:content';
 
 export interface SocialLink {
   title: string;
   href: string;
-  icon: string; // icon identifier, e.g. 'github', 'x'
+  icon: 'github' | 'x' | 'discord' | 'mail' | 'rss';
 }
 
 export interface FooterLink {
@@ -31,7 +32,7 @@ export interface FooterSection {
  */
 export interface ContentSection {
   /** Collection ID — must match content.config.ts collection name and src/content/{id}/ directory */
-  id: string;
+  id: CollectionKey;
   /** i18n key used in nav and page title — maps to m.nav[labelKey] */
   labelKey: string;
 }
