@@ -1,0 +1,105 @@
+---
+title: What Should an AI-Native Content-Driven Website Look Like? (Sample)
+date: 2026-01-09
+category: AI
+description: When AI agents become your readers, websites need to rethink how content is organized.
+tags: [AI, Design]
+pinned: false
+---
+
+For the past two decades, we built websites for human readers. Over the next decade, AI agents will become equally important readers. This is not a distant hypothesis — it is happening now.
+
+## Two Types of Readers
+
+Your website now has two types of readers.
+
+The first is human. They scan pages with their eyes, get drawn in by headlines, skip between paragraphs, and rely on intuition to decide whether an article is worth reading. They need typography, whitespace, and visual hierarchy.
+
+The second is AI agents. They parse pages through structured protocols, pull site indexes from `llms.txt`, understand content semantics from JSON-LD, and extract clean text from Markdown endpoints. They do not care how beautiful your fonts are — they care whether your content is machine-readable.
+
+Traditional websites serve only the first type. AI-native websites serve both.
+
+## Content as Interface
+
+The core belief of an AI-native website is: **content itself is the interface**.
+
+Not an API. Not a database. Not a GraphQL endpoint. It is every article you write, every page you publish. When content is organized well enough, AI agents can understand and use it directly, without you building a separate "machine-only" system.
+
+What does this mean in practice?
+
+### Structured Metadata
+
+Every article is more than a block of text. It has a title, date, category, tags, and description — these frontmatter fields form a machine-understandable semantic layer. Search engines started leveraging this information a decade ago, but AI agents depend on it far more heavily.
+
+When an AI agent answers "what tech stack does this project use," it does not read through the entire article like a human would. It first checks JSON-LD structured data, then inspects frontmatter tags and categories, and only then scans the body text. If your metadata is empty, the quality of the agent's answer drops significantly.
+
+### Multi-Format Output
+
+The same piece of content should be accessible in multiple ways:
+
+- **HTML page** — for human readers, with typography and styling
+- **Markdown endpoint** — for AI agents that need plain text
+- **JSON-LD** — for search engines and agents that need structured data
+- **RSS** — for readers and bots that subscribe to updates
+- **llms.txt** — for AI agents that need a site overview
+
+You do not need to maintain content separately for each format. Write Markdown once, and the system generates all formats automatically. This is the practical meaning of "content as interface" — write once, consume many ways.
+
+## Discoverability
+
+How do AI agents find your content? The answer is not "wait for them to crawl" — it is telling them proactively.
+
+### robots.txt: Welcome, Don't Block
+
+Many websites block AI crawlers in robots.txt. This is a shortsighted decision. If your content is public and you want it cited, blocking AI crawlers simply removes your content from AI knowledge graphs.
+
+```
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+```
+
+Actively welcome AI crawlers, then use structured data to guide their understanding of your content.
+
+### llms.txt: A Sitemap for AI
+
+`sitemap.xml` tells search engines what pages you have. `llms.txt` does the same thing, but for AI agents. It describes site structure, content categories, and access methods in a human-readable format.
+
+This is not a hypothetical standard — a growing number of AI tools already check for this file.
+
+### Markdown Endpoints: Clean Text
+
+Append `.md` to any article URL, and it returns the raw Markdown of that article. No HTML tags, no navbar, no footer — just the title, metadata, and body.
+
+This is extremely friendly for AI agents. They process Markdown far more efficiently than HTML, because they do not need to extract actual content from layers of layout markup.
+
+## Multilingual as a Native Capability
+
+In the AI era, multilingual support is no longer a nice-to-have — it is infrastructure.
+
+AI agents serve users globally. When a non-English speaker queries your content through an AI agent and you only have an English version, the agent must translate on the fly — a process that inevitably loses information. But if you provide a version in their language, the agent can quote it directly, and answer quality improves noticeably.
+
+More importantly, `hreflang` tags let AI agents know which language versions of the same content are available. This is an underestimated signal — it tells agents "this site takes multilingual content seriously."
+
+## Performance Is Accessibility
+
+Page load speed does not only affect the human experience. AI agents also have timeout limits when fetching content. A page that takes three seconds to load is "a bit slow" for a human, but for an AI crawler it might mean "fetch failed."
+
+Static Site Generation (SSG) is the best choice for AI-native websites. Every page is pre-rendered HTML with no JavaScript execution dependency and no client-side rendering delay. AI crawlers receive complete, final content — not an empty `<div id="root">` waiting for JavaScript to fill it.
+
+This is also why Astro's islands architecture is particularly well-suited for content-driven websites — static HTML as the backbone, with JavaScript loaded only where interactivity is needed.
+
+## Design Philosophy
+
+Bringing all these principles together, the design philosophy of an AI-native content-driven website can be summarized as:
+
+**Write for humans. Annotate for machines. Let the content speak for itself.**
+
+You do not need to do anything "special" for AI. What you need to do is execute the fundamentals to the highest standard: clear structure, accurate metadata, multi-format output, and proper semantic markup. When you get these right, your content becomes better for humans and machines simultaneously.
+
+This is not the future. This is now.

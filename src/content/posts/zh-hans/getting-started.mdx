@@ -1,0 +1,345 @@
+---
+title: Astro-Theme-Aither 使用指南
+date: 2026-03-14
+category: Tutorial
+description: 安装、配置、自定义和部署 Astro-Theme-Aither 所需的一切，都在这一篇文章里。
+tags: [Guide, Astro]
+pinned: true
+---
+
+本指南涵盖从零开始到完成部署多语言博客的全部内容。你可以从头读到尾，也可以直接跳到需要的章节。
+
+## 前置条件
+
+- [Node.js](https://nodejs.org/) 22 LTS 或更高版本
+- [pnpm](https://pnpm.io/) 10 或更高版本
+- 一个 GitHub 账号
+- 一个 [Cloudflare](https://cloudflare.com/) 账号（用于部署）
+
+## 安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# 安装依赖
+pnpm install
+
+# 启动开发服务器
+pnpm dev
+```
+
+在浏览器中打开 `http://localhost:4321`，你会看到默认的博客页面。
+
+## 项目结构
+
+```
+src/
+├── components/        # Astro 和 React 组件
+├── config/site.ts     # 站点名称、导航、页脚、社交链接
+├── content/posts/     # 按语言组织的博客文章
+│   ├── en/            # 英文文章
+│   ├── zh-hans/       # 简体中文文章
+│   └── .../           # 其他语言
+├── i18n/              # UI 文本翻译
+├── layouts/           # 页面布局 (Layout.astro)
+├── lib/               # 工具函数 (posts, formatter 等)
+├── pages/             # 路由页面
+└── styles/global.css  # Tailwind v4 主题变量
+```
+
+## 配置
+
+### 站点配置
+
+编辑 `src/config/site.ts`——这是整个站点的唯一配置来源。
+
+```typescript
+export const siteConfig = {
+  name: '你的博客名称',
+  title: '你的标语。',
+  description: '你的站点描述，用于 SEO。',
+  author: {
+    name: '你的名字',
+    avatar: '',
+  },
+  // ...
+};
+```
+
+主要配置项：
+
+| 配置项 | 控制内容 |
+|--------|---------|
+| `name` | 导航栏和页脚中的站点标题 |
+| `social` | 页脚社交链接（GitHub、X、Discord、邮箱、RSS） |
+| `nav` | 导航栏菜单项 |
+| `footer.sections` | 页脚栏目链接 |
+| `ui.defaultMode` | 默认主题：`'light'`、`'dark'` 或 `'system'` |
+| `blog.paginationSize` | 每页文章数（默认：20） |
+| `sections` | 自定义内容分区（见下文） |
+
+### 环境变量
+
+将 `.env.example` 复制为 `.env` 并填入你的值：
+
+```bash
+cp .env.example .env
+```
+
+| 变量名 | 服务 | 必填 |
+|--------|------|------|
+| `PUBLIC_GA_ID` | Google Analytics | 否 |
+| `PUBLIC_CRISP_WEBSITE_ID` | Crisp 在线客服 | 否 |
+| `PUBLIC_GISCUS_REPO` | Giscus 评论 | 否 |
+| `PUBLIC_GISCUS_REPO_ID` | Giscus 评论 | 否 |
+| `PUBLIC_GISCUS_CATEGORY` | Giscus 评论 | 否 |
+| `PUBLIC_GISCUS_CATEGORY_ID` | Giscus 评论 | 否 |
+
+留空即可禁用对应服务，无需修改代码。
+
+### 站点 URL
+
+站点 URL 只需在一处配置——`astro.config.mjs`：
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+  // ...
+});
+```
+
+所有组件通过 `import.meta.env.SITE` 读取该值，无需在其他地方重复配置。
+
+## 写文章
+
+### 创建文章
+
+在 `src/content/posts/en/` 下创建一个新的 `.mdx` 文件：
+
+```markdown
+---
+title: 我的第一篇文章
+date: 2026-03-14
+category: General
+description: 用于 SEO 和社交预览的简短摘要。
+tags: [Topic, Another]
+pinned: false
+---
+
+正文从这里开始。使用标准 Markdown 语法。
+```
+
+### Frontmatter 参考
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `title` | string | 是 | — | 文章标题 |
+| `date` | date | 是 | — | 发布日期（`YYYY-MM-DD`） |
+| `category` | string | 否 | `General` | 文章分类 |
+| `description` | string | 否 | — | SEO 描述 |
+| `tags` | string[] | 否 | — | 标签列表 |
+| `pinned` | boolean | 否 | `false` | 是否置顶 |
+| `image` | string | 否 | — | 封面图片路径 |
+
+### MDX 组件
+
+所有文章均使用 `.mdx` 格式，你可以直接在文章中导入和使用 React 组件：
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+这是一个交互式图表：
+
+<MyChart data={[10, 20, 30]} />
+```
+
+这是可选的——`.mdx` 文件中标准 Markdown 语法完全一样可用。
+
+### 置顶文章
+
+在 frontmatter 中设置 `pinned: true`。置顶文章会显示在列表顶部并带有置顶图标，置顶文章之间按日期排序。
+
+## 国际化（i18n）
+
+主题开箱即支持 11 种语言：英语、简体中文、繁体中文、韩语、法语、德语、意大利语、西班牙语、俄语、印度尼西亚语和巴西葡萄牙语。
+
+### 添加翻译文章
+
+在目标语言目录下创建同名文件：
+
+```
+src/content/posts/en/my-post.mdx      # 英文原文
+src/content/posts/zh-hans/my-post.mdx  # 中文翻译
+src/content/posts/fr/my-post.mdx       # 法文翻译
+```
+
+每个文件是独立的——frontmatter 字段也需要翻译。
+
+### 翻译 UI 文本
+
+UI 文本（导航、页脚、按钮）位于 `src/i18n/messages/`，每种语言有独立的文件：
+
+```
+src/i18n/messages/
+├── en.ts
+├── zh-hans.ts
+├── fr.ts
+└── ...
+```
+
+编辑对应文件即可更改任何 UI 文本。
+
+### 浏览器语言检测
+
+主题会检测访客的浏览器语言，并显示横幅建议切换语言。用户的偏好保存在 `localStorage` 中。
+
+## 自定义内容分区
+
+除了博客文章，你还可以创建自定义内容分区（译文、笔记、教程等），每个分区自动拥有独立的列表页、详情页和导航入口。
+
+### 添加分区
+
+**第 1 步**——在 `src/content.config.ts` 中注册集合：
+
+```typescript
+const translations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/translations' }),
+  schema: contentSchema,
+});
+
+export const collections = { posts, translations };
+```
+
+**第 2 步**——在 `src/config/site.ts` 中添加分区配置：
+
+```typescript
+sections: [
+  { id: 'translations', labelKey: 'translations' },
+],
+```
+
+**第 3 步**——在 `src/i18n/messages/` 的每个语言文件中添加导航标签：
+
+```typescript
+nav: {
+  blog: '博客',
+  translations: '译文',  // 添加这一行
+  about: '关于',
+},
+```
+
+**第 4 步**——在 `src/content/translations/en/` 中创建内容：
+
+```markdown
+---
+title: 我的翻译
+date: 2026-03-14
+category: General
+---
+
+你的翻译内容。
+```
+
+列表页（`/translations/`）、详情页（`/translations/slug/`）和导航入口会自动为所有 11 种语言生成。
+
+## 主题定制
+
+### 浅色和深色模式
+
+主题支持三种模式：浅色、深色和系统（跟随操作系统偏好）。默认为 `system`。在 `src/config/site.ts` 中更改：
+
+```typescript
+ui: {
+  defaultMode: 'system', // 'light' | 'dark' | 'system'
+},
+```
+
+主题切换使用 View Transitions API 实现平滑的圆形展开动画。
+
+### 颜色
+
+编辑 `src/styles/global.css` 中的 CSS 自定义属性。主题使用 Tailwind CSS v4 的 `@theme` 变量：
+
+```css
+:root {
+  --color-link: ...;
+  --color-link-hover: ...;
+  --color-nav-text: ...;
+  /* 等等 */
+}
+```
+
+浅色和深色模式各有一套独立的颜色变量。
+
+### 字体
+
+主题默认使用系统无衬线字体栈，遵循 Apple Human Interface Guidelines 排版参数（17px / 1.47 / -0.022em）。如需使用自定义字体，请在 Tailwind 主题配置中更新 font-family 值。
+
+## SEO 和 AI
+
+每个页面都针对搜索引擎和 AI 智能体进行了优化：
+
+| 功能 | URL | 说明 |
+|------|-----|------|
+| 站点地图 | `/sitemap-index.xml` | 自动生成 |
+| RSS 订阅 | `/rss.xml` | 自动生成 |
+| robots.txt | `/robots.txt` | 欢迎 AI 爬虫 |
+| llms.txt | `/llms.txt` | AI 内容索引 |
+| llms-full.txt | `/llms-full.txt` | AI 全文内容 |
+| Markdown 导出 | `/posts/slug.md` | 每篇文章的原始 Markdown |
+| JSON-LD | 每个页面 | 文章结构化数据 |
+| Open Graph | 每个页面 | 社交预览卡片 |
+| OG 图片 | `/og/slug.png` | 通过 Satori 自动生成 |
+
+## 部署
+
+### Cloudflare Pages
+
+内置的 GitHub Actions 工作流自动处理 CI/CD。
+
+**第 1 步**——设置 GitHub Secrets：
+
+| Secret | 获取方式 |
+|--------|---------|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare 控制台 → API 令牌 |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare 控制台 → 账户首页 |
+
+**第 2 步**——推送到 GitHub。工作流会：
+
+1. 每次推送和 PR 时构建站点
+2. 推送到 `main` 分支时部署到 Cloudflare Pages
+
+你的站点将在 `https://your-project.pages.dev` 上线。
+
+### 自定义域名
+
+在 Cloudflare Pages 控制台的项目设置 → 自定义域名中添加。
+
+## 技术栈
+
+| 层面 | 技术 |
+|------|------|
+| 框架 | Astro 6（SSG） |
+| UI 岛屿 | React 19 |
+| 样式 | Tailwind CSS v4 |
+| 组件库 | shadcn/ui（base-nova） |
+| 内容 | MDX + Content Collections |
+| OG 图片 | Satori + resvg-js |
+| 国际化 | 11 种语言 |
+| 部署 | Cloudflare Pages |
+| 包管理 | pnpm 10 |
+| 语言 | TypeScript 5 |
+
+## 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `pnpm dev` | 启动开发服务器（`localhost:4321`） |
+| `pnpm build` | 生产环境构建 |
+| `pnpm preview` | 本地预览生产构建 |
+
+## 版本规则
+
+本项目使用 [CalVer](https://calver.org/) 日历版本——`YYYY.0M.0D`。同一天的补丁追加后缀：`2026.03.14.1`、`2026.03.14.2`，以此类推。
