@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { localeLabels, getLocalizedPath, type Locale } from '@/i18n';
+import { IconClose } from '@/components/icons';
 
 const DISMISSED_KEY = 'locale-banner-dismissed';
 const PREFERRED_KEY = 'preferred-locale';
@@ -92,8 +93,8 @@ export default function LocaleBanner({ currentLocale, currentPath, allMessages }
       className="fixed top-0 right-0 left-0 z-[51] bg-gradient-to-r from-primary to-primary/80 text-white shadow-lg"
     >
       <div className="mx-auto px-[15px] min-[768px]:max-w-[750px] min-[992px]:max-w-[970px] min-[1200px]:max-w-[1170px] py-2.5">
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-[16px] font-semibold">{text}</span>
+        <div className="flex items-center justify-between gap-3 sm:gap-4">
+          <span className="text-[14px] sm:text-[16px] font-semibold leading-snug">{text}</span>
           <div className="flex flex-shrink-0 items-center gap-2">
             <button
               onClick={handleSwitch}
@@ -106,9 +107,7 @@ export default function LocaleBanner({ currentLocale, currentPath, allMessages }
               className="rounded p-1 hover:bg-white/20 transition-colors"
               aria-label="Close"
             >
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="size-4" shapeRendering="geometricPrecision">
-                <path d="M12.5 3.5L3.5 12.5M3.5 3.5l9 9" />
-              </svg>
+              <IconClose className="size-4" />
             </button>
           </div>
         </div>

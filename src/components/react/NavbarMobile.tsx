@@ -12,64 +12,58 @@ interface NavbarMobileProps {
   locale: Locale;
   currentPath: string;
   siteName: string;
-  logoLight: string;
-  logoDark: string;
   navLinks: NavLink[];
   languageLabel?: string;
+  modeLabels?: { light: string; dark: string; system: string };
 }
 
 export default function NavbarMobile({
   locale,
   currentPath,
   siteName,
-  logoLight,
-  logoDark,
   navLinks,
   languageLabel = 'Language',
+  modeLabels = { light: 'Light', dark: 'Dark', system: 'System' },
 }: NavbarMobileProps) {
   const [open, setOpen] = useState(false);
+  const [activeTheme, setActiveTheme] = useState<string>(() => {
+    if (typeof window === 'undefined') return 'light';
+    const stored = localStorage.getItem('theme') || 'system';
+    if (stored === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return stored;
+  });
 
   const setTheme = (theme: string) => {
     localStorage.setItem('theme', theme);
+    const resolved = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme;
+    setActiveTheme(resolved);
     const root = document.documentElement;
     root.classList.add('theme-transition');
     root.classList.remove('light', 'dark');
-    let resolved = theme;
-    if (theme === 'system') {
-      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-    }
     root.classList.add(resolved);
     setTimeout(() => root.classList.remove('theme-transition'), 500);
   };
 
   return (
     <div className="lg:hidden">
-      <div className="flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
-          <img
-            src={logoLight}
-            alt={siteName}
-            className="size-8 rounded-md dark:hidden"
-          />
-          <img
-            src={logoDark}
-            alt={siteName}
-            className="size-8 rounded-md hidden dark:block"
-          />
-          <span className="text-xl font-semibold flex items-center gap-2"><span aria-hidden="true">✍️</span><span>{siteName}</span></span>
+      <div className="flex items-center justify-between min-h-[50px]">
+        <a href="/" className="flex items-center gap-2 py-2">
+          <span className="text-[18px] font-semibold flex items-center gap-2"><span aria-hidden="true">✍️</span><span>{siteName}</span></span>
         </a>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Button
             type="button"
             variant="ghost"
             size="icon"
             aria-expanded={open}
-            aria-label="Toggle menu"
+            aria-label={open ? '✕' : '☰'}
             onClick={() => setOpen((o) => !o)}
-            className="size-8 rounded-md border"
+            className="size-9 rounded-md border"
           >
             {open ? (
               <IconX className="size-4" />
@@ -85,7 +79,7 @@ export default function NavbarMobile({
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation"
-          className="fixed inset-0 top-[57px] z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200"
+          className="fixed inset-0 top-[51px] z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200"
         >
           <div className="flex flex-1 flex-col items-start gap-4 p-4">
             <ul className="w-full space-y-1">
@@ -98,7 +92,7 @@ export default function NavbarMobile({
                     <a
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className={`flex w-full items-center rounded-md p-2 text-base text-muted-foreground transition-colors duration-150 hover:text-foreground ${
+                      className={`flex w-full items-center rounded-md px-3 py-3 text-base text-muted-foreground transition-colors duration-150 hover:text-foreground min-h-[44px] ${
                         isActive ? 'font-semibold text-primary' : ''
                       }`}
                     >
@@ -120,7 +114,8 @@ export default function NavbarMobile({
                   <a
                     key={loc}
                     href={getLocalizedPath(currentPath, loc)}
-                    className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+                    onClick={() => localStorage.setItem('preferred-locale', loc)}
+                    className={`rounded-md px-3 py-2 text-sm transition-colors min-h-[44px] inline-flex items-center ${
                       loc === locale
                         ? 'bg-muted font-semibold text-foreground'
                         : 'text-muted-foreground hover:text-foreground'
@@ -138,26 +133,26 @@ export default function NavbarMobile({
                 <button
                   type="button"
                   onClick={() => setTheme('light')}
-                  className="rounded-full p-1.5 hover:bg-accent transition-colors"
-                  aria-label="Light mode"
+                  className={`rounded-full p-2.5 transition-colors ${activeTheme === 'light' ? 'bg-accent text-primary' : 'hover:bg-accent'}`}
+                  aria-label={modeLabels.light}
                 >
-                  <IconSun className="size-4" />
+                  <IconSun className="size-5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setTheme('dark')}
-                  className="rounded-full p-1.5 hover:bg-accent transition-colors"
-                  aria-label="Dark mode"
+                  className={`rounded-full p-2.5 transition-colors ${activeTheme === 'dark' ? 'bg-accent text-primary' : 'hover:bg-accent'}`}
+                  aria-label={modeLabels.dark}
                 >
-                  <IconMoon className="size-4" />
+                  <IconMoon className="size-5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setTheme('system')}
-                  className="rounded-full p-1.5 hover:bg-accent transition-colors"
-                  aria-label="System mode"
+                  className={`rounded-full p-2.5 transition-colors ${activeTheme === 'system' ? 'bg-accent text-primary' : 'hover:bg-accent'}`}
+                  aria-label={modeLabels.system}
                 >
-                  <IconMonitor className="size-4" />
+                  <IconMonitor className="size-5" />
                 </button>
               </div>
             </div>

@@ -1,10 +1,17 @@
 ---
-import SocialIcon from '@/components/icons/SocialIcon.astro';
+import { IconGithub, IconTwitterX, IconDiscord, IconMail, IconRss } from '@/components/icons';
 import Container from './Container.astro';
-import Logo from './Logo.astro';
 import BuiltWithButton from './BuiltWithButton.astro';
 import { siteConfig } from '@/config/site';
-import { getMessages, type Locale } from '@/i18n';
+import { getMessages, getLocalizedPath, type Locale } from '@/i18n';
+
+const socialIcons: Record<string, any> = {
+  github: IconGithub,
+  x: IconTwitterX,
+  discord: IconDiscord,
+  mail: IconMail,
+  rss: IconRss,
+};
 
 interface Props {
   locale: Locale;
@@ -19,6 +26,8 @@ function isActive(href: string): boolean {
   if (href.includes('#')) return false;
   return currentPath === href;
 }
+
+const footerSectionTitles = [m.footer.navigate, m.footer.subscribe, m.footer.source];
 ---
 
 <footer class="border-t font-body">
@@ -32,7 +41,7 @@ function isActive(href: string): boolean {
         <p class="font-body text-muted-foreground text-base py-2 md:pr-12">
           {m.footer.tagline}
         </p>
-        <nav aria-label="Social links" class="flex items-center gap-4 pt-3">
+        <nav class="flex items-center gap-4 pt-3">
           {
             siteConfig.social.map((link) => (
               <a
@@ -40,9 +49,9 @@ function isActive(href: string): boolean {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={link.title}
-                class="inline-flex size-8 items-center justify-center rounded-full border border-border hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all duration-200"
+                class="inline-flex size-11 items-center justify-center rounded-full border border-border hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all duration-200"
               >
-                <SocialIcon name={link.icon} class="size-4" />
+                {socialIcons[link.icon] && (() => { const Icon = socialIcons[link.icon]; return <Icon className="size-4 [&_path]:fill-current" />; })()}
               </a>
             ))
           }
@@ -52,12 +61,12 @@ function isActive(href: string): boolean {
       {
         siteConfig.footer.sections.map((section, i) => (
           <div class:list={["col-span-1 md:col-span-1 flex flex-col items-start", i === 0 && "md:col-start-4"]}>
-            <span class="text-sm font-semibold uppercase">{section.title}</span>
+            <span class="text-sm font-semibold uppercase">{footerSectionTitles[i]}</span>
             <ul class="mt-2 list-inside space-y-2">
               {section.items.map((item) => (
                 <li>
                   <a
-                    href={item.href}
+                    href={item.external ? item.href : getLocalizedPath(item.href, locale)}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
                     class:list={[
@@ -67,7 +76,7 @@ function isActive(href: string): boolean {
                         : "text-muted-foreground",
                     ]}
                   >
-                    {item.title}
+                    {item.labelKey ? (m.nav[item.labelKey] ?? item.title) : item.title}
                   </a>
                 </li>
               ))}
@@ -80,18 +89,18 @@ function isActive(href: string): boolean {
 
   <div class="py-12">
     <Container
-      class="px-4 flex flex-col items-center justify-between gap-4 sm:flex-row"
+      class="px-4 flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left"
     >
       <span class="text-muted-foreground text-sm">
         &copy; {siteConfig.footer.copyrightYear === 'auto' ? new Date().getFullYear() : siteConfig.footer.copyrightYear}
         {siteConfig.name}. {m.footer.rightsReserved}
       </span>
-      <nav aria-label="AI endpoints" class="flex items-center gap-3 font-mono text-xs text-muted-foreground">
-        <a href="/skill.md" class="hover:text-[var(--color-link)] transition-colors">skill.md</a>
-        <a href={`${localePrefix}/llms.txt`} class="hover:text-[var(--color-link)] transition-colors">llms.txt</a>
-        <a href={`${localePrefix}/llms-full.txt`} class="hover:text-[var(--color-link)] transition-colors">llms-full.txt</a>
+      <nav class="flex items-center gap-3 font-mono text-xs text-muted-foreground">
+        <a href="/skill.md" class="hover:text-[var(--color-link)] transition-colors py-2 px-1">skill.md</a>
+        <a href={`${localePrefix}/llms.txt`} class="hover:text-[var(--color-link)] transition-colors py-2 px-1">llms.txt</a>
+        <a href={`${localePrefix}/llms-full.txt`} class="hover:text-[var(--color-link)] transition-colors py-2 px-1">llms-full.txt</a>
       </nav>
-      <BuiltWithButton />
+      <BuiltWithButton locale={locale} />
     </Container>
   </div>
 </footer>
