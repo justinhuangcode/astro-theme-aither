@@ -1,0 +1,345 @@
+---
+title: Getting Started with Astro-Theme-Aither
+date: 2026-03-14
+category: Tutorial
+description: Everything you need to install, configure, customize, and deploy Astro-Theme-Aither — in one page.
+tags: [Guide, Astro]
+pinned: true
+---
+
+This guide covers everything you need to go from zero to a fully deployed, multilingual blog. Read it start to finish, or jump to the section you need.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) 22 LTS or later
+- [pnpm](https://pnpm.io/) 10 or later
+- A GitHub account
+- A [Cloudflare](https://cloudflare.com/) account (for deployment)
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# Install dependencies
+pnpm install
+
+# Start the dev server
+pnpm dev
+```
+
+Open `http://localhost:4321` in your browser. You should see the default blog.
+
+## Project Structure
+
+```
+src/
+├── components/        # Astro & React components
+├── config/site.ts     # Site name, nav, footer, social links
+├── content/posts/     # Blog posts organized by locale
+│   ├── en/            # English posts
+│   ├── zh-hans/       # Simplified Chinese posts
+│   └── .../           # Other locales
+├── i18n/              # Translations for UI text
+├── layouts/           # Page layout (Layout.astro)
+├── lib/               # Utilities (posts, formatter, etc.)
+├── pages/             # Route pages
+└── styles/global.css  # Tailwind v4 theme tokens
+```
+
+## Configuration
+
+### Site Config
+
+Edit `src/config/site.ts` — this is the single source of truth for your site.
+
+```typescript
+export const siteConfig = {
+  name: 'Your Blog Name',
+  title: 'Your tagline here.',
+  description: 'Your site description for SEO.',
+  author: {
+    name: 'Your Name',
+    avatar: '',
+  },
+  // ...
+};
+```
+
+Key sections:
+
+| Section | What it controls |
+|---------|-----------------|
+| `name` | Site title in navbar and footer |
+| `social` | Social links in footer (GitHub, X, Discord, Email, RSS) |
+| `nav` | Navigation bar items |
+| `footer.sections` | Footer column links |
+| `ui.defaultMode` | Default theme: `'light'`, `'dark'`, or `'system'` |
+| `blog.paginationSize` | Posts per page (default: 20) |
+| `sections` | Custom content sections (see below) |
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Service | Required |
+|----------|---------|----------|
+| `PUBLIC_GA_ID` | Google Analytics | No |
+| `PUBLIC_CRISP_WEBSITE_ID` | Crisp Chat | No |
+| `PUBLIC_GISCUS_REPO` | Giscus Comments | No |
+| `PUBLIC_GISCUS_REPO_ID` | Giscus Comments | No |
+| `PUBLIC_GISCUS_CATEGORY` | Giscus Comments | No |
+| `PUBLIC_GISCUS_CATEGORY_ID` | Giscus Comments | No |
+
+Leave any variable empty to disable that service. No code changes needed.
+
+### Site URL
+
+The site URL is configured in one place — `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+  // ...
+});
+```
+
+All components read this value via `import.meta.env.SITE`. No need to configure it elsewhere.
+
+## Writing Posts
+
+### Create a Post
+
+Create a new `.mdx` file in `src/content/posts/en/`:
+
+```markdown
+---
+title: My First Post
+date: 2026-03-14
+category: General
+description: A brief summary for SEO and social previews.
+tags: [Topic, Another]
+pinned: false
+---
+
+Your content starts here. Write in standard Markdown.
+```
+
+### Frontmatter Reference
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `title` | string | Yes | — | Post title |
+| `date` | date | Yes | — | Publish date (`YYYY-MM-DD`) |
+| `category` | string | No | `General` | Single category |
+| `description` | string | No | — | SEO meta description |
+| `tags` | string[] | No | — | Tag list |
+| `pinned` | boolean | No | `false` | Pin to top of list |
+| `image` | string | No | — | Cover image path |
+
+### MDX Components
+
+Since all posts use `.mdx` format, you can import and use React components directly in your content:
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+Here is an interactive chart:
+
+<MyChart data={[10, 20, 30]} />
+```
+
+This is optional — standard Markdown works exactly the same in `.mdx` files.
+
+### Pinning Posts
+
+Set `pinned: true` in the frontmatter. Pinned posts appear at the top of the list with a pin icon, sorted by date among themselves.
+
+## Internationalization (i18n)
+
+The theme supports 11 locales out of the box: English, Simplified Chinese, Traditional Chinese, Korean, French, German, Italian, Spanish, Russian, Indonesian, and Brazilian Portuguese.
+
+### Adding a Translated Post
+
+Create the same filename in the target locale directory:
+
+```
+src/content/posts/en/my-post.mdx      # English original
+src/content/posts/zh-hans/my-post.mdx  # Chinese translation
+src/content/posts/fr/my-post.mdx       # French translation
+```
+
+Each file is independent — translate the frontmatter fields too.
+
+### Translating UI Text
+
+UI strings (navigation, footer, buttons) live in `src/i18n/messages/`. Each locale has its own file:
+
+```
+src/i18n/messages/
+├── en.ts
+├── zh-hans.ts
+├── fr.ts
+└── ...
+```
+
+Edit the relevant file to change any UI text.
+
+### Browser Language Detection
+
+The theme detects the visitor's browser language and shows a banner suggesting to switch locale. The preference is saved in `localStorage`.
+
+## Custom Content Sections
+
+Beyond blog posts, you can create custom content sections (translations, notes, tutorials, etc.) that get their own list page and detail pages, with a separate navigation entry.
+
+### Adding a Section
+
+**Step 1** — Register the collection in `src/content.config.ts`:
+
+```typescript
+const translations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/translations' }),
+  schema: contentSchema,
+});
+
+export const collections = { posts, translations };
+```
+
+**Step 2** — Add section config in `src/config/site.ts`:
+
+```typescript
+sections: [
+  { id: 'translations', labelKey: 'translations' },
+],
+```
+
+**Step 3** — Add the nav label to each locale file in `src/i18n/messages/`:
+
+```typescript
+nav: {
+  blog: 'Blog',
+  translations: 'Translations',  // add this line
+  about: 'About',
+},
+```
+
+**Step 4** — Create content in `src/content/translations/en/`:
+
+```markdown
+---
+title: My Translation
+date: 2026-03-14
+category: General
+---
+
+Your translated content here.
+```
+
+The list page (`/translations/`), detail pages (`/translations/slug/`), and navigation entry are generated automatically for all 11 locales.
+
+## Theming
+
+### Light and Dark Mode
+
+The theme supports three modes: Light, Dark, and System (follows OS preference). The default is `system`. Change it in `src/config/site.ts`:
+
+```typescript
+ui: {
+  defaultMode: 'system', // 'light' | 'dark' | 'system'
+},
+```
+
+Theme switching uses the View Transitions API for a smooth circular reveal animation.
+
+### Colors
+
+Edit CSS custom properties in `src/styles/global.css`. The theme uses Tailwind CSS v4 `@theme` tokens:
+
+```css
+:root {
+  --color-link: ...;
+  --color-link-hover: ...;
+  --color-nav-text: ...;
+  /* etc. */
+}
+```
+
+Both light and dark modes have their own set of color tokens.
+
+### Fonts
+
+The theme uses a system sans-serif font stack by default, following Apple Human Interface Guidelines typography parameters (17px / 1.47 / -0.022em). To use a custom font, update the font-family values in the Tailwind theme configuration.
+
+## SEO and AI
+
+Every page is optimized for search engines and AI agents:
+
+| Feature | URL | Description |
+|---------|-----|-------------|
+| Sitemap | `/sitemap-index.xml` | Auto-generated |
+| RSS Feed | `/rss.xml` | Auto-generated |
+| robots.txt | `/robots.txt` | Welcomes AI crawlers |
+| llms.txt | `/llms.txt` | AI content index |
+| llms-full.txt | `/llms-full.txt` | Full-text for AI |
+| Markdown export | `/posts/slug.md` | Raw Markdown per post |
+| JSON-LD | Every page | Article structured data |
+| Open Graph | Every page | Social preview cards |
+| OG Images | `/og/slug.png` | Auto-generated with Satori |
+
+## Deployment
+
+### Cloudflare Pages
+
+The included GitHub Actions workflow handles CI/CD automatically.
+
+**Step 1** — Set GitHub Secrets:
+
+| Secret | Where to get it |
+|--------|----------------|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → API Tokens |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → Account Home |
+
+**Step 2** — Push to GitHub. The workflow will:
+
+1. Build the site on every push and PR
+2. Deploy to Cloudflare Pages on push to `main`
+
+Your site will be live at `https://your-project.pages.dev`.
+
+### Custom Domain
+
+Add a custom domain in the Cloudflare Pages dashboard under your project → Custom domains.
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Astro 6 (SSG) |
+| UI Islands | React 19 |
+| Styling | Tailwind CSS v4 |
+| Components | shadcn/ui (base-nova) |
+| Content | MDX with Content Collections |
+| OG Images | Satori + resvg-js |
+| i18n | 11 locales |
+| Deployment | Cloudflare Pages |
+| Package Manager | pnpm 10 |
+| Language | TypeScript 5 |
+
+## Useful Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start dev server at `localhost:4321` |
+| `pnpm build` | Build for production |
+| `pnpm preview` | Preview production build locally |
+
+## Version Scheme
+
+This project uses [CalVer](https://calver.org/) — `YYYY.0M.0D`. Same-day patches append a suffix: `2026.03.14.1`, `2026.03.14.2`, etc.
