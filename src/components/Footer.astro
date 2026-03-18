@@ -2,16 +2,16 @@
 import { IconGithub, IconTwitterX, IconDiscord, IconMail, IconRss } from '@/components/icons';
 import Container from './Container.astro';
 import BuiltWithButton from './BuiltWithButton.astro';
-import { siteConfig } from '@/config/site';
+import { siteConfig, type FooterSection, type SocialLink } from '@/config/site';
 import { getMessages, getLocalizedPath, type Locale } from '@/i18n';
 
-const socialIcons: Record<string, any> = {
+const socialIcons = {
   github: IconGithub,
   x: IconTwitterX,
   discord: IconDiscord,
   mail: IconMail,
   rss: IconRss,
-};
+} satisfies Record<SocialLink['icon'], typeof IconGithub>;
 
 interface Props {
   locale: Locale;
@@ -20,11 +20,24 @@ interface Props {
 const { locale } = Astro.props;
 const m = getMessages(locale);
 const currentPath = Astro.url.pathname;
-const localePrefix = locale === 'en' ? '' : `/${locale}`;
+const navLabels = m.nav as Record<string, string>;
+const footerSections: FooterSection[] = siteConfig.footer.sections;
+
+function resolveInternalHref(href: string): string {
+  if (href.startsWith('#')) return href;
+  return getLocalizedPath(href, locale);
+}
+
+function resolveSocialHref(href: string): string {
+  if (/^https?:\/\//.test(href) || href.startsWith('#')) return href;
+  return resolveInternalHref(href);
+}
 
 function isActive(href: string): boolean {
-  if (href.includes('#')) return false;
-  return currentPath === href;
+  if (href.includes('#') || /^https?:\/\//.test(href)) return false;
+  const localizedHref = resolveInternalHref(href).replace(/\/$/, '') || '/';
+  const localizedCurrent = currentPath.replace(/\/$/, '') || '/';
+  return localizedCurrent === localizedHref;
 }
 
 const footerSectionTitles = [m.footer.navigate, m.footer.subscribe, m.footer.source];
@@ -45,13 +58,16 @@ const footerSectionTitles = [m.footer.navigate, m.footer.subscribe, m.footer.sou
           {
             siteConfig.social.map((link) => (
               <a
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
+                href={resolveSocialHref(link.href)}
+                target={/^https?:\/\//.test(link.href) ? '_blank' : undefined}
+                rel={/^https?:\/\//.test(link.href) ? 'noreferrer' : undefined}
                 aria-label={link.title}
                 class="inline-flex size-11 items-center justify-center rounded-full border border-border hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all duration-200"
               >
-                {socialIcons[link.icon] && (() => { const Icon = socialIcons[link.icon]; return <Icon className="size-4 [&_path]:fill-current" />; })()}
+                {(() => {
+                  const Icon = socialIcons[link.icon];
+                  return <Icon className="size-4" />;
+                })()}
               </a>
             ))
           }
@@ -59,14 +75,14 @@ const footerSectionTitles = [m.footer.navigate, m.footer.subscribe, m.footer.sou
       </div>
 
       {
-        siteConfig.footer.sections.map((section, i) => (
+        footerSections.map((section, i) => (
           <div class:list={["col-span-1 md:col-span-1 flex flex-col items-start", i === 0 && "md:col-start-4"]}>
             <span class="text-sm font-semibold uppercase">{footerSectionTitles[i]}</span>
             <ul class="mt-2 list-inside space-y-2">
               {section.items.map((item) => (
                 <li>
                   <a
-                    href={item.external ? item.href : getLocalizedPath(item.href, locale)}
+                    href={item.external ? item.href : resolveInternalHref(item.href)}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
                     class:list={[
@@ -76,7 +92,7 @@ const footerSectionTitles = [m.footer.navigate, m.footer.subscribe, m.footer.sou
                         : "text-muted-foreground",
                     ]}
                   >
-                    {item.labelKey ? (m.nav[item.labelKey] ?? item.title) : item.title}
+                    {item.labelKey ? (navLabels[item.labelKey] ?? item.title) : item.title}
                   </a>
                 </li>
               ))}
@@ -97,8 +113,8 @@ const footerSectionTitles = [m.footer.navigate, m.footer.subscribe, m.footer.sou
       </span>
       <nav class="flex items-center gap-3 font-mono text-xs text-muted-foreground">
         <a href="/skill.md" class="hover:text-[var(--color-link)] transition-colors py-2 px-1">skill.md</a>
-        <a href={`${localePrefix}/llms.txt`} class="hover:text-[var(--color-link)] transition-colors py-2 px-1">llms.txt</a>
-        <a href={`${localePrefix}/llms-full.txt`} class="hover:text-[var(--color-link)] transition-colors py-2 px-1">llms-full.txt</a>
+        <a href={resolveInternalHref('/llms.txt')} class="hover:text-[var(--color-link)] transition-colors py-2 px-1">llms.txt</a>
+        <a href={resolveInternalHref('/llms-full.txt')} class="hover:text-[var(--color-link)] transition-colors py-2 px-1">llms-full.txt</a>
       </nav>
       <BuiltWithButton locale={locale} />
     </Container>

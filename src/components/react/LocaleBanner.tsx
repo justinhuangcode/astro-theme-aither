@@ -41,7 +41,7 @@ export default function LocaleBanner({ currentLocale, currentPath, allMessages }
   const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Already has a preference → auto-redirect handled by inline script
+    // Already has a stored preference, so don't keep prompting.
     if (localStorage.getItem(PREFERRED_KEY)) return;
 
     // Dismissed within this session

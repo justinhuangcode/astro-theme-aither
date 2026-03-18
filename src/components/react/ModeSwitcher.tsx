@@ -12,8 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { IconChevronRight, IconMonitor, IconMoon, IconPalette, IconSun } from '@/components/icons';
 
-type Theme = 'light' | 'dark' | 'system' | string;
-
 const THEME_GROUPS = [
   {
     label: 'Classic',
@@ -82,8 +80,14 @@ const THEME_GROUPS = [
   },
 ] as const;
 
-const ALL_CUSTOM_KEYS = THEME_GROUPS.flatMap((g) => g.themes.map((t) => t.key));
-const ALL_THEME_CLASSES = ['light', 'dark', ...ALL_CUSTOM_KEYS];
+type CustomThemeKey = (typeof THEME_GROUPS)[number]['themes'][number]['key'];
+type Theme = 'light' | 'dark' | 'system' | CustomThemeKey;
+
+const ALL_CUSTOM_KEYS = THEME_GROUPS.flatMap((group) =>
+  group.themes.map((theme) => theme.key),
+) as CustomThemeKey[];
+const ALL_THEME_CLASSES: string[] = ['light', 'dark', ...ALL_CUSTOM_KEYS];
+const ALL_THEME_KEYS = new Set<Theme>(['light', 'dark', 'system', ...ALL_CUSTOM_KEYS]);
 
 interface ModeSwitcherProps {
   labels?: { light: string; dark: string; system: string; moreThemes: string; classic: string; modern: string; extra: string; scifi: string };
@@ -98,10 +102,19 @@ function resolveTheme(theme: Theme): string {
   return theme;
 }
 
+function isTheme(value: string): value is Theme {
+  return ALL_THEME_KEYS.has(value as Theme);
+}
+
+function isCustomThemeKey(value: string): value is CustomThemeKey {
+  return ALL_CUSTOM_KEYS.includes(value as CustomThemeKey);
+}
+
 function useThemeLocal() {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'system';
-    return localStorage.getItem('theme') || 'system';
+    const storedTheme = localStorage.getItem('theme');
+    return storedTheme && isTheme(storedTheme) ? storedTheme : 'system';
   });
 
   const setTheme = useCallback((newTheme: Theme) => {
@@ -182,7 +195,7 @@ export default function ModeSwitcher({
     [setTheme]
   );
 
-  const isCustomTheme = ALL_CUSTOM_KEYS.includes(theme as any);
+  const isCustomTheme = isCustomThemeKey(theme);
 
   const baseItems: { key: 'light' | 'dark' | 'system'; label: string; icon: typeof IconSun }[] = [
     { key: 'light', label: labels.light, icon: IconSun },
@@ -226,7 +239,7 @@ export default function ModeSwitcher({
             <IconChevronRight className="ml-auto size-3.5" />
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            {THEME_GROUPS.map((group, gi) => (
+            {THEME_GROUPS.map((group) => (
               <DropdownMenuSub key={group.label}>
                 <DropdownMenuSubTrigger>
                   <span className={activeGroup?.label === group.label ? 'font-semibold text-primary' : ''}>

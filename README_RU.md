@@ -36,11 +36,11 @@ An AI-native Astro theme that believes text itself is beautiful.  ✍️
 - **AI-нативные эндпоинты** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json` и `.md` эндпоинты для каждой статьи
 - **RSS-лента** -- Встроенный `/rss.xml` через `@astrojs/rss`
 - **Карта сайта** -- Автоматическая генерация через `@astrojs/sitemap`
-- **SEO** -- Теги Open Graph, канонические URL, описания для каждой статьи, OpenSearch
+- **SEO** -- Теги Open Graph, канонические URL, описания для каждой статьи
 - **Адаптивность** -- Дружественный к мобильным устройствам макет, сохраняющий ритм чтения на всех размерах экрана
 - **Google Analytics** -- Опционально, нулевая конфигурация через переменную окружения `PUBLIC_GA_ID`
 - **Astro Content Collections** -- Типобезопасные Markdown-статьи с валидацией схемы Zod
-- **GitHub Pages** -- CI/CD workflow для автоматического развёртывания
+- **Cloudflare Pages** -- CI/CD workflow для автоматического развёртывания
 
 ## Быстрый старт
 
@@ -151,7 +151,7 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'dark', enableModeSwitch: true },
+  ui: { defaultMode: 'system', enableModeSwitch: true },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -166,10 +166,10 @@ export const siteConfig = {
 ```javascript
 export default defineConfig({
   site: 'https://your-domain.com', // Обязательно для RSS и sitemap
-  integrations: [react(), sitemap()],
+  integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-cn', 'zh-tw', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
+    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
     routing: { prefixDefaultLocale: false },
   },
   vite: { plugins: [tailwindcss()] },
@@ -199,8 +199,8 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | Код | Язык |
 |---|---|
 | `en` | English (по умолчанию) |
-| `zh-cn` | 简体中文 |
-| `zh-tw` | 繁體中文 |
+| `zh-hans` | 简体中文 |
+| `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -221,7 +221,7 @@ src/
 ├── content.config.ts         # Схема Content Collections (Zod)
 ├── i18n/
 │   ├── index.ts              # Определения локалей, getMessages(), хелперы маршрутизации
-│   └── messages/             # Файлы переводов (en.ts, zh-cn.ts, ko.ts, fr.ts, ...)
+│   └── messages/             # Файлы переводов (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Глобальный макет (head, навигация, переключатель темы, аналитика)
 ├── components/
@@ -249,7 +249,7 @@ src/
 │   ├── skill.md.ts           # Дескриптор AI-навыка
 │   ├── api/
 │   │   └── posts.json.ts     # JSON API статей
-│   └── {locale}/             # Страницы для каждой поддерживаемой локали
+│   └── [locale]/             # Страницы для каждой поддерживаемой локали
 ├── content/
 │   └── posts/
 │       ├── en/*.md           # Статьи на English (локаль по умолчанию)
@@ -259,21 +259,20 @@ src/
 public/
 ├── favicon.svg
 ├── robots.txt
-├── opensearch.xml
 └── .well-known/
 .github/
 └── workflows/
-    └── deploy-cloudflare-pages.yml     # Деплой GitHub Pages (по умолчанию)
+    └── deploy-cloudflare-pages.yml     # Деплой Cloudflare Pages (по умолчанию)
 ```
 
 ## Развёртывание
 
-### GitHub Pages (по умолчанию)
+### Cloudflare Pages (по умолчанию)
 
 Встроенный workflow (`.github/workflows/deploy-cloudflare-pages.yml`) развёртывает автоматически:
 
 1. Перейдите в **Settings** > **Pages** > **Source**: выберите **GitHub Actions**
-2. Обновите `site` в `astro.config.mjs` на ваш URL GitHub Pages
+2. Обновите `site` в `astro.config.mjs` на ваш URL Cloudflare Pages
 3. Push в `main` — сайт развёртывается автоматически
 
 ### Другие платформы

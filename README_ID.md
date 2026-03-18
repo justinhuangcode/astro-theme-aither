@@ -36,11 +36,11 @@ Tipografi sans-serif yang bersih dengan heading Bricolage Grotesque, ritme baca 
 - **Endpoint AI-native** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json`, dan endpoint `.md` per artikel
 - **Feed RSS** -- `/rss.xml` bawaan melalui `@astrojs/rss`
 - **Sitemap** -- Dihasilkan otomatis melalui `@astrojs/sitemap`
-- **SEO** -- Tag Open Graph, URL kanonik, deskripsi per artikel, OpenSearch
+- **SEO** -- Tag Open Graph, URL kanonik, deskripsi per artikel
 - **Responsif** -- Tata letak ramah seluler yang menjaga ritme baca di semua ukuran layar
 - **Google Analytics** -- Opsional, tanpa konfigurasi melalui variabel lingkungan `PUBLIC_GA_ID`
 - **Astro Content Collections** -- Artikel Markdown type-safe dengan validasi skema Zod
-- **GitHub Pages** -- Workflow CI/CD disertakan untuk deployment otomatis
+- **Cloudflare Pages** -- Workflow CI/CD disertakan untuk deployment otomatis
 
 ## Mulai Cepat
 
@@ -151,7 +151,7 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'dark', enableModeSwitch: true },
+  ui: { defaultMode: 'system', enableModeSwitch: true },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -166,10 +166,10 @@ export const siteConfig = {
 ```javascript
 export default defineConfig({
   site: 'https://your-domain.com', // Diperlukan untuk RSS dan sitemap
-  integrations: [react(), sitemap()],
+  integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-cn', 'zh-tw', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
+    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
     routing: { prefixDefaultLocale: false },
   },
   vite: { plugins: [tailwindcss()] },
@@ -199,8 +199,8 @@ Konfigurasi bahasa ada di `src/i18n/index.ts`, terjemahan di `src/i18n/messages/
 | Kode | Bahasa |
 |---|---|
 | `en` | English (default) |
-| `zh-cn` | 简体中文 |
-| `zh-tw` | 繁體中文 |
+| `zh-hans` | 简体中文 |
+| `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -221,7 +221,7 @@ src/
 ├── content.config.ts         # Skema Content Collections (Zod)
 ├── i18n/
 │   ├── index.ts              # Definisi locale, getMessages(), helper routing
-│   └── messages/             # File terjemahan (en.ts, zh-cn.ts, ko.ts, fr.ts, ...)
+│   └── messages/             # File terjemahan (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Layout global (head, navigasi, pengalih tema, analytics)
 ├── components/
@@ -249,7 +249,7 @@ src/
 │   ├── skill.md.ts           # Deskriptor skill AI
 │   ├── api/
 │   │   └── posts.json.ts     # API JSON artikel
-│   └── {locale}/             # Halaman untuk setiap locale yang didukung
+│   └── [locale]/             # Halaman untuk setiap locale yang didukung
 ├── content/
 │   └── posts/
 │       ├── en/*.md           # Artikel English (locale default)
@@ -259,21 +259,20 @@ src/
 public/
 ├── favicon.svg
 ├── robots.txt
-├── opensearch.xml
 └── .well-known/
 .github/
 └── workflows/
-    └── deploy-cloudflare-pages.yml     # Deploy GitHub Pages (default)
+    └── deploy-cloudflare-pages.yml     # Deploy Cloudflare Pages (default)
 ```
 
 ## Deployment
 
-### GitHub Pages (default)
+### Cloudflare Pages (default)
 
 Workflow yang disertakan (`.github/workflows/deploy-cloudflare-pages.yml`) men-deploy secara otomatis:
 
 1. Buka **Settings** > **Pages** > **Source** repositori: pilih **GitHub Actions**
-2. Perbarui `site` di `astro.config.mjs` dengan URL GitHub Pages Anda
+2. Perbarui `site` di `astro.config.mjs` dengan URL Cloudflare Pages Anda
 3. Push ke `main` — situs di-deploy secara otomatis
 
 ### Platform lain

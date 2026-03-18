@@ -1,0 +1,45 @@
+---
+import Container from '@/components/Container.astro';
+import Layout from '@/layouts/Layout.astro';
+import { siteConfig } from '@/config/site';
+import { getMessages, type Locale } from '@/i18n';
+import { getAboutMarkdownPath } from '@/lib/site-content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const m = getMessages(locale);
+---
+
+<Layout
+  title={`${m.about.title} | ${siteConfig.name}`}
+  alternateFormats={[
+    {
+      type: 'text/markdown',
+      href: getAboutMarkdownPath(locale),
+      title: `${m.about.title} (Markdown)`,
+    },
+  ]}
+>
+  <Container class="py-16 px-4">
+    <article>
+      <h1 class="font-body text-2xl font-semibold mb-8 leading-[1.4] max-md:text-xl text-[var(--color-link)]">{m.about.title}</h1>
+      <div class="about-content text-lg leading-relaxed text-foreground">
+        <p set:html={m.about.description} />
+      </div>
+    </article>
+  </Container>
+</Layout>
+
+<style>
+  .about-content :global(a) {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+  .about-content :global(a:hover) {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+  }
+</style>

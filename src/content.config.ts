@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
@@ -9,7 +9,7 @@ import { glob } from 'astro/loaders';
  * 2. Add matching config in src/config/site.ts → sections
  * 3. Create content in src/content/{section-id}/{locale}/
  */
-const contentSchema = ({ image }: { image: () => ReturnType<typeof z.any> }) =>
+const contentSchema = ({ image }: SchemaContext) =>
   z.object({
     title: z.string(),
     description: z.string().optional(),

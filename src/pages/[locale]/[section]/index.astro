@@ -3,8 +3,8 @@ import Layout from '@/layouts/Layout.astro';
 import Container from '@/components/Container.astro';
 import BlogGrid from '@/components/BlogGrid.astro';
 import BlogCard from '@/components/BlogCard.astro';
-import { siteConfig } from '@/config/site';
-import { locales, getMessages, intlLocales, type Locale } from '@/i18n';
+import { siteConfig, type ContentSection } from '@/config/site';
+import { getLocaleBasePath, locales, getMessages, intlLocales, type Locale } from '@/i18n';
 import { getContentByLocale, getSlug } from '@/lib/posts';
 
 export async function getStaticPaths() {
@@ -21,10 +21,12 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { locale, section } = Astro.props as { locale: Locale; section: (typeof siteConfig.sections)[number] };
+const { locale, section } = Astro.props as { locale: Locale; section: ContentSection };
 const m = getMessages(locale);
+const navLabels = m.nav as Record<string, string>;
 const entries = await getContentByLocale(section.id, locale);
-const title = m.nav[section.labelKey] ?? section.labelKey;
+const title = navLabels[section.labelKey] ?? section.labelKey;
+const basePath = getLocaleBasePath(locale);
 ---
 
 <Layout title={`${title} | ${siteConfig.name}`}>
@@ -33,13 +35,13 @@ const title = m.nav[section.labelKey] ?? section.labelKey;
       <h1 class="text-2xl font-semibold mb-6 text-[var(--color-link)]">{title}</h1>
       <BlogGrid>
         {
-          entries.map((entry: any) => (
+          entries.map((entry) => (
             <BlogCard
               slug={getSlug(entry.id)}
               title={entry.data.title}
               date={entry.data.date}
               locale={intlLocales[locale]}
-              basePath={`/${locale}`}
+              basePath={basePath}
               section={section.id}
               pinned={entry.data.pinned}
             />

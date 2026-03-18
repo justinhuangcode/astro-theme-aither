@@ -9,17 +9,26 @@ import TableOfContents from '@/components/TableOfContents.astro';
 import Tag from '@/components/Tag.astro';
 import CategoryPill from '@/components/CategoryPill.astro';
 import Giscus from '@/components/Giscus.astro';
+import type { CollectionKey } from 'astro:content';
 import { render } from 'astro:content';
 import { formatDate, wordCount, readingTime } from '@/lib/formatter';
-import { siteConfig } from '@/config/site';
+import { siteConfig, type ContentSection } from '@/config/site';
 import { getMessages } from '@/i18n';
-import { getContentByLocale, getSlug } from '@/lib/posts';
+import { getContentByLocale, getSlug, type LocalizedEntry } from '@/lib/posts';
 
 export async function getStaticPaths() {
-  const paths = [];
+  const paths: Array<{
+    params: { section: string; slug: string };
+    props: {
+      section: ContentSection;
+      entry: LocalizedEntry<CollectionKey>;
+      prevEntry: LocalizedEntry<CollectionKey> | null;
+      nextEntry: LocalizedEntry<CollectionKey> | null;
+    };
+  }> = [];
   for (const s of siteConfig.sections) {
     const entries = await getContentByLocale(s.id, 'en');
-    entries.forEach((entry: any, i: number) => {
+    entries.forEach((entry, i) => {
       paths.push({
         params: { section: s.id, slug: getSlug(entry.id) },
         props: {
@@ -34,12 +43,18 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { section, entry, prevEntry, nextEntry } = Astro.props;
+const { section, entry, prevEntry, nextEntry } = Astro.props as {
+  section: ContentSection;
+  entry: LocalizedEntry<CollectionKey>;
+  prevEntry: LocalizedEntry<CollectionKey> | null;
+  nextEntry: LocalizedEntry<CollectionKey> | null;
+};
 const { Content, headings } = await render(entry);
 const m = getMessages('en');
+const navLabels = m.nav as Record<string, string>;
 const slug = getSlug(entry.id);
 const entryUrl = `${siteConfig.url}/${section.id}/${slug}/`;
-const sectionTitle = m.nav[section.labelKey] ?? section.labelKey;
+const sectionTitle = navLabels[section.labelKey] ?? section.labelKey;
 
 const articleJsonLd = [
   {
@@ -80,7 +95,7 @@ const articleJsonLd = [
       <article>
         <div class="mb-4 flex flex-wrap items-center gap-2">
           <CategoryPill category={entry.data.category} locale="en" />
-          {entry.data.tags && entry.data.tags.map((tag: string) => <Tag tag={tag} locale="en" />)}
+          {entry.data.tags?.map((tag) => <Tag tag={tag} locale="en" />)}
         </div>
 
         <h1 class="text-xl sm:text-2xl md:text-[31px] font-semibold mb-4 leading-[1.4] text-[var(--color-link)] break-words">{entry.data.title}</h1>
@@ -126,7 +141,7 @@ const articleJsonLd = [
               class="group flex flex-col items-start text-sm hover:text-foreground sm:max-w-[45%] py-2"
             >
               <span class="inline-flex items-center gap-1 text-muted-foreground group-hover:text-foreground">
-                <ArrowLeft class="size-3.5" />
+                <ArrowLeft className="size-3.5" />
                 {m.blog.prevPost}
               </span>
               <span class="mt-1 text-[var(--color-link)] group-hover:text-[var(--color-link-hover)]">{prevEntry.data.title}</span>
@@ -139,7 +154,7 @@ const articleJsonLd = [
             >
               <span class="inline-flex items-center gap-1 text-muted-foreground group-hover:text-foreground">
                 {m.blog.nextPost}
-                <ArrowRight class="size-3.5" />
+                <ArrowRight className="size-3.5" />
               </span>
               <span class="mt-1 text-[var(--color-link)] group-hover:text-[var(--color-link-hover)]">{nextEntry.data.title}</span>
             </a>
