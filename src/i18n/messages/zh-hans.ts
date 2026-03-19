@@ -44,6 +44,8 @@ export const zhHans = {
     },
     language: '语言',
     builtWith: '构建于',
+    copy: '复制',
+    copied: '已复制',
   },
   about: {
     title: '关于',

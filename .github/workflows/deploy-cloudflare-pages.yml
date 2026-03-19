@@ -10,6 +10,9 @@ concurrency:
   group: cloudflare-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME || github.event.repository.name }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -58,7 +61,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project create astro-theme-aither --production-branch main
+          command: pages project create ${{ env.CLOUDFLARE_PAGES_PROJECT_NAME }} --production-branch main
         continue-on-error: true
 
       - name: Deploy to Cloudflare Pages
@@ -66,4 +69,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist/ --project-name=astro-theme-aither
+          command: pages deploy dist/ --project-name=${{ env.CLOUDFLARE_PAGES_PROJECT_NAME }}

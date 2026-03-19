@@ -224,7 +224,7 @@ export const siteConfig = {
   // url is automatically read from astro.config.mjs — no need to set it here
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
-    { title: 'Twitter', href: '#', icon: 'x' },
+    { title: 'Twitter', href: '', icon: 'x' },
   ],
   blog: { paginationSize: 20, timeZone: 'Asia/Shanghai' },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
@@ -389,11 +389,13 @@ scripts/
 
 `.github/workflows/deploy-cloudflare-pages.yml` workflow는 Cloudflare Pages 기준이며 배포 전에 validation을 수행합니다.
 
-1. Cloudflare Pages 프로젝트를 만들거나 기본 이름 `astro-theme-aither`를 변경
+1. Cloudflare Pages 프로젝트를 만드세요. workflow는 기본적으로 저장소 이름을 사용하고, 필요하면 `CLOUDFLARE_PAGES_PROJECT_NAME`로 덮어쓸 수 있습니다
 2. GitHub Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` 추가
 3. `astro.config.mjs`의 `site` 업데이트
 4. `pnpm validate` 실행
 5. `main`에 push
+
+권장 방식: 저장소 이름과 Pages 프로젝트 이름을 맞추고, 다른 이름이 필요할 때만 저장소 변수 `CLOUDFLARE_PAGES_PROJECT_NAME`를 사용하세요.
 
 ### 다른 플랫폼
 

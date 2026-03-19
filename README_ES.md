@@ -224,7 +224,7 @@ export const siteConfig = {
   // url is automatically read from astro.config.mjs — no need to set it here
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
-    { title: 'Twitter', href: '#', icon: 'x' },
+    { title: 'Twitter', href: '', icon: 'x' },
   ],
   blog: { paginationSize: 20, timeZone: 'Asia/Shanghai' },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
@@ -389,13 +389,13 @@ scripts/
 
 El workflow `.github/workflows/deploy-cloudflare-pages.yml` está orientado a Cloudflare Pages y valida el sitio antes de desplegar.
 
-1. Crea un proyecto de Cloudflare Pages o cambia el nombre por defecto `astro-theme-aither`
+1. Crea un proyecto de Cloudflare Pages. El workflow usa por defecto el nombre del repositorio, o `CLOUDFLARE_PAGES_PROJECT_NAME` si quieres sobrescribirlo
 2. Añade `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` en GitHub Secrets
 3. Actualiza `site` en `astro.config.mjs`
 4. Ejecuta `pnpm validate`
 5. Haz push a `main`
 
-Buena práctica: si usaste el repo como plantilla, cambia el nombre hardcodeado del proyecto antes del primer despliegue.
+Buena práctica: mantén alineados el nombre del repositorio y el proyecto de Pages, o define la variable de repositorio `CLOUDFLARE_PAGES_PROJECT_NAME` si necesitas otro destino.
 
 ### Otras plataformas
 

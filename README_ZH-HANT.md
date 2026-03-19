@@ -224,7 +224,7 @@ export const siteConfig = {
   // url 會自動從 astro.config.mjs 讀取，無需在這裡重複設定
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
-    { title: 'Twitter', href: '#', icon: 'x' },
+    { title: 'Twitter', href: '', icon: 'x' },
   ],
   blog: { paginationSize: 20, timeZone: 'Asia/Shanghai' },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
@@ -391,13 +391,13 @@ scripts/
 
 內建工作流程 `.github/workflows/deploy-cloudflare-pages.yml` 是一條偏向 Cloudflare Pages 的部署路徑，且會在部署前先完成驗證。
 
-1. 建立一個 Cloudflare Pages 專案，或把工作流程中的預設專案名稱 `astro-theme-aither` 改成你自己的
+1. 建立一個 Cloudflare Pages 專案。工作流程預設使用倉庫名稱；如果需要覆蓋，請設定倉庫變數 `CLOUDFLARE_PAGES_PROJECT_NAME`
 2. 在 GitHub Secrets 中加入 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`
 3. 在 `astro.config.mjs` 中把 `site` 改成你的正式網域
 4. 執行 `pnpm validate`
 5. 推送到 `main`，讓 GitHub Actions 自動建置並部署
 
-最佳實務：若你是從模板建立新倉庫，第一次部署前先把 `.github/workflows/deploy-cloudflare-pages.yml` 中硬編碼的 Pages 專案名稱改掉，避免誤用上游預設值。
+最佳實務：盡量讓倉庫名稱和 Pages 專案名稱保持一致；如果必須不同，再透過倉庫變數 `CLOUDFLARE_PAGES_PROJECT_NAME` 覆蓋。
 
 ### 其他平台
 

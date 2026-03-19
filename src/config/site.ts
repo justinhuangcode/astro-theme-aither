@@ -3,6 +3,7 @@ import type { CollectionKey } from 'astro:content';
 
 export interface SocialLink {
   title: string;
+  /** Leave empty to hide the social icon until the link is configured. */
   href: string;
   icon: 'github' | 'x' | 'discord' | 'mail' | 'rss';
 }
@@ -60,17 +61,17 @@ export const siteConfig = {
     },
     {
       title: 'Twitter',
-      href: '#',
+      href: '',
       icon: 'x',
     },
     {
       title: 'Discord',
-      href: '#',
+      href: '',
       icon: 'discord',
     },
     {
       title: 'Email',
-      href: '#',
+      href: '',
       icon: 'mail',
     },
     {
