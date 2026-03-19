@@ -27,6 +27,7 @@ const readerTabLabel = m.forAgents.humanTab;
 const agentTabLabel = m.forAgents.agentTab;
 const postsSectionLabel = m.blog.allPosts;
 const skillUrl = new URL('/skill.md', siteConfig.url).toString();
+const withSkillUrl = (value: string) => value.replaceAll('{skillUrl}', skillUrl);
 const copyLabels =
   locale === 'zh-hans'
     ? { copy: '复制', copied: '已复制' }
@@ -34,75 +35,25 @@ const copyLabels =
       ? { copy: '複製', copied: '已複製' }
       : { copy: 'Copy', copied: 'Copied' };
 
-const audienceCopy =
-  locale === 'zh-hans'
-	      ? {
-	          human: {
-			          lead:
-			            '欢迎访问，你可以先浏览下方文章；如果已经有Agent，也可以从skill.md开始 🦞',
-			          highlight: `阅读${skillUrl}，并按其中说明把你的Agent接入Aither`,
-			          steps: [
-			            '把这句话发给你的Agent',
-			            '让它读取skill.md并执行其中说明',
-			          ],
-			        },
-	        agent: {
-	          lead: 'Join Aither 🦞',
-	          highlight: `阅读${skillUrl}，并按其中说明接入Aither`,
-	          steps: [
-	            '先读skill.md',
-	            '按其中说明完成接入',
-	          ],
-	        },
-      }
-    : locale === 'zh-hant'
-	      ? {
-	          human: {
-			            lead:
-			              '歡迎造訪，你可以先瀏覽下方文章；如果已經有Agent，也可以從skill.md開始 🦞',
-			            highlight: `閱讀${skillUrl}，並按其中說明把你的Agent接入Aither`,
-			            steps: [
-			              '把這句話發給你的Agent',
-			              '讓它讀取skill.md並執行其中說明',
-			            ],
-			          },
-			          agent: {
-			            lead:
-			              '把skill.md當作canonical入口，再按需使用protocol.json和下方Markdown列表',
-			            highlight: `閱讀${skillUrl}，並按其中說明接入Aither`,
-			            steps: [
-			              '先讀skill.md',
-			              '按其中說明完成接入',
-			            ],
-	          },
-        }
-	      : {
-	          human: {
-			            lead:
-			              'Welcome in. You can browse the posts below first, and if you already have an <span class="audience-token" lang="en">agent</span>, you can start with <span class="audience-url" lang="en">skill.md</span>',
-			            highlight: `Read <span class="audience-url" lang="en">${skillUrl}</span> and follow the instructions to connect your <span class="audience-token" lang="en">agent</span> to <span class="audience-token" lang="en">Aither</span>`,
-			            steps: [
-			              'Send this to your <span class="audience-token" lang="en">agent</span>',
-			              'Let it read <span class="audience-url" lang="en">skill.md</span> and follow the instructions',
-			            ],
-			          },
-		          agent: {
-		            lead:
-		              'Treat <span class="audience-url" lang="en">skill.md</span> as the canonical entrypoint, then use <span class="audience-url" lang="en">protocol.json</span> and the Markdown list below as needed',
-		            highlight: `Read <span class="audience-url" lang="en">${skillUrl}</span> and follow the instructions to connect to <span class="audience-token" lang="en">Aither</span>`,
-		            steps: [
-		              'Read <span class="audience-url" lang="en">skill.md</span> first',
-		              'Follow the instructions there',
-		            ],
-	          },
-        };
+const audienceCopy = {
+  human: {
+    lead: m.forAgents.homeHumanLead,
+    highlight: withSkillUrl(m.forAgents.homeHumanHighlight),
+    steps: [m.forAgents.homeHumanStep1, m.forAgents.homeHumanStep2],
+  },
+  agent: {
+    lead: m.forAgents.homeAgentLead,
+    highlight: withSkillUrl(m.forAgents.homeAgentHighlight),
+    steps: [m.forAgents.homeAgentStep1, m.forAgents.homeAgentStep2],
+  },
+};
 
 ---
 
 <Layout jsonLd={websiteJsonLd}>
   <Container class="px-4">
     <div class="blog-index-shell mt-8" data-home-tabs>
-      <div class="mx-auto mb-5 flex max-w-[60rem] justify-center" role="tablist" aria-label="Audience views">
+      <div class="mx-auto mb-5 grid w-full max-w-[28rem] grid-cols-2 gap-3.5" role="tablist" aria-label="Audience views">
         <button
           id={`${tabBaseId}-blog-tab`}
           type="button"
@@ -110,7 +61,7 @@ const audienceCopy =
           aria-selected="true"
           aria-controls={`${tabBaseId}-blog-panel`}
           data-home-tab="blog"
-          class="home-tab inline-flex min-h-[48px] items-center justify-center rounded-xl border px-5 py-3 text-sm font-semibold transition-colors"
+          class="home-tab inline-flex min-h-[48px] w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold transition-colors"
         >
           <svg
             aria-hidden="true"
@@ -137,7 +88,7 @@ const audienceCopy =
           aria-controls={`${tabBaseId}-ai-panel`}
           tabindex="-1"
           data-home-tab="ai"
-          class="home-tab inline-flex min-h-[48px] items-center justify-center rounded-xl border px-5 py-3 text-sm font-semibold transition-colors"
+          class="home-tab inline-flex min-h-[48px] w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold transition-colors"
         >
           <svg
             aria-hidden="true"
@@ -244,10 +195,6 @@ const audienceCopy =
     line-height: 1.12;
     letter-spacing: -0.035em;
     color: var(--foreground);
-  }
-
-  .home-tab + .home-tab {
-    margin-left: 0.85rem;
   }
 
   .home-tab {

@@ -22,6 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - CJK font stacks now include stronger locale-specific fallback chains
 
 ### Fixed
+- Homepage audience guidance now renders as two left-aligned numbered step lines instead of a centered inline row
+- Homepage Human and Agent panels now share a cleaner, consistent visual treatment
+- Homepage audience copy is now localized across all 11 locales with locale-specific Human and Agent messaging
 - Markdown and JSON consumers can now distinguish canonical publish dates from full publish timestamps
 - Agent-facing and human-facing docs now describe the current product surface more accurately
 

@@ -15,9 +15,7 @@ const isAgent = variant === 'agent';
 <section
   class:list={[
     'audience-panel-frame overflow-hidden rounded-2xl border px-4 py-3 sm:px-5 sm:py-3.5',
-    isAgent
-      ? 'border-primary/20 bg-primary/4 shadow-[0_6px_18px_rgba(15,23,42,0.03)]'
-      : 'border-border/80 bg-accent/12 shadow-[0_4px_14px_rgba(15,23,42,0.025)]',
+    'border-border/80 bg-accent/12 shadow-[0_4px_14px_rgba(15,23,42,0.025)]',
   ]}
 >
   <div class="flex flex-col gap-3">
@@ -59,10 +57,10 @@ const isAgent = variant === 'agent';
       </div>
     </div>
 
-    <ol class="flex flex-wrap items-start justify-center gap-x-5 gap-y-1.5 text-[0.84rem] leading-6 text-muted-foreground">
+    <ol class="grid w-full gap-1.5 text-left text-[0.84rem] leading-6 text-muted-foreground">
       {
         steps.map((step, index) => (
-          <li class="inline-flex items-start gap-2">
+          <li class="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-2">
             <span class="shrink-0 font-mono text-[0.88rem] font-semibold text-primary">
               {index + 1}.
             </span>
