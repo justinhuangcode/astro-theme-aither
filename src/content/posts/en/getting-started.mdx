@@ -76,7 +76,9 @@ Key sections:
 | `social` | Social links in footer (GitHub, X, Discord, Email, RSS) |
 | `nav` | Navigation bar items |
 | `footer.sections` | Footer column links |
-| `ui.defaultMode` | Default theme: `'light'`, `'dark'`, or `'system'` |
+| `ui.defaultMode` | Default color mode: `'light'`, `'dark'`, or `'system'` |
+| `ui.defaultStyle` | Default custom style: `'default'` or any built-in style key |
+| `ui.showMoreThemesMenu` | Show or hide the `More Themes` custom theme picker |
 | `blog.paginationSize` | Posts per page (default: 20) |
 | `sections` | Custom content sections (see below) |
 
@@ -246,17 +248,34 @@ The list page (`/translations/`), detail pages (`/translations/slug/`), and navi
 
 ## Theming
 
-### Light and Dark Mode
+### Modes and Styles
 
-The theme supports three modes: Light, Dark, and System (follows OS preference). The default is `system`. Change it in `src/config/site.ts`:
+The theme uses two layers:
+
+- Color mode: Light, Dark, or System (follows OS preference)
+- Theme style: `default` or any built-in custom style such as `evolution`
+
+The defaults live in `src/config/site.ts`:
 
 ```typescript
 ui: {
   defaultMode: 'system', // 'light' | 'dark' | 'system'
+  defaultStyle: 'default', // 'default' | custom style key
+  showMoreThemesMenu: true, // true to show the custom theme picker
 },
 ```
 
-Theme switching uses the View Transitions API for a smooth circular reveal animation.
+Picking Light, Dark, or System resets back to the main modes. Picking a custom style keeps your mode preference stored for later. Theme switching uses the View Transitions API for a smooth circular reveal animation.
+
+If you want a simpler theme UI, keep mode switching enabled and set `showMoreThemesMenu: false`. This hides the custom style list while preserving the Light / Dark / System controls.
+
+Theme labels are managed separately from theme keys:
+
+- Theme keys such as `evolution` or `threebody` stay stable and are used only for state and CSS hooks
+- User-facing labels are centralized in `src/config/themes.ts`
+- Localized labels should translate generic descriptors, while brand names or strong IP names can stay partially untranslated when that reads better in the target locale
+
+This keeps the theme system predictable in code while allowing locale-specific naming on the UI.
 
 ### Colors
 

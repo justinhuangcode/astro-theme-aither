@@ -11,7 +11,7 @@
 
 **[Онлайн-превью](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme that believes text itself is beautiful.  ✍️
+An AI-native Astro theme built around beautiful text.  ✍️
 
 ## Почему Aither?
 
@@ -25,6 +25,7 @@ An AI-native Astro theme that believes text itself is beautiful.  ✍️
 - **Тёмный режим** -- Переключение Светлый / Тёмный / Системный с сохранением в localStorage, анимация через View Transitions API (круговое раскрытие)
 - **Tailwind CSS v4** -- Utility-first стилизация с дизайн-токенами `@theme`, легко настраивается
 - **i18n на 11 языках** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
+- **55 локализованных демо-статей** -- Каждая локаль включает одни и те же 5 стартовых статей (`11 локалей x 5 slug`), чтобы демо и проверки покрытия оставались синхронизированы
 - **Динамические OG-изображения** -- Автоматическая генерация изображений Open Graph для каждой статьи через Satori + resvg-js
 - **Комментарии Giscus** -- Система комментариев на основе GitHub Discussions
 - **Чат Crisp** -- Опциональный виджет живого чата через Crisp
@@ -33,7 +34,7 @@ An AI-native Astro theme that believes text itself is beautiful.  ✍️
 - **Пагинация** -- Настраиваемый размер страницы для списка блога
 - **Оглавление** -- Автоматически генерируется из заголовков статьи
 - **Информация об авторе** -- Настраиваемые имя и аватар автора
-- **AI-нативные эндпоинты** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json` и `.md` эндпоинты для каждой статьи
+- **AI-нативные эндпоинты** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json` и `.md` эндпоинты для каждой статьи
 - **RSS-лента** -- Встроенный `/rss.xml` через `@astrojs/rss`
 - **Карта сайта** -- Автоматическая генерация через `@astrojs/sitemap`
 - **SEO** -- Теги Open Graph, канонические URL, описания для каждой статьи
@@ -63,10 +64,11 @@ pnpm install
 4. Настройте свой сайт:
 
 ```bash
-# astro.config.mjs -- установите URL вашего сайта
+# astro.config.mjs -- установите URL вашего сайта (единственное место, где нужно задавать URL)
 site: 'https://your-domain.com'
 
 # src/config/site.ts -- установите название, описание, социальные ссылки, навигацию, подвал
+# (url автоматически читается из astro.config.mjs)
 ```
 
 5. Настройте переменные окружения (опционально):
@@ -127,8 +129,33 @@ image: ./optional-cover.jpg
 | Команда | Описание |
 |---|---|
 | `pnpm dev` | Запустить локальный сервер разработки |
+| `pnpm check` | Запустить проверки типов и контента Astro |
+| `pnpm check:post-coverage` | Проверить, что все локали содержат одинаковый набор article slug |
 | `pnpm build` | Собрать статический сайт в `dist/` |
+| `pnpm smoke` | Запустить smoke-тесты AI-протокольных артефактов в `dist/` |
 | `pnpm preview` | Локальный предпросмотр продакшн-сборки |
+| `pnpm validate` | Запустить `check`, `check:post-coverage`, `build` и `smoke` вместе |
+
+## AI-нативный протокол
+
+Если вы строите интеграцию AI или agent, рекомендуемый порядок чтения такой:
+
+1. `/protocol.json` для лёгкого структурированного манифеста
+2. `/skill.md` как каноническая narrative-точка входа в протокол
+3. `/agent/home.json` для текущих метаданных сайта и последних статей
+4. `/policy.md` для правил и границ безопасности
+5. `/reading.md` для рекомендаций по чтению / retrieval
+6. `/subscribe.md` для мониторинга и polling
+7. `/auth.md`, чтобы подтвердить, что потоки записи / авторизации пока остаются зарезервированными
+
+Сейчас протокол намеренно остаётся только для чтения. Agents могут обнаруживать, индексировать, суммировать, подписываться и получать Markdown, но не должны предполагать, что публикация, комментарии или авторизованные write API уже существуют.
+
+Для более строгих интеграций доступны и schema-endpoints:
+
+- `/schemas/agent-protocol.schema.json`
+- `/schemas/agent-home.schema.json`
+
+Лучшая практика: если вы меняете `protocol.json`, `skill.md`, `agent/home.json` или любой Markdown-документ, ориентированный на agents, минимум выполните `pnpm smoke`.
 
 ## Конфигурация
 
@@ -137,13 +164,13 @@ image: ./optional-cover.jpg
 ```typescript
 export const siteConfig = {
   name: 'Aither',
-  title: 'An AI-native Astro theme that believes text itself is beautiful.',
+  title: 'An AI-native Astro theme built around beautiful text.',
   description: '...',
   author: {
     name: 'Aither',
     avatar: '', // Импорт из src/assets/ для оптимизации, или URL-строка
   },
-  url: 'https://your-domain.com',
+  // url автоматически читается из astro.config.mjs, поэтому повторно задавать его здесь не нужно
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
@@ -151,7 +178,12 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'system', enableModeSwitch: true },
+  ui: {
+    defaultMode: 'system',
+    defaultStyle: 'default',
+    enableModeSwitch: true,
+    showMoreThemesMenu: true,
+  },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -160,6 +192,8 @@ export const siteConfig = {
   footer: { copyrightYear: 'auto', sections: [/* ... */] },
 };
 ```
+
+Установите `ui.showMoreThemesMenu` в `false`, если хотите сохранить переключатель Светлый / Тёмный / Системный, но скрыть селектор кастомных тем.
 
 ### Конфигурация Astro (`astro.config.mjs`)
 
@@ -217,15 +251,21 @@ PUBLIC_GISCUS_CATEGORY_ID=
 ```
 src/
 ├── config/
-│   └── site.ts              # Название сайта, соцссылки, навигация, подвал, аналитика, Giscus, Crisp
+│   ├── site.ts              # Название сайта, соцссылки, навигация, подвал, аналитика, Giscus, Crisp
+│   └── themes.ts            # Группы тем и локализованные названия тем
 ├── content.config.ts         # Схема Content Collections (Zod)
 ├── i18n/
 │   ├── index.ts              # Определения локалей, getMessages(), хелперы маршрутизации
 │   └── messages/             # Файлы переводов (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Глобальный макет (head, навигация, переключатель темы, аналитика)
+├── lib/
+│   └── theme.ts              # Хелперы состояния предпочтений темы
 ├── components/
 │   ├── Navbar.astro          # Навбар в стиле Bootstrap 3 с градиентом
+│   ├── NavbarMobile.astro    # Мобильная навигация с управлением локалью и темой
+│   ├── ModeSwitcher.astro    # Десктопный переключатель режима и стиля темы
+│   ├── LanguageSwitcher.astro# Десктопный переключатель локали
 │   ├── BlogGrid.astro        # Сетка статей с пагинацией
 │   ├── BlogCard.astro        # Карточка статьи с категорией, тегами, датой
 │   ├── TableOfContents.astro # Автогенерируемое оглавление
@@ -233,8 +273,7 @@ src/
 │   ├── Giscus.astro          # Комментарии GitHub Discussions
 │   ├── Crisp.astro           # Виджет чата Crisp
 │   ├── Analytics.astro       # Скрипт Google Analytics
-│   ├── Prose.astro           # Типографический враппер для контента
-│   └── react/                # React-компоненты (ModeSwitcher, LanguageSwitcher, NavbarMobile)
+│   └── Prose.astro           # Типографический враппер для контента
 ├── pages/
 │   ├── index.astro           # Главная (English, локаль по умолчанию)
 │   ├── about.astro           # Страница «О нас»

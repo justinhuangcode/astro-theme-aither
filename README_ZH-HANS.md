@@ -11,7 +11,7 @@
 
 **[在线预览](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme that believes text itself is beautiful.  ✍️
+An AI-native Astro theme built around beautiful text.  ✍️
 
 ## 为什么选择 Aither？
 
@@ -25,6 +25,7 @@ An AI-native Astro theme that believes text itself is beautiful.  ✍️
 - **暗色模式** -- 亮色 / 暗色 / 系统三档切换，localStorage 持久化，View Transitions API 圆形揭幕动画
 - **Tailwind CSS v4** -- 工具类优先的样式方案，`@theme` 设计令牌，易于自定义
 - **11 种语言** -- 内置 Astro i18n 路由，支持 English、简体中文、繁體中文、한국어、Français、Deutsch、Italiano、Español、Русский、Bahasa Indonesia、Português (BR)
+- **55 篇本地化示例文章** -- 11 种语言各自都带齐 5 篇示例文章（`11 个 locale x 5 个 slug`），演示站和覆盖率校验始终同步
 - **动态 OG 图片** -- 基于 Satori + resvg-js 自动生成社交分享图，无需手动制作
 - **Giscus 评论** -- 基于 GitHub Discussions 的评论系统，通过环境变量配置
 - **Crisp 客服** -- 可选的在线客服聊天，通过环境变量启用
@@ -33,7 +34,7 @@ An AI-native Astro theme that believes text itself is beautiful.  ✍️
 - **分页** -- 内置分页组件，默认每页 20 篇
 - **目录导航** -- 文章页自动生成 Table of Contents
 - **作者信息** -- 可配置的作者名称和头像
-- **AI 端点** -- `/llms.txt`、`/llms-full.txt`、`/skill.md`、`/api/posts.json`、每篇文章的 `.md` 端点，LLM 友好
+- **AI 端点** -- `/protocol.json`、`/skill.md`、`/policy.md`、`/reading.md`、`/subscribe.md`、`/auth.md`、`/agent/home.json`、`/llms.txt`、`/llms-full.txt`、`/api/posts.json`、每篇文章的 `.md` 端点，LLM 友好
 - **RSS 订阅** -- 内置 `/rss.xml`，基于 `@astrojs/rss`
 - **Sitemap** -- 通过 `@astrojs/sitemap` 自动生成
 - **SEO** -- Open Graph 标签、canonical URL、每篇文章独立 description
@@ -63,10 +64,11 @@ pnpm install
 4. 配置站点：
 
 ```bash
-# astro.config.mjs -- 设置你的站点 URL
+# astro.config.mjs -- 设置你的站点 URL（唯一需要设置 URL 的地方）
 site: 'https://your-domain.com'
 
 # src/config/site.ts -- 设置站点名称、社交链接、导航等
+# （url 会自动从 astro.config.mjs 读取）
 ```
 
 5. （可选）配置环境变量：
@@ -127,8 +129,33 @@ image: ./optional-cover.jpg
 | 命令 | 说明 |
 |---|---|
 | `pnpm dev` | 启动本地开发服务器 |
+| `pnpm check` | 运行 Astro 类型与内容校验 |
+| `pnpm check:post-coverage` | 校验每种语言是否都拥有相同的文章 slug 覆盖率 |
 | `pnpm build` | 构建静态站点到 `dist/` |
+| `pnpm smoke` | 对 `dist/` 中的 AI 协议产物运行 smoke test |
 | `pnpm preview` | 本地预览生产构建 |
+| `pnpm validate` | 一次运行 `check`、`check:post-coverage`、`build` 与协议 smoke test |
+
+## AI 原生协议
+
+如果你要构建 AI 或 agent 集成，推荐按下面顺序读取：
+
+1. `/protocol.json` 获取轻量结构化清单
+2. `/skill.md` 获取规范化协议入口说明
+3. `/agent/home.json` 获取当前站点元信息与最新文章
+4. `/policy.md` 获取规则与安全边界
+5. `/reading.md` 获取内容读取流程建议
+6. `/subscribe.md` 获取监控与轮询建议
+7. `/auth.md` 确认当前鉴权/写入能力仍处于预留状态
+
+当前这套协议有意保持只读。Agent 可以发现、索引、总结、订阅和抓取 Markdown，但不应假设站点已经支持发文、评论或其他需要鉴权的写操作。
+
+如果你需要更严格的结构校验，还可以使用：
+
+- `/schemas/agent-protocol.schema.json`
+- `/schemas/agent-home.schema.json`
+
+最佳实践：只要你改了 `protocol.json`、`skill.md`、`agent/home.json`，或者其他面向 agent 的协议 Markdown，就至少跑一次 `pnpm smoke`。
 
 ## 配置
 
@@ -137,13 +164,13 @@ image: ./optional-cover.jpg
 ```typescript
 export const siteConfig = {
   name: 'Aither',
-  title: 'An AI-native Astro theme that believes text itself is beautiful.',
+  title: 'An AI-native Astro theme built around beautiful text.',
   description: '...',
   author: {
     name: 'Aither',
     avatar: '', // 从 src/assets/ 导入优化，或使用 URL 字符串
   },
-  url: 'https://your-domain.com',
+  // url 会自动从 astro.config.mjs 读取，这里无需重复设置
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
@@ -151,7 +178,12 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'system', enableModeSwitch: true },
+  ui: {
+    defaultMode: 'system',
+    defaultStyle: 'default',
+    enableModeSwitch: true,
+    showMoreThemesMenu: true,
+  },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -160,6 +192,8 @@ export const siteConfig = {
   footer: { copyrightYear: 'auto', sections: [/* ... */] },
 };
 ```
+
+如果你想保留浅色 / 深色 / 系统切换，但隐藏自定义主题选择菜单，把 `ui.showMoreThemesMenu` 设为 `false` 即可。
 
 ### Astro 配置（`astro.config.mjs`）
 
@@ -217,15 +251,21 @@ PUBLIC_GISCUS_CATEGORY_ID=
 ```
 src/
 ├── config/
-│   └── site.ts              # 站点名称、社交链接、导航、分析、Giscus、Crisp
+│   ├── site.ts              # 站点名称、社交链接、导航、页脚、分析、Giscus、Crisp
+│   └── themes.ts            # 主题分组与本地化主题标签
 ├── content.config.ts         # Content Collections 模式定义（Zod）
 ├── i18n/
 │   ├── index.ts              # 语言定义、工具函数
 │   └── messages/             # 各语言翻译文件（en.ts、zh-hans.ts、ko.ts...）
 ├── layouts/
 │   └── Layout.astro          # 全局布局（head、导航、主题切换、分析）
+├── lib/
+│   └── theme.ts              # 主题偏好状态辅助函数
 ├── components/
 │   ├── Navbar.astro          # Bootstrap 3 风格渐变导航栏
+│   ├── NavbarMobile.astro    # 含语言与主题控制的移动端导航
+│   ├── ModeSwitcher.astro    # 桌面端主题模式/风格切换器
+│   ├── LanguageSwitcher.astro# 桌面端语言切换器
 │   ├── BlogGrid.astro        # 文章列表网格
 │   ├── BlogCard.astro        # 文章卡片（分类、标签、日期）
 │   ├── TableOfContents.astro # 目录导航
@@ -233,8 +273,7 @@ src/
 │   ├── Giscus.astro          # Giscus 评论
 │   ├── Crisp.astro           # Crisp 客服
 │   ├── Analytics.astro       # Google Analytics
-│   ├── Prose.astro           # 文章排版容器
-│   └── react/                # React 交互组件（暗色模式、语言切换、移动导航）
+│   └── Prose.astro           # 文章排版容器
 ├── pages/
 │   ├── index.astro           # 首页（English，默认语言）
 │   ├── about.astro           # 关于页面
@@ -252,6 +291,7 @@ src/
 │   └── [locale]/             # 各语言页面
 ├── content/
 │   └── posts/
+│       ├── en/*.md           # English 文章（默认语言）
 │       └── {locale}/*.md     # 各语言文章
 └── styles/
     └── global.css            # Tailwind CSS v4 @theme 设计令牌 + 基础样式

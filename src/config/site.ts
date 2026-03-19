@@ -39,9 +39,9 @@ export interface ContentSection {
 
 export const siteConfig = {
   name: 'Aither',
-  title: 'An AI-native Astro theme that believes text itself is beautiful.',
+  title: 'An AI-native Astro theme built around beautiful text.',
   description:
-    'An AI-native Astro theme that believes text itself is beautiful.',
+    'An AI-native Astro theme built around beautiful text.',
   author: {
     name: 'Aither',
     avatar: '' as ImageMetadata | string, // Import from src/assets/ for optimization, or use URL string
@@ -90,7 +90,9 @@ export const siteConfig = {
   },
   ui: {
     defaultMode: 'system' as const,
+    defaultStyle: 'default' as const,
     enableModeSwitch: true,
+    showMoreThemesMenu: true,
   },
   giscus: {
     repo: import.meta.env.PUBLIC_GISCUS_REPO || '',

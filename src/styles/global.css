@@ -31,6 +31,7 @@
 
   /* ── Content / Typography tokens ── */
   --font-heading: var(--font-body);
+  --font-ui: var(--font-body);
   --font-code: ui-monospace, "SF Mono", "Source Code Pro", Consolas, monospace;
   --line-height-body: 1.47;
   --paragraph-spacing: 18px;
@@ -199,8 +200,8 @@ html.rose {
 }
 
 @theme inline {
-  --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC",
-    "Microsoft YaHei", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", system-ui, sans-serif;
   --font-serif: ui-serif, Georgia, "Noto Serif", "Palatino Linotype",
     "Book Antiqua", Palatino, serif;
   --font-mono: ui-monospace, "Source Code Pro", Consolas, Monaco, monospace;
@@ -230,6 +231,16 @@ html.rose {
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+}
+
+html:lang(zh-Hans) {
+  --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+html:lang(zh-Hant) {
+  --font-body: -apple-system, BlinkMacSystemFont, "PingFang TC",
+    "Microsoft JhengHei", "Heiti TC", system-ui, sans-serif;
 }
 
 @layer base {

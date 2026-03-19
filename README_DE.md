@@ -11,7 +11,7 @@
 
 **[Live-Vorschau](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme that believes text itself is beautiful.  ✍️
+An AI-native Astro theme built around beautiful text.  ✍️
 
 ## Warum Aither?
 
@@ -25,6 +25,7 @@ Klare serifenlose Typografie mit Bricolage Grotesque-Überschriften, ein sorgfä
 - **Dunkelmodus** -- Hell / Dunkel / System-Umschaltung mit localStorage-Persistenz, animiert über die View Transitions API (kreisförmige Enthüllung)
 - **Tailwind CSS v4** -- Utility-first-Styling mit `@theme`-Design-Tokens, einfach anzupassen
 - **11 Sprachen i18n** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
+- **55 lokalisierte Beispielbeiträge** -- Jede Locale enthält dieselben fünf Starter-Beiträge (`11 Locales x 5 Slugs`), damit Demo und Coverage-Checks synchron bleiben
 - **Dynamische OG-Bilder** -- Automatisch generierte Open Graph-Bilder pro Beitrag via Satori + resvg-js
 - **Giscus-Kommentare** -- Kommentarsystem basierend auf GitHub Discussions
 - **Crisp-Chat** -- Optionales Live-Chat-Widget via Crisp
@@ -33,7 +34,7 @@ Klare serifenlose Typografie mit Bricolage Grotesque-Überschriften, ein sorgfä
 - **Paginierung** -- Konfigurierbare Seitengröße für die Blog-Liste
 - **Inhaltsverzeichnis** -- Automatisch aus den Überschriften des Beitrags generiert
 - **Autoreninfo** -- Konfigurierbarer Autorenname und Avatar
-- **AI-native Endpunkte** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json` und `.md`-Endpunkte pro Beitrag
+- **AI-native Endpunkte** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json` und `.md`-Endpunkte pro Beitrag
 - **RSS-Feed** -- Integriertes `/rss.xml` via `@astrojs/rss`
 - **Sitemap** -- Automatisch generiert via `@astrojs/sitemap`
 - **SEO** -- Open Graph-Meta-Tags, kanonische URLs, Beschreibungen pro Beitrag
@@ -63,10 +64,11 @@ pnpm install
 4. Konfigurieren Sie Ihre Seite:
 
 ```bash
-# astro.config.mjs -- Ihre Site-URL festlegen
+# astro.config.mjs -- Ihre Site-URL festlegen (der einzige Ort, an dem Sie die URL setzen müssen)
 site: 'https://your-domain.com'
 
 # src/config/site.ts -- Name, Beschreibung, Social Links, Navigation, Footer festlegen
+# (die URL wird automatisch aus astro.config.mjs gelesen)
 ```
 
 5. Umgebungsvariablen einrichten (optional):
@@ -127,8 +129,33 @@ Ihr Inhalt hier.
 | Befehl | Beschreibung |
 |---|---|
 | `pnpm dev` | Lokalen Entwicklungsserver starten |
+| `pnpm check` | Astro-Typ- und Inhaltsprüfungen ausführen |
+| `pnpm check:post-coverage` | Prüfen, ob jede Locale dieselbe Beitrags-Slug-Abdeckung hat |
 | `pnpm build` | Statische Seite in `dist/` bauen |
+| `pnpm smoke` | Smoke-Tests für AI-Protokoll-Artefakte in `dist/` ausführen |
 | `pnpm preview` | Produktionsbuild lokal vorschauen |
+| `pnpm validate` | `check`, `check:post-coverage`, `build` und `smoke` zusammen ausführen |
+
+## AI-native Protokoll
+
+Für AI- oder Agent-Integrationen empfiehlt sich diese Reihenfolge:
+
+1. `/protocol.json` für ein leichtgewichtiges strukturiertes Manifest
+2. `/skill.md` als kanonischer narrativer Protokolleinstieg
+3. `/agent/home.json` für aktuelle Site-Metadaten und neueste Beiträge
+4. `/policy.md` für Regeln und Sicherheitsgrenzen
+5. `/reading.md` für Lese- und Retrieval-Hinweise
+6. `/subscribe.md` für Monitoring- und Polling-Hinweise
+7. `/auth.md`, um zu bestätigen, dass Schreib-/Auth-Flows derzeit noch reserviert sind
+
+Das Protokoll ist aktuell bewusst schreibgeschützt. Agenten können Markdown entdecken, indexieren, zusammenfassen, abonnieren und abrufen, sollten aber nicht annehmen, dass Posting, Kommentare oder authentifizierte Write-APIs existieren.
+
+Für strengere Integrationen stehen zusätzlich Schema-Endpunkte bereit:
+
+- `/schemas/agent-protocol.schema.json`
+- `/schemas/agent-home.schema.json`
+
+Best Practice: Wenn Sie `protocol.json`, `skill.md`, `agent/home.json` oder andere agentenseitige Markdown-Protokolldokumente ändern, führen Sie mindestens `pnpm smoke` aus.
 
 ## Konfiguration
 
@@ -137,13 +164,13 @@ Ihr Inhalt hier.
 ```typescript
 export const siteConfig = {
   name: 'Aither',
-  title: 'An AI-native Astro theme that believes text itself is beautiful.',
+  title: 'An AI-native Astro theme built around beautiful text.',
   description: '...',
   author: {
     name: 'Aither',
     avatar: '', // Aus src/assets/ importieren für Optimierung, oder URL-String verwenden
   },
-  url: 'https://your-domain.com',
+  // die URL wird automatisch aus astro.config.mjs gelesen und muss hier nicht erneut gesetzt werden
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
@@ -151,7 +178,12 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'system', enableModeSwitch: true },
+  ui: {
+    defaultMode: 'system',
+    defaultStyle: 'default',
+    enableModeSwitch: true,
+    showMoreThemesMenu: true,
+  },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -160,6 +192,8 @@ export const siteConfig = {
   footer: { copyrightYear: 'auto', sections: [/* ... */] },
 };
 ```
+
+Setzen Sie `ui.showMoreThemesMenu` auf `false`, wenn Sie Hell / Dunkel / System beibehalten, aber den Custom-Theme-Picker ausblenden möchten.
 
 ### Astro-Konfiguration (`astro.config.mjs`)
 
@@ -217,15 +251,21 @@ Die Standard-Locale (`en`) hat kein URL-Präfix. Andere Locales verwenden ihren 
 ```
 src/
 ├── config/
-│   └── site.ts              # Site-Name, Social Links, Navigation, Footer, Analytics, Giscus, Crisp
+│   ├── site.ts              # Site-Name, Social Links, Navigation, Footer, Analytics, Giscus, Crisp
+│   └── themes.ts            # Theme-Gruppen und lokalisierte Theme-Labels
 ├── content.config.ts         # Content Collections Schema (Zod)
 ├── i18n/
 │   ├── index.ts              # Locale-Definitionen, getMessages(), Routing-Helpers
 │   └── messages/             # Übersetzungsdateien (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Globales Layout (Head, Navigation, Theme-Wechsler, Analytics)
+├── lib/
+│   └── theme.ts              # Hilfsfunktionen für den Theme-Präferenzzustand
 ├── components/
 │   ├── Navbar.astro          # Bootstrap 3-Stil Gradient-Navbar
+│   ├── NavbarMobile.astro    # Mobile Navigation mit Locale- und Theme-Steuerung
+│   ├── ModeSwitcher.astro    # Desktop-Wechsler für Theme-Modus und -Stil
+│   ├── LanguageSwitcher.astro# Desktop-Wechsler für die Locale
 │   ├── BlogGrid.astro        # Beitrags-Grid mit Paginierung
 │   ├── BlogCard.astro        # Beitragskarte mit Kategorie, Tags, Datum
 │   ├── TableOfContents.astro # Auto-generiertes Inhaltsverzeichnis
@@ -233,8 +273,7 @@ src/
 │   ├── Giscus.astro          # GitHub Discussions Kommentare
 │   ├── Crisp.astro           # Crisp Chat-Widget
 │   ├── Analytics.astro       # Google Analytics Script
-│   ├── Prose.astro           # Typografie-Wrapper für Beitragsinhalte
-│   └── react/                # React-Komponenten (ModeSwitcher, LanguageSwitcher, NavbarMobile)
+│   └── Prose.astro           # Typografie-Wrapper für Beitragsinhalte
 ├── pages/
 │   ├── index.astro           # Startseite (English, Standard-Locale)
 │   ├── about.astro           # Über-Seite

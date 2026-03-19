@@ -11,7 +11,7 @@
 
 **[Live Preview](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme that believes text itself is beautiful.  ✍️
+An AI-native Astro theme built around beautiful text.  ✍️
 
 ## Why Aither?
 
@@ -25,6 +25,7 @@ Clean sans-serif typography with Bricolage Grotesque headings, a carefully tuned
 - **Dark mode** -- Light / Dark / System toggle with localStorage persistence, animated via the View Transitions API circular reveal
 - **Tailwind CSS v4** -- Utility-first styling with `@theme` design tokens, easy to customize
 - **11-language i18n** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
+- **55 localized sample posts** -- Every locale ships with the same five starter posts (`11 locales x 5 slugs`) so demos and coverage checks stay aligned
 - **Dynamic OG images** -- Auto-generated Open Graph images per post via Satori + resvg-js
 - **Giscus comments** -- GitHub Discussions-powered comments on every post
 - **Crisp chat** -- Optional live chat widget via Crisp
@@ -33,7 +34,7 @@ Clean sans-serif typography with Bricolage Grotesque headings, a carefully tuned
 - **Pagination** -- Configurable page size for blog listing
 - **Table of contents** -- Auto-generated from post headings
 - **Author info** -- Configurable author name and avatar displayed on posts
-- **AI-native endpoints** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json`, and per-post `.md` endpoints for LLM discoverability
+- **AI-native endpoints** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, and per-post `.md` endpoints for LLM discoverability
 - **RSS feed** -- Built-in `/rss.xml` via `@astrojs/rss`
 - **Sitemap** -- Auto-generated via `@astrojs/sitemap`
 - **SEO** -- Open Graph meta tags, canonical URLs, per-post descriptions
@@ -129,9 +130,32 @@ Your content here.
 |---|---|
 | `pnpm dev` | Start local dev server |
 | `pnpm check` | Run Astro type and content checks |
+| `pnpm check:post-coverage` | Verify that every locale ships the same post slug coverage |
 | `pnpm build` | Build static site to `dist/` |
+| `pnpm smoke` | Run smoke tests for AI-native protocol artifacts in `dist/` |
 | `pnpm preview` | Preview production build locally |
-| `pnpm validate` | Run `check` and `build` together |
+| `pnpm validate` | Run `check`, `check:post-coverage`, `build`, and protocol smoke tests together |
+
+## AI-Native Protocol
+
+Use these endpoints in this order when building AI or agent integrations:
+
+1. `/protocol.json` for a lightweight structured manifest
+2. `/skill.md` for the canonical narrative protocol entry
+3. `/agent/home.json` for current site metadata and latest posts
+4. `/policy.md` for rules and safety boundaries
+5. `/reading.md` for retrieval guidance
+6. `/subscribe.md` for monitoring and polling guidance
+7. `/auth.md` to confirm that write/auth flows are currently reserved and not active
+
+Today, the protocol is intentionally read-only. Agents can discover, index, summarize, subscribe, and fetch Markdown, but should not assume that posting, commenting, or authenticated write APIs exist.
+
+Schema endpoints are also available for stricter integrations:
+
+- `/schemas/agent-protocol.schema.json`
+- `/schemas/agent-home.schema.json`
+
+Best practice: treat `pnpm smoke` as the minimum guardrail whenever you change `protocol.json`, `skill.md`, `agent/home.json`, or any of the agent-facing Markdown protocol documents.
 
 ## Configuration
 
@@ -140,7 +164,7 @@ Your content here.
 ```typescript
 export const siteConfig = {
   name: 'Aither',
-  title: 'An AI-native Astro theme that believes text itself is beautiful.',
+  title: 'An AI-native Astro theme built around beautiful text.',
   description: '...',
   author: {
     name: 'Aither',
@@ -154,7 +178,12 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'system', enableModeSwitch: true },
+  ui: {
+    defaultMode: 'system',
+    defaultStyle: 'default',
+    enableModeSwitch: true,
+    showMoreThemesMenu: true,
+  },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -163,6 +192,8 @@ export const siteConfig = {
   footer: { copyrightYear: 'auto', sections: [/* ... */] },
 };
 ```
+
+Set `ui.showMoreThemesMenu` to `false` if you want to keep Light / Dark / System switching but hide the custom theme picker.
 
 ### Astro config (`astro.config.mjs`)
 
@@ -220,15 +251,21 @@ The default locale (`en`) has no URL prefix. Other locales use their code as pre
 ```
 src/
 ├── config/
-│   └── site.ts              # Site name, social links, nav, footer, analytics, Giscus, Crisp
+│   ├── site.ts              # Site name, social links, nav, footer, analytics, Giscus, Crisp
+│   └── themes.ts            # Theme groups and localized theme labels
 ├── content.config.ts         # Content Collections schema (Zod)
 ├── i18n/
 │   ├── index.ts              # Locale definitions, getMessages(), routing helpers
 │   └── messages/             # Translation files (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Global layout (head, nav, theme switcher, analytics)
+├── lib/
+│   └── theme.ts              # Theme preference state helpers
 ├── components/
 │   ├── Navbar.astro          # Bootstrap 3-style gradient navbar
+│   ├── NavbarMobile.astro    # Mobile navigation with locale + theme controls
+│   ├── ModeSwitcher.astro    # Desktop theme mode/style switcher
+│   ├── LanguageSwitcher.astro# Desktop locale switcher
 │   ├── BlogGrid.astro        # Post grid with pagination
 │   ├── BlogCard.astro        # Post card with category, tags, date
 │   ├── TableOfContents.astro # Auto-generated TOC from headings
@@ -236,8 +273,7 @@ src/
 │   ├── Giscus.astro          # GitHub Discussions comments
 │   ├── Crisp.astro           # Crisp chat widget
 │   ├── Analytics.astro       # Google Analytics script
-│   ├── Prose.astro           # Typography wrapper for post content
-│   └── react/                # React components (ModeSwitcher, LanguageSwitcher, NavbarMobile)
+│   └── Prose.astro           # Typography wrapper for post content
 ├── pages/
 │   ├── index.astro           # Home (English, default locale)
 │   ├── about.astro           # About page

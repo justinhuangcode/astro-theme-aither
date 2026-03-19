@@ -1,0 +1,190 @@
+---
+title: Memulai dengan Astro-Theme-Aither
+date: 2026-03-14
+category: Tutorial
+description: Semua yang Anda butuhkan untuk memasang, mengatur, menyesuaikan, dan men-deploy Astro-Theme-Aither dalam satu panduan.
+tags: [Guide, Astro]
+pinned: true
+---
+
+Panduan ini membawa Anda dari nol sampai blog multibahasa yang sudah ter-deploy. Baca dari awal sampai akhir atau langsung lompat ke bagian yang dibutuhkan.
+
+## Prasyarat
+
+- [Node.js](https://nodejs.org/) 22 LTS atau lebih baru
+- [pnpm](https://pnpm.io/) 10 atau lebih baru
+- Akun GitHub
+- Akun [Cloudflare](https://cloudflare.com/) untuk deployment
+
+## Instalasi
+
+```bash
+# Clone repositori
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# Install dependensi
+pnpm install
+
+# Jalankan server development
+pnpm dev
+```
+
+Buka `http://localhost:4321` di browser Anda.
+
+## Struktur proyek
+
+```text
+src/
+├── components/        # Komponen Astro dan React
+├── config/site.ts     # Nama situs, navigasi, footer, dan tautan sosial
+├── content/posts/     # Post yang diatur per locale
+├── i18n/              # Terjemahan UI
+├── layouts/           # Layout
+├── lib/               # Utilitas
+├── pages/             # Halaman dan rute
+└── styles/global.css  # Token tema Tailwind v4
+```
+
+## Konfigurasi
+
+### Site Config
+
+`src/config/site.ts` adalah sumber utama konfigurasi situs:
+
+```typescript
+export const siteConfig = {
+  name: 'Nama blog Anda',
+  title: 'Tagline Anda',
+  description: 'Deskripsi situs untuk SEO',
+  author: {
+    name: 'Nama Anda',
+    avatar: '',
+  },
+};
+```
+
+### Variabel lingkungan
+
+```bash
+cp .env.example .env
+```
+
+Biarkan nilai kosong jika ingin menonaktifkan layanan tertentu.
+
+### URL situs
+
+Atur URL produksi di `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+});
+```
+
+## Menulis post
+
+Buat file `.mdx` baru di `src/content/posts/en/`:
+
+```markdown
+---
+title: Post pertama saya
+date: 2026-03-14
+category: General
+description: Ringkasan singkat untuk SEO dan preview sosial.
+tags: [Topic, Another]
+pinned: false
+---
+
+Konten dimulai di sini.
+```
+
+### Referensi frontmatter
+
+| Field | Tipe | Wajib | Deskripsi |
+|------|------|-------|-----------|
+| `title` | string | Ya | Judul post |
+| `date` | date | Ya | Tanggal publikasi |
+| `category` | string | Tidak | Kategori |
+| `description` | string | Tidak | Deskripsi SEO |
+| `tags` | string[] | Tidak | Daftar tag |
+| `pinned` | boolean | Tidak | Menaruh post di atas |
+| `image` | string | Tidak | Gambar cover |
+
+### Komponen MDX
+
+Anda bisa mengimpor komponen langsung di dalam konten:
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+<MyChart data={[10, 20, 30]} />
+```
+
+## Internasionalisasi
+
+Theme ini mendukung 11 locale. Untuk menambahkan versi terjemahan, buat file dengan nama yang sama di folder locale tujuan:
+
+```text
+src/content/posts/en/my-post.mdx
+src/content/posts/id/my-post.mdx
+src/content/posts/zh-hans/my-post.mdx
+```
+
+Teks UI berada di `src/i18n/messages/`.
+
+## Bagian konten kustom
+
+Anda dapat menambahkan koleksi seperti terjemahan, catatan, atau tutorial melalui `src/content.config.ts` dan `src/config/site.ts`. Halaman daftar dan detail akan dibuat otomatis.
+
+## Theming
+
+Sistem theme memiliki dua lapisan:
+
+- mode warna: `light`, `dark`, `system`
+- style theme: `default` atau style bawaan seperti `evolution`
+
+```typescript
+ui: {
+  defaultMode: 'system',
+  defaultStyle: 'default',
+  showMoreThemesMenu: true,
+},
+```
+
+Warna disimpan di `src/styles/global.css`. Secara default theme menggunakan font sans-serif sistem dan font monospace untuk kode.
+
+## SEO dan AI
+
+Setiap halaman sudah menyediakan output berikut:
+
+- `/sitemap-index.xml`
+- `/rss.xml`
+- `/robots.txt`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/posts/slug.md`
+- JSON-LD dan Open Graph
+
+## Deployment
+
+### Cloudflare Pages
+
+Tambahkan secret GitHub berikut:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Workflow yang sudah tersedia akan build dan deploy otomatis ke `main`.
+
+## Perintah yang berguna
+
+| Perintah | Deskripsi |
+|---------|-----------|
+| `pnpm dev` | Menjalankan server development |
+| `pnpm build` | Membuat build produksi |
+| `pnpm preview` | Meninjau build produksi secara lokal |
+
+## Skema versi
+
+Proyek ini menggunakan [CalVer](https://calver.org/) dengan format `YYYY.0M.0D`.

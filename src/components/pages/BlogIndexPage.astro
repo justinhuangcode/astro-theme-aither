@@ -1,10 +1,13 @@
 ---
+import AIAccessList from '@/components/AIAccessList.astro';
+import AudiencePanel from '@/components/AudiencePanel.astro';
 import BlogCard from '@/components/BlogCard.astro';
 import BlogGrid from '@/components/BlogGrid.astro';
 import BlogPagination from '@/components/BlogPagination.astro';
 import Container from '@/components/Container.astro';
+import { siteConfig } from '@/config/site';
 import Layout from '@/layouts/Layout.astro';
-import { getLocaleBasePath, intlLocales, type Locale } from '@/i18n';
+import { getLocaleBasePath, getMessages, intlLocales, type Locale } from '@/i18n';
 import { getSlug, type PostEntry } from '@/lib/posts';
 import { buildWebsiteJsonLd } from '@/lib/site-content';
 
@@ -18,26 +21,354 @@ interface Props {
 const { locale, currentPage, posts, totalPages } = Astro.props;
 const basePath = getLocaleBasePath(locale);
 const websiteJsonLd = buildWebsiteJsonLd(locale);
+const m = getMessages(locale);
+const tabBaseId = `home-tab-${locale}`;
+const readerTabLabel = m.forAgents.humanTab;
+const agentTabLabel = m.forAgents.agentTab;
+const postsSectionLabel = m.blog.allPosts;
+const skillUrl = new URL('/skill.md', siteConfig.url).toString();
+const copyLabels =
+  locale === 'zh-hans'
+    ? { copy: '复制', copied: '已复制' }
+    : locale === 'zh-hant'
+      ? { copy: '複製', copied: '已複製' }
+      : { copy: 'Copy', copied: 'Copied' };
+
+const audienceCopy =
+  locale === 'zh-hans'
+	      ? {
+	          human: {
+			          lead:
+			            '欢迎访问，你可以先浏览下方文章；如果已经有Agent，也可以从skill.md开始 🦞',
+			          highlight: `阅读${skillUrl}，并按其中说明把你的Agent接入Aither`,
+			          steps: [
+			            '把这句话发给你的Agent',
+			            '让它读取skill.md并执行其中说明',
+			          ],
+			        },
+	        agent: {
+	          lead: 'Join Aither 🦞',
+	          highlight: `阅读${skillUrl}，并按其中说明接入Aither`,
+	          steps: [
+	            '先读skill.md',
+	            '按其中说明完成接入',
+	          ],
+	        },
+      }
+    : locale === 'zh-hant'
+	      ? {
+	          human: {
+			            lead:
+			              '歡迎造訪，你可以先瀏覽下方文章；如果已經有Agent，也可以從skill.md開始 🦞',
+			            highlight: `閱讀${skillUrl}，並按其中說明把你的Agent接入Aither`,
+			            steps: [
+			              '把這句話發給你的Agent',
+			              '讓它讀取skill.md並執行其中說明',
+			            ],
+			          },
+			          agent: {
+			            lead:
+			              '把skill.md當作canonical入口，再按需使用protocol.json和下方Markdown列表',
+			            highlight: `閱讀${skillUrl}，並按其中說明接入Aither`,
+			            steps: [
+			              '先讀skill.md',
+			              '按其中說明完成接入',
+			            ],
+	          },
+        }
+	      : {
+	          human: {
+			            lead:
+			              'Welcome in. You can browse the posts below first, and if you already have an <span class="audience-token" lang="en">agent</span>, you can start with <span class="audience-url" lang="en">skill.md</span>',
+			            highlight: `Read <span class="audience-url" lang="en">${skillUrl}</span> and follow the instructions to connect your <span class="audience-token" lang="en">agent</span> to <span class="audience-token" lang="en">Aither</span>`,
+			            steps: [
+			              'Send this to your <span class="audience-token" lang="en">agent</span>',
+			              'Let it read <span class="audience-url" lang="en">skill.md</span> and follow the instructions',
+			            ],
+			          },
+		          agent: {
+		            lead:
+		              'Treat <span class="audience-url" lang="en">skill.md</span> as the canonical entrypoint, then use <span class="audience-url" lang="en">protocol.json</span> and the Markdown list below as needed',
+		            highlight: `Read <span class="audience-url" lang="en">${skillUrl}</span> and follow the instructions to connect to <span class="audience-token" lang="en">Aither</span>`,
+		            steps: [
+		              'Read <span class="audience-url" lang="en">skill.md</span> first',
+		              'Follow the instructions there',
+		            ],
+	          },
+        };
+
 ---
 
 <Layout jsonLd={websiteJsonLd}>
   <Container class="px-4">
-    <div class="mt-8">
-      <BlogGrid>
-        {
-          posts.map((post) => (
-            <BlogCard
-              slug={getSlug(post.id)}
-              title={post.data.title}
-              date={post.data.date}
-              locale={intlLocales[locale]}
-              basePath={basePath}
-              pinned={post.data.pinned}
-            />
-          ))
-        }
-      </BlogGrid>
+    <div class="blog-index-shell mt-8" data-home-tabs>
+      <div class="mx-auto mb-5 flex max-w-[60rem] justify-center" role="tablist" aria-label="Audience views">
+        <button
+          id={`${tabBaseId}-blog-tab`}
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls={`${tabBaseId}-blog-panel`}
+          data-home-tab="blog"
+          class="home-tab inline-flex min-h-[48px] items-center justify-center rounded-xl border px-5 py-3 text-sm font-semibold transition-colors"
+        >
+          <svg
+            aria-hidden="true"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="mr-2 shrink-0"
+          >
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M5 20a7 7 0 0 1 14 0"></path>
+          </svg>
+          <span>{readerTabLabel}</span>
+        </button>
+        <button
+          id={`${tabBaseId}-ai-tab`}
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls={`${tabBaseId}-ai-panel`}
+          tabindex="-1"
+          data-home-tab="ai"
+          class="home-tab inline-flex min-h-[48px] items-center justify-center rounded-xl border px-5 py-3 text-sm font-semibold transition-colors"
+        >
+          <svg
+            aria-hidden="true"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="mr-2 shrink-0"
+          >
+            <path d="M12 3v3"></path>
+            <rect x="4" y="7" width="16" height="11" rx="4"></rect>
+            <circle cx="9" cy="12" r="1"></circle>
+            <circle cx="15" cy="12" r="1"></circle>
+            <path d="M9 15h6"></path>
+          </svg>
+          <span>{agentTabLabel}</span>
+        </button>
+      </div>
+
+      <div
+        id={`${tabBaseId}-blog-panel`}
+        role="tabpanel"
+        aria-labelledby={`${tabBaseId}-blog-tab`}
+        data-home-panel="blog"
+      >
+        <AudiencePanel
+          variant="human"
+          lead={audienceCopy.human.lead}
+          highlight={audienceCopy.human.highlight}
+          steps={audienceCopy.human.steps}
+          copyLabel={copyLabels.copy}
+          copiedLabel={copyLabels.copied}
+        />
+        <h2 class="content-section-heading">{postsSectionLabel}</h2>
+        <BlogGrid>
+          {
+            posts.map((post) => (
+              <BlogCard
+                slug={getSlug(post.id)}
+                title={post.data.title}
+                date={post.data.date}
+                locale={intlLocales[locale]}
+                basePath={basePath}
+                pinned={post.data.pinned}
+              />
+            ))
+          }
+        </BlogGrid>
+      </div>
+
+      <div
+        id={`${tabBaseId}-ai-panel`}
+        role="tabpanel"
+        aria-labelledby={`${tabBaseId}-ai-tab`}
+        data-home-panel="ai"
+        hidden
+      >
+        <AudiencePanel
+          variant="agent"
+          lead={audienceCopy.agent.lead}
+          highlight={audienceCopy.agent.highlight}
+          steps={audienceCopy.agent.steps}
+          copyLabel={copyLabels.copy}
+          copiedLabel={copyLabels.copied}
+        />
+        <h2 class="content-section-heading">{postsSectionLabel}</h2>
+        <AIAccessList locale={locale} posts={posts} />
+      </div>
     </div>
     <BlogPagination currentPage={currentPage} totalPages={totalPages} basePath={basePath || '/'} />
   </Container>
 </Layout>
+
+<style>
+  .blog-index-shell {
+    margin-top: 2.1rem;
+  }
+
+  .blog-index-shell :global(.blog-grid),
+  .blog-index-shell :global(.ai-access-frame),
+  .blog-index-shell :global(.audience-panel-frame) {
+    max-width: 60rem;
+    margin-inline: auto;
+  }
+
+  .blog-index-shell :global(.blog-grid) {
+    margin-bottom: 1.95rem;
+  }
+
+  .blog-index-shell :global(.audience-panel-frame) {
+    max-width: 60rem;
+    margin-bottom: 1.45rem;
+  }
+
+  .content-section-heading {
+    max-width: 60rem;
+    margin: 0 auto 1.35rem;
+    font-size: clamp(1.3rem, 2.1vw, 1.55rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    color: var(--foreground);
+  }
+
+  .home-tab + .home-tab {
+    margin-left: 0.85rem;
+  }
+
+  .home-tab {
+    border-color: color-mix(in srgb, var(--border) 92%, transparent);
+    background: color-mix(in srgb, var(--background) 82%, transparent);
+    color: var(--muted-foreground);
+  }
+
+  .home-tab:hover {
+    border-color: color-mix(in srgb, var(--primary) 20%, var(--border));
+    color: var(--foreground);
+  }
+
+  .home-tab[aria-selected='true'] {
+    border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+    background: color-mix(in srgb, var(--primary) 12%, var(--background));
+    color: var(--primary);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  }
+
+  @media (min-width: 992px) {
+    .blog-index-shell {
+      margin-top: 2.8rem;
+    }
+  }
+</style>
+
+<script>
+  const HOME_VIEW_PARAM = 'tab';
+  const AGENT_VIEW_VALUE = 'agent';
+  type HomeView = 'blog' | 'ai';
+
+  function getRequestedHomeView(): HomeView {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get(HOME_VIEW_PARAM) === AGENT_VIEW_VALUE) return 'ai';
+    return 'blog';
+  }
+
+  document.querySelectorAll('[data-home-tabs]').forEach((root) => {
+    if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const tabs = Array.from(root.querySelectorAll('[data-home-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
+    const paginationLinks = Array.from(document.querySelectorAll('.blog-pagination a'));
+
+    const syncPaginationLinks = (view: HomeView) => {
+      paginationLinks.forEach((link) => {
+        if (!(link instanceof HTMLAnchorElement)) return;
+        const url = new URL(link.href, window.location.origin);
+        if (view === 'ai') {
+          url.searchParams.set(HOME_VIEW_PARAM, AGENT_VIEW_VALUE);
+        } else {
+          url.searchParams.delete(HOME_VIEW_PARAM);
+        }
+        url.hash = '';
+        link.href = `${url.pathname}${url.search}`;
+      });
+    };
+
+    const setView = (view: HomeView, updateUrl = true) => {
+      tabs.forEach((tab) => {
+        if (!(tab instanceof HTMLButtonElement)) return;
+        const active = tab.dataset.homeTab === view;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+
+      panels.forEach((panel) => {
+        if (!(panel instanceof HTMLElement)) return;
+        panel.hidden = panel.dataset.homePanel !== view;
+      });
+
+      syncPaginationLinks(view);
+
+      if (!updateUrl) return;
+
+      const url = new URL(window.location.href);
+      if (view === 'ai') {
+        url.searchParams.set(HOME_VIEW_PARAM, AGENT_VIEW_VALUE);
+      } else {
+        url.searchParams.delete(HOME_VIEW_PARAM);
+      }
+      url.hash = '';
+      window.history.replaceState({}, '', `${url.pathname}${url.search}`);
+    };
+
+    tabs.forEach((tab, index) => {
+      if (!(tab instanceof HTMLButtonElement)) return;
+
+      tab.addEventListener('click', () => {
+        const nextView = tab.dataset.homeTab === 'ai' ? 'ai' : 'blog';
+        setView(nextView);
+      });
+
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') {
+          return;
+        }
+
+        event.preventDefault();
+
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabs.length - 1;
+
+        const nextTab = tabs[nextIndex];
+        if (nextTab instanceof HTMLButtonElement) {
+          nextTab.focus();
+          const nextView = nextTab.dataset.homeTab === 'ai' ? 'ai' : 'blog';
+          setView(nextView);
+        }
+      });
+    });
+
+    window.addEventListener('popstate', () => {
+      setView(getRequestedHomeView(), false);
+    });
+
+    setView(getRequestedHomeView(), false);
+  });
+</script>

@@ -1,0 +1,190 @@
+---
+title: Astro-Theme-Aither 시작하기
+date: 2026-03-14
+category: Tutorial
+description: Astro-Theme-Aither를 설치하고 설정하고 커스터마이징하고 배포하는 데 필요한 내용을 한 페이지에 정리했습니다.
+tags: [Guide, Astro]
+pinned: true
+---
+
+이 가이드는 처음 설정부터 다국어 블로그 배포까지 전체 흐름을 안내합니다. 처음부터 끝까지 읽어도 되고, 필요한 섹션만 바로 찾아가도 됩니다.
+
+## 준비 사항
+
+- [Node.js](https://nodejs.org/) 22 LTS 이상
+- [pnpm](https://pnpm.io/) 10 이상
+- GitHub 계정
+- 배포용 [Cloudflare](https://cloudflare.com/) 계정
+
+## 설치
+
+```bash
+# 저장소 복제
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# 의존성 설치
+pnpm install
+
+# 개발 서버 시작
+pnpm dev
+```
+
+브라우저에서 `http://localhost:4321`을 열면 됩니다.
+
+## 프로젝트 구조
+
+```text
+src/
+├── components/        # Astro 및 React 컴포넌트
+├── config/site.ts     # 사이트 이름, 내비게이션, 푸터, 소셜 링크
+├── content/posts/     # 로케일별 글 콘텐츠
+├── i18n/              # UI 번역
+├── layouts/           # 레이아웃
+├── lib/               # 유틸리티
+├── pages/             # 페이지와 라우트
+└── styles/global.css  # Tailwind v4 테마 토큰
+```
+
+## 설정
+
+### Site Config
+
+`src/config/site.ts`가 사이트 설정의 단일 진실 공급원입니다:
+
+```typescript
+export const siteConfig = {
+  name: '블로그 이름',
+  title: '태그라인',
+  description: 'SEO용 사이트 설명',
+  author: {
+    name: '작성자 이름',
+    avatar: '',
+  },
+};
+```
+
+### 환경 변수
+
+```bash
+cp .env.example .env
+```
+
+값을 비워두면 해당 서비스는 자동으로 비활성화됩니다.
+
+### 사이트 URL
+
+운영 URL은 `astro.config.mjs`에서 설정합니다:
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+});
+```
+
+## 글 작성하기
+
+`src/content/posts/en/` 아래에 새 `.mdx` 파일을 만드세요:
+
+```markdown
+---
+title: 나의 첫 글
+date: 2026-03-14
+category: General
+description: SEO와 소셜 미리보기를 위한 짧은 설명.
+tags: [Topic, Another]
+pinned: false
+---
+
+여기서부터 본문이 시작됩니다.
+```
+
+### Frontmatter 참고
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | 예 | 글 제목 |
+| `date` | date | 예 | 발행일 |
+| `category` | string | 아니오 | 카테고리 |
+| `description` | string | 아니오 | SEO 설명 |
+| `tags` | string[] | 아니오 | 태그 목록 |
+| `pinned` | boolean | 아니오 | 상단 고정 여부 |
+| `image` | string | 아니오 | 커버 이미지 |
+
+### MDX 컴포넌트
+
+콘텐츠 안에서 컴포넌트를 바로 사용할 수 있습니다:
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+<MyChart data={[10, 20, 30]} />
+```
+
+## 국제화
+
+이 테마는 기본적으로 11개 언어를 지원합니다. 번역 글을 추가하려면 대상 로케일 디렉터리에 같은 파일명을 만들면 됩니다:
+
+```text
+src/content/posts/en/my-post.mdx
+src/content/posts/ko/my-post.mdx
+src/content/posts/zh-hans/my-post.mdx
+```
+
+UI 문자열은 `src/i18n/messages/`에 있습니다.
+
+## 커스텀 콘텐츠 섹션
+
+번역, 노트, 튜토리얼 같은 별도 컬렉션은 `src/content.config.ts`와 `src/config/site.ts`에서 등록할 수 있습니다. 그러면 목록 페이지와 상세 페이지가 자동 생성됩니다.
+
+## 테마 설정
+
+테마는 두 층으로 나뉩니다:
+
+- 색상 모드: `light`, `dark`, `system`
+- 스타일 모드: `default` 또는 `evolution` 같은 내장 스타일
+
+```typescript
+ui: {
+  defaultMode: 'system',
+  defaultStyle: 'default',
+  showMoreThemesMenu: true,
+},
+```
+
+색상 토큰은 `src/styles/global.css`에 있고, 기본 본문은 시스템 sans-serif, 코드 영역은 monospace를 사용합니다.
+
+## SEO 및 AI
+
+각 페이지는 다음과 같은 출력물을 기본 제공합니다:
+
+- `/sitemap-index.xml`
+- `/rss.xml`
+- `/robots.txt`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/posts/slug.md`
+- JSON-LD 및 Open Graph
+
+## 배포
+
+### Cloudflare Pages
+
+GitHub Secrets에 아래 값을 추가하세요:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+포함된 workflow가 `main` 브랜치 푸시 시 자동으로 빌드와 배포를 수행합니다.
+
+## 자주 쓰는 명령어
+
+| 명령어 | 설명 |
+|-------|------|
+| `pnpm dev` | 개발 서버 실행 |
+| `pnpm build` | 프로덕션 빌드 생성 |
+| `pnpm preview` | 빌드 결과를 로컬에서 미리보기 |
+
+## 버전 체계
+
+이 프로젝트는 `YYYY.0M.0D` 형식의 [CalVer](https://calver.org/)를 사용합니다.

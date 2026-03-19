@@ -8,8 +8,9 @@ import Footer from '@/components/Footer.astro';
 import ThemeEffects from '@/components/ThemeEffects.astro';
 import Analytics from '@/components/Analytics.astro';
 import Crisp from '@/components/Crisp.astro';
-import LocaleBanner from '@/components/react/LocaleBanner';
+import LocaleBanner from '@/components/LocaleBanner.astro';
 import { siteConfig } from '@/config/site';
+import { CUSTOM_THEME_KEYS } from '@/lib/theme';
 import {
   getLocaleFromUrl,
   getMessages,
@@ -76,7 +77,12 @@ const alternateUrls = locales.map((l) => ({
 
 ---
 
-<html lang={htmlLangs[locale]} class="no-transition">
+<html
+  lang={htmlLangs[locale]}
+  class="no-transition"
+  data-default-mode={siteConfig.ui.defaultMode}
+  data-default-style={siteConfig.ui.defaultStyle}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -120,18 +126,54 @@ const alternateUrls = locales.map((l) => ({
     ) : null}
     <Analytics />
     <Crisp />
-    <script is:inline define:vars={{ defaultMode: siteConfig.ui.defaultMode }}>
+    <script
+      is:inline
+      define:vars={{
+        defaultMode: siteConfig.ui.defaultMode,
+        defaultStyle: siteConfig.ui.defaultStyle,
+        customThemeKeys: CUSTOM_THEME_KEYS,
+      }}
+    >
       (function () {
         try {
-          var theme = localStorage.getItem('theme') || defaultMode;
+          var storedMode = localStorage.getItem('color-mode');
+          var storedStyle = localStorage.getItem('theme-style');
+          var legacyTheme = localStorage.getItem('theme');
+          var mode =
+            storedMode === 'light' || storedMode === 'dark' || storedMode === 'system'
+              ? storedMode
+              : defaultMode;
+          var style =
+            storedStyle && (storedStyle === 'default' || customThemeKeys.indexOf(storedStyle) > -1)
+              ? storedStyle
+              : defaultStyle;
+
+          if (!storedMode && !storedStyle && legacyTheme) {
+            if (legacyTheme === 'light' || legacyTheme === 'dark' || legacyTheme === 'system') {
+              mode = legacyTheme;
+            } else if (customThemeKeys.indexOf(legacyTheme) > -1) {
+              style = legacyTheme;
+            }
+          }
+
           var systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
             .matches
             ? 'dark'
             : 'light';
-          var resolved = theme === 'system' ? systemTheme : theme;
-          document.documentElement.classList.add(resolved);
+          var resolved = mode === 'system' ? systemTheme : mode;
+          var root = document.documentElement;
+
+          root.classList.remove('light', 'dark');
+          root.classList.add(style === 'default' ? resolved : style);
+          root.dataset.mode = resolved;
+          root.dataset.theme = style;
         } catch (e) {
-          document.documentElement.classList.add(defaultMode);
+          var fallbackMode = defaultMode === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : defaultMode;
+          document.documentElement.classList.add(defaultStyle === 'default' ? fallbackMode : defaultStyle);
+          document.documentElement.dataset.mode = fallbackMode;
+          document.documentElement.dataset.theme = defaultStyle;
         }
       })();
     </script>
@@ -142,13 +184,51 @@ const alternateUrls = locales.map((l) => ({
         });
       });
     </script>
+    <script>
+      import {
+        THEME_CHANGE_EVENT,
+        applyThemePreferences,
+        getStoredThemePreferences,
+        isColorMode,
+        isThemeStyle,
+        resolveColorMode,
+        type ColorMode,
+        type ThemeStyle,
+      } from '@/lib/theme';
+
+      const root = document.documentElement;
+      const rawDefaultMode = root.dataset.defaultMode ?? '';
+      const rawDefaultStyle = root.dataset.defaultStyle ?? '';
+      const defaultMode: ColorMode = isColorMode(rawDefaultMode)
+        ? rawDefaultMode
+        : 'system';
+      const defaultStyle: ThemeStyle = isThemeStyle(rawDefaultStyle)
+        ? rawDefaultStyle
+        : 'default';
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const syncSystemTheme = () => {
+        const preferences = getStoredThemePreferences(defaultMode, defaultStyle);
+        if (preferences.mode !== 'system') return;
+
+        applyThemePreferences(preferences);
+        window.dispatchEvent(
+          new CustomEvent(THEME_CHANGE_EVENT, {
+            detail: {
+              ...preferences,
+              resolvedMode: resolveColorMode(preferences.mode),
+            },
+          }),
+        );
+      };
+
+      mediaQuery.addEventListener('change', syncSystemTheme);
+    </script>
   </head>
   <body
     class="font-body antialiased bg-background text-foreground"
     style="font-weight:400"
   >
     <LocaleBanner
-      client:idle
       currentLocale={locale}
       currentPath={Astro.url.pathname}
       allMessages={allBannerMessages}

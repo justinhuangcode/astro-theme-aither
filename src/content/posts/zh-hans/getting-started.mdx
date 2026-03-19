@@ -76,7 +76,9 @@ export const siteConfig = {
 | `social` | 页脚社交链接（GitHub、X、Discord、邮箱、RSS） |
 | `nav` | 导航栏菜单项 |
 | `footer.sections` | 页脚栏目链接 |
-| `ui.defaultMode` | 默认主题：`'light'`、`'dark'` 或 `'system'` |
+| `ui.defaultMode` | 默认显示模式：`'light'`、`'dark'` 或 `'system'` |
+| `ui.defaultStyle` | 默认风格主题：`'default'` 或任意内置风格 key |
+| `ui.showMoreThemesMenu` | 显示或隐藏 `More Themes` 自定义主题选择菜单 |
 | `blog.paginationSize` | 每页文章数（默认：20） |
 | `sections` | 自定义内容分区（见下文） |
 
@@ -246,17 +248,34 @@ category: General
 
 ## 主题定制
 
-### 浅色和深色模式
+### 模式与风格
 
-主题支持三种模式：浅色、深色和系统（跟随操作系统偏好）。默认为 `system`。在 `src/config/site.ts` 中更改：
+主题现在分成两层：
+
+- 显示模式：浅色、深色、系统（跟随操作系统偏好）
+- 风格主题：`default` 或任意内置自定义风格，例如 `evolution`
+
+默认值在 `src/config/site.ts` 中配置：
 
 ```typescript
 ui: {
   defaultMode: 'system', // 'light' | 'dark' | 'system'
+  defaultStyle: 'default', // 'default' | 自定义风格 key
+  showMoreThemesMenu: true, // true 表示显示自定义主题选择器
 },
 ```
 
-主题切换使用 View Transitions API 实现平滑的圆形展开动画。
+选择浅色、深色或系统时，会回到主模式；选择自定义风格时，会保留当前的模式偏好，方便后续切回。主题切换继续使用 View Transitions API，实现平滑的圆形展开动画。
+
+如果你想让主题 UI 更简洁，可以保留模式切换，并把 `showMoreThemesMenu` 设为 `false`。这样会隐藏自定义风格列表，但仍保留浅色 / 深色 / 系统三档切换。
+
+主题展示名和主题 key 是分开的：
+
+- `evolution`、`threebody` 这类主题 key 保持稳定，只用于状态和 CSS 选择
+- 面向用户的主题名称统一集中在 `src/config/themes.ts`
+- 本地化时优先翻译通用描述词；品牌名或强 IP 名称可以按目标语言保留一部分原名
+
+这样既能保证代码层稳定，也能让不同语言下的主题命名更自然。
 
 ### 颜色
 

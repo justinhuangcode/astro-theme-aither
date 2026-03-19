@@ -1,0 +1,217 @@
+---
+title: Erste Schritte mit Astro-Theme-Aither
+date: 2026-03-14
+category: Tutorial
+description: Alles, was Sie zum Installieren, Konfigurieren, Anpassen und Deployen von Astro-Theme-Aither brauchen, auf einer Seite.
+tags: [Guide, Astro]
+pinned: true
+---
+
+Diese Anleitung bringt Sie von null bis zu einem bereitgestellten, mehrsprachigen Blog. Lesen Sie alles der Reihe nach oder springen Sie direkt zum Abschnitt, den Sie gerade brauchen.
+
+## Voraussetzungen
+
+- [Node.js](https://nodejs.org/) 22 LTS oder neuer
+- [pnpm](https://pnpm.io/) 10 oder neuer
+- Ein GitHub-Konto
+- Ein [Cloudflare](https://cloudflare.com/) Konto (für das Deployment)
+
+## Installation
+
+```bash
+# Repository klonen
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# Abhängigkeiten installieren
+pnpm install
+
+# Entwicklungsserver starten
+pnpm dev
+```
+
+Öffnen Sie anschließend `http://localhost:4321` im Browser.
+
+## Projektstruktur
+
+```text
+src/
+├── components/        # Astro- und React-Komponenten
+├── config/site.ts     # Name, Navigation, Footer, Social Links
+├── content/posts/     # Beiträge nach Locale
+├── i18n/              # UI-Übersetzungen
+├── layouts/           # Layout-Komponenten
+├── lib/               # Hilfsfunktionen
+├── pages/             # Seiten und Routen
+└── styles/global.css  # Tailwind-v4-Token
+```
+
+## Konfiguration
+
+### Site Config
+
+`src/config/site.ts` ist die zentrale Konfigurationsdatei für den gesamten Blog:
+
+```typescript
+export const siteConfig = {
+  name: 'Ihr Blogname',
+  title: 'Ihr Untertitel',
+  description: 'Ihre SEO-Beschreibung',
+  author: {
+    name: 'Ihr Name',
+    avatar: '',
+  },
+};
+```
+
+Wichtige Bereiche:
+
+| Bereich | Funktion |
+|--------|----------|
+| `name` | Seitentitel in Navigation und Footer |
+| `social` | Footer-Links wie GitHub, X, Discord, E-Mail und RSS |
+| `nav` | Einträge der Hauptnavigation |
+| `footer.sections` | Linkspalten im Footer |
+| `ui.defaultMode` | Standardmodus: `light`, `dark` oder `system` |
+| `ui.defaultStyle` | Standardstil wie `default` oder `evolution` |
+| `ui.showMoreThemesMenu` | Zeigt oder versteckt den More-Themes-Menüpunkt |
+| `blog.paginationSize` | Beiträge pro Seite |
+| `sections` | Eigene Inhaltssammlungen |
+
+### Umgebungsvariablen
+
+```bash
+cp .env.example .env
+```
+
+Leere Variablen deaktivieren die jeweilige Integration automatisch.
+
+| Variable | Dienst | Erforderlich |
+|---------|--------|--------------|
+| `PUBLIC_GA_ID` | Google Analytics | Nein |
+| `PUBLIC_CRISP_WEBSITE_ID` | Crisp Chat | Nein |
+| `PUBLIC_GISCUS_REPO` | Giscus | Nein |
+| `PUBLIC_GISCUS_REPO_ID` | Giscus | Nein |
+| `PUBLIC_GISCUS_CATEGORY` | Giscus | Nein |
+| `PUBLIC_GISCUS_CATEGORY_ID` | Giscus | Nein |
+
+### Site URL
+
+Die Produktions-URL wird in `astro.config.mjs` gesetzt:
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+});
+```
+
+## Beiträge schreiben
+
+Erstellen Sie eine neue `.mdx`-Datei in `src/content/posts/en/`:
+
+```markdown
+---
+title: Mein erster Beitrag
+date: 2026-03-14
+category: General
+description: Kurze Zusammenfassung für SEO und Social Previews.
+tags: [Topic, Another]
+pinned: false
+---
+
+Ihr Inhalt beginnt hier.
+```
+
+### Frontmatter-Referenz
+
+| Feld | Typ | Pflicht | Beschreibung |
+|-----|-----|---------|--------------|
+| `title` | string | Ja | Beitragstitel |
+| `date` | date | Ja | Veröffentlichungsdatum |
+| `category` | string | Nein | Einzelne Kategorie |
+| `description` | string | Nein | SEO-Beschreibung |
+| `tags` | string[] | Nein | Schlagwörter |
+| `pinned` | boolean | Nein | Beitrag oben anheften |
+| `image` | string | Nein | Titelbild |
+
+### MDX-Komponenten
+
+MDX erlaubt das Einbinden interaktiver Komponenten direkt im Inhalt:
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+<MyChart data={[10, 20, 30]} />
+```
+
+## Internationalisierung
+
+Das Theme unterstützt standardmäßig 11 Sprachen, darunter Englisch, vereinfachtes Chinesisch, traditionelles Chinesisch, Deutsch, Französisch, Italienisch, Spanisch, Russisch, Koreanisch, Indonesisch und brasilianisches Portugiesisch.
+
+Für eine übersetzte Version legen Sie dieselbe Datei im Zielordner an:
+
+```text
+src/content/posts/en/my-post.mdx
+src/content/posts/de/my-post.mdx
+src/content/posts/zh-hans/my-post.mdx
+```
+
+UI-Texte liegen in `src/i18n/messages/`.
+
+## Eigene Inhaltsbereiche
+
+Zusätzliche Sammlungen wie Übersetzungen, Notizen oder Tutorials lassen sich über `src/content.config.ts` und `src/config/site.ts` registrieren. Danach werden Listen-, Detailseiten und Navigationseinträge automatisch erzeugt.
+
+## Theming
+
+Es gibt zwei Ebenen:
+
+- Farbmodus: `light`, `dark`, `system`
+- Stilmodus: `default` oder ein eingebauter Stil wie `evolution`
+
+In `src/config/site.ts`:
+
+```typescript
+ui: {
+  defaultMode: 'system',
+  defaultStyle: 'default',
+  showMoreThemesMenu: true,
+},
+```
+
+Farben kommen aus CSS-Variablen in `src/styles/global.css`. Standardmäßig nutzt das Theme einen System-Sans-Stack; Code und Protokollflächen verwenden eine Monospace-Schrift.
+
+## SEO und AI
+
+Jede Seite liefert bereits die wichtigsten Maschinen- und SEO-Schnittstellen:
+
+- `/sitemap-index.xml`
+- `/rss.xml`
+- `/robots.txt`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/posts/slug.md`
+- JSON-LD und Open-Graph-Metadaten
+
+## Deployment
+
+### Cloudflare Pages
+
+Richten Sie diese GitHub-Secrets ein:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Danach baut und deployt der vorhandene Workflow automatisch bei Pushes auf `main`.
+
+## Nützliche Befehle
+
+| Befehl | Beschreibung |
+|-------|--------------|
+| `pnpm dev` | Lokalen Entwicklungsserver starten |
+| `pnpm build` | Produktions-Build erstellen |
+| `pnpm preview` | Produktions-Build lokal testen |
+
+## Versionsschema
+
+Dieses Projekt verwendet [CalVer](https://calver.org/) im Format `YYYY.0M.0D`.
