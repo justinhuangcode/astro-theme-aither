@@ -1,0 +1,190 @@
+---
+title: Astro-Theme-Aither 使用指南
+date: 2026-03-14
+category: Tutorial
+description: 安裝、設定、自訂與部署 Astro-Theme-Aither 所需的一切，都在這一篇文章裡。
+tags: [Guide, Astro]
+pinned: true
+---
+
+本指南涵蓋從零開始到完成部署多語言部落格的完整流程。你可以從頭讀到尾，也可以直接跳到需要的章節。
+
+## 前置條件
+
+- [Node.js](https://nodejs.org/) 22 LTS 或更新版本
+- [pnpm](https://pnpm.io/) 10 或更新版本
+- 一個 GitHub 帳號
+- 一個 [Cloudflare](https://cloudflare.com/) 帳號（用於部署）
+
+## 安裝
+
+```bash
+# 複製倉庫
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# 安裝相依套件
+pnpm install
+
+# 啟動開發伺服器
+pnpm dev
+```
+
+接著在瀏覽器中打開 `http://localhost:4321`。
+
+## 專案結構
+
+```text
+src/
+├── components/        # Astro 與 React 元件
+├── config/site.ts     # 站點名稱、導覽、頁尾、社群連結
+├── content/posts/     # 依語系組織的文章內容
+├── i18n/              # UI 文字翻譯
+├── layouts/           # 版面元件
+├── lib/               # 工具函式
+├── pages/             # 路由頁面
+└── styles/global.css  # Tailwind v4 主題 token
+```
+
+## 設定
+
+### 站點設定
+
+`src/config/site.ts` 是整個站點的單一設定來源：
+
+```typescript
+export const siteConfig = {
+  name: '你的部落格名稱',
+  title: '你的標語',
+  description: '你的站點 SEO 描述',
+  author: {
+    name: '你的名字',
+    avatar: '',
+  },
+};
+```
+
+### 環境變數
+
+```bash
+cp .env.example .env
+```
+
+如果某個變數留空，對應服務就會自動停用。
+
+### 站點 URL
+
+在 `astro.config.mjs` 中設定正式網址：
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+});
+```
+
+## 撰寫文章
+
+在 `src/content/posts/en/` 下建立新的 `.mdx` 檔案：
+
+```markdown
+---
+title: 我的第一篇文章
+date: 2026-03-14
+category: General
+description: 用於 SEO 與社群預覽的簡短摘要。
+tags: [Topic, Another]
+pinned: false
+---
+
+正文從這裡開始。
+```
+
+### Frontmatter 參考
+
+| 欄位 | 型別 | 必填 | 說明 |
+|------|------|------|------|
+| `title` | string | 是 | 文章標題 |
+| `date` | date | 是 | 發布日期 |
+| `category` | string | 否 | 分類 |
+| `description` | string | 否 | SEO 描述 |
+| `tags` | string[] | 否 | 標籤列表 |
+| `pinned` | boolean | 否 | 是否置頂 |
+| `image` | string | 否 | 封面圖片 |
+
+### MDX 元件
+
+你可以在內容中直接匯入互動元件：
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+<MyChart data={[10, 20, 30]} />
+```
+
+## 國際化
+
+主題預設支援 11 種語言。要新增翻譯文章，只要在目標語系資料夾建立同名檔案：
+
+```text
+src/content/posts/en/my-post.mdx
+src/content/posts/zh-hant/my-post.mdx
+src/content/posts/fr/my-post.mdx
+```
+
+UI 文字位於 `src/i18n/messages/`。
+
+## 自訂內容分區
+
+你可以透過 `src/content.config.ts` 與 `src/config/site.ts` 增加翻譯、筆記、教學等自訂集合。之後列表頁、詳情頁與導覽入口都會自動生成。
+
+## 主題樣式
+
+系統分成兩層：
+
+- 顏色模式：`light`、`dark`、`system`
+- 風格樣式：`default` 或內建樣式如 `evolution`
+
+```typescript
+ui: {
+  defaultMode: 'system',
+  defaultStyle: 'default',
+  showMoreThemesMenu: true,
+},
+```
+
+顏色 token 位於 `src/styles/global.css`。預設字型為系統 sans-serif，程式碼區塊則使用 monospace。
+
+## SEO 與 AI
+
+每個頁面都已內建以下輸出：
+
+- `/sitemap-index.xml`
+- `/rss.xml`
+- `/robots.txt`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/posts/slug.md`
+- JSON-LD 與 Open Graph
+
+## 部署
+
+### Cloudflare Pages
+
+請在 GitHub Secrets 中設定：
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+內建 workflow 會在 push 到 `main` 時自動建置並部署。
+
+## 常用指令
+
+| 指令 | 說明 |
+|------|------|
+| `pnpm dev` | 啟動本地開發伺服器 |
+| `pnpm build` | 建立正式環境 build |
+| `pnpm preview` | 在本機預覽 production build |
+
+## 版本方案
+
+本專案使用 [CalVer](https://calver.org/) 格式：`YYYY.0M.0D`。

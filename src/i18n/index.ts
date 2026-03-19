@@ -80,8 +80,8 @@ export function translateCategory(key: string, locale: string = 'en'): string {
 /** Map internal locale to Intl/BCP-47 locale for date formatting etc. */
 export const intlLocales: Record<Locale, string> = {
   en: 'en-US',
-  'zh-hans': 'zh-CN',
-  'zh-hant': 'zh-TW',
+  'zh-hans': 'zh-Hans',
+  'zh-hant': 'zh-Hant',
   ko: 'ko-KR',
   fr: 'fr-FR',
   de: 'de-DE',
@@ -95,8 +95,8 @@ export const intlLocales: Record<Locale, string> = {
 /** Map internal locale to HTML lang attribute / inLanguage value */
 export const htmlLangs: Record<Locale, string> = {
   en: 'en',
-  'zh-hans': 'zh-CN',
-  'zh-hant': 'zh-TW',
+  'zh-hans': 'zh-Hans',
+  'zh-hant': 'zh-Hant',
   ko: 'ko',
   fr: 'fr',
   de: 'de',

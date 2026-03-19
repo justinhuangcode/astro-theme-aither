@@ -11,7 +11,7 @@
 
 **[Pratinjau Langsung](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme that believes text itself is beautiful.  ✍️
+An AI-native Astro theme built around beautiful text.  ✍️
 
 ## Mengapa Aither?
 
@@ -25,6 +25,7 @@ Tipografi sans-serif yang bersih dengan heading Bricolage Grotesque, ritme baca 
 - **Mode gelap** -- Toggle Terang / Gelap / Sistem dengan persistensi localStorage, dianimasikan melalui View Transitions API (reveal melingkar)
 - **Tailwind CSS v4** -- Styling utility-first dengan token desain `@theme`, mudah dikustomisasi
 - **i18n 11 bahasa** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
+- **55 artikel contoh terlokalisasi** -- Setiap locale membawa 5 artikel awal yang sama (`11 locale x 5 slug`) agar demo dan pemeriksaan cakupan selalu sinkron
 - **Gambar OG dinamis** -- Gambar Open Graph yang dihasilkan otomatis per artikel melalui Satori + resvg-js
 - **Komentar Giscus** -- Sistem komentar berbasis GitHub Discussions
 - **Chat Crisp** -- Widget chat langsung opsional melalui Crisp
@@ -33,7 +34,7 @@ Tipografi sans-serif yang bersih dengan heading Bricolage Grotesque, ritme baca 
 - **Paginasi** -- Ukuran halaman yang dapat dikonfigurasi untuk daftar blog
 - **Daftar isi** -- Dihasilkan otomatis dari heading artikel
 - **Info penulis** -- Nama dan avatar penulis yang dapat dikonfigurasi
-- **Endpoint AI-native** -- `/llms.txt`, `/llms-full.txt`, `/skill.md`, `/api/posts.json`, dan endpoint `.md` per artikel
+- **Endpoint AI-native** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, dan endpoint `.md` per artikel
 - **Feed RSS** -- `/rss.xml` bawaan melalui `@astrojs/rss`
 - **Sitemap** -- Dihasilkan otomatis melalui `@astrojs/sitemap`
 - **SEO** -- Tag Open Graph, URL kanonik, deskripsi per artikel
@@ -63,10 +64,11 @@ pnpm install
 4. Konfigurasi situs Anda:
 
 ```bash
-# astro.config.mjs -- atur URL situs Anda
+# astro.config.mjs -- atur URL situs Anda (satu-satunya tempat Anda perlu mengatur URL)
 site: 'https://your-domain.com'
 
 # src/config/site.ts -- atur nama, deskripsi, tautan sosial, navigasi, footer
+# (url akan otomatis dibaca dari astro.config.mjs)
 ```
 
 5. Atur variabel lingkungan (opsional):
@@ -127,8 +129,33 @@ Konten Anda di sini.
 | Perintah | Deskripsi |
 |---|---|
 | `pnpm dev` | Mulai server pengembangan lokal |
+| `pnpm check` | Jalankan pemeriksaan tipe dan konten Astro |
+| `pnpm check:post-coverage` | Verifikasi bahwa setiap locale memiliki cakupan slug artikel yang sama |
 | `pnpm build` | Bangun situs statis ke `dist/` |
+| `pnpm smoke` | Jalankan smoke test untuk artefak protokol AI di `dist/` |
 | `pnpm preview` | Pratinjau build produksi secara lokal |
+| `pnpm validate` | Jalankan `check`, `check:post-coverage`, `build`, dan `smoke` sekaligus |
+
+## Protokol AI-native
+
+Jika Anda membangun integrasi AI atau agent, urutan baca yang disarankan adalah:
+
+1. `/protocol.json` untuk manifes terstruktur yang ringan
+2. `/skill.md` sebagai titik masuk naratif canonical untuk protokol
+3. `/agent/home.json` untuk metadata situs saat ini dan artikel terbaru
+4. `/policy.md` untuk aturan dan batas keamanan
+5. `/reading.md` untuk panduan membaca / retrieval
+6. `/subscribe.md` untuk monitoring dan polling
+7. `/auth.md` untuk memastikan alur tulis / autentikasi masih berstatus reserved
+
+Saat ini protokol sengaja dibuat read-only. Agent dapat menemukan, mengindeks, merangkum, berlangganan, dan mengambil Markdown, tetapi tidak boleh berasumsi bahwa posting, komentar, atau write API terautentikasi sudah tersedia.
+
+Endpoint schema juga tersedia untuk integrasi yang lebih ketat:
+
+- `/schemas/agent-protocol.schema.json`
+- `/schemas/agent-home.schema.json`
+
+Best practice: jika Anda mengubah `protocol.json`, `skill.md`, `agent/home.json`, atau dokumen Markdown lain yang ditujukan untuk agent, minimal jalankan `pnpm smoke`.
 
 ## Konfigurasi
 
@@ -137,13 +164,13 @@ Konten Anda di sini.
 ```typescript
 export const siteConfig = {
   name: 'Aither',
-  title: 'An AI-native Astro theme that believes text itself is beautiful.',
+  title: 'An AI-native Astro theme built around beautiful text.',
   description: '...',
   author: {
     name: 'Aither',
     avatar: '', // Import dari src/assets/ untuk optimisasi, atau gunakan string URL
   },
-  url: 'https://your-domain.com',
+  // url dibaca otomatis dari astro.config.mjs, jadi tidak perlu diulang di sini
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
@@ -151,7 +178,12 @@ export const siteConfig = {
   blog: { paginationSize: 20 },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: { defaultMode: 'system', enableModeSwitch: true },
+  ui: {
+    defaultMode: 'system',
+    defaultStyle: 'default',
+    enableModeSwitch: true,
+    showMoreThemesMenu: true,
+  },
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -160,6 +192,8 @@ export const siteConfig = {
   footer: { copyrightYear: 'auto', sections: [/* ... */] },
 };
 ```
+
+Setel `ui.showMoreThemesMenu` ke `false` jika Anda ingin mempertahankan toggle Terang / Gelap / Sistem tetapi menyembunyikan pemilih tema kustom.
 
 ### Konfigurasi Astro (`astro.config.mjs`)
 
@@ -217,15 +251,21 @@ Locale default (`en`) tidak memiliki prefiks URL. Locale lainnya menggunakan kod
 ```
 src/
 ├── config/
-│   └── site.ts              # Nama situs, tautan sosial, navigasi, footer, analytics, Giscus, Crisp
+│   ├── site.ts              # Nama situs, tautan sosial, navigasi, footer, analytics, Giscus, Crisp
+│   └── themes.ts            # Grup tema dan label tema yang dilokalkan
 ├── content.config.ts         # Skema Content Collections (Zod)
 ├── i18n/
 │   ├── index.ts              # Definisi locale, getMessages(), helper routing
 │   └── messages/             # File terjemahan (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
 ├── layouts/
 │   └── Layout.astro          # Layout global (head, navigasi, pengalih tema, analytics)
+├── lib/
+│   └── theme.ts              # Helper status preferensi tema
 ├── components/
 │   ├── Navbar.astro          # Navbar gaya Bootstrap 3 dengan gradien
+│   ├── NavbarMobile.astro    # Navigasi mobile dengan kontrol locale dan tema
+│   ├── ModeSwitcher.astro    # Pengalih mode/gaya tema desktop
+│   ├── LanguageSwitcher.astro# Pengalih locale desktop
 │   ├── BlogGrid.astro        # Grid artikel dengan paginasi
 │   ├── BlogCard.astro        # Kartu artikel dengan kategori, tag, tanggal
 │   ├── TableOfContents.astro # Daftar isi yang dihasilkan otomatis
@@ -233,8 +273,7 @@ src/
 │   ├── Giscus.astro          # Komentar GitHub Discussions
 │   ├── Crisp.astro           # Widget chat Crisp
 │   ├── Analytics.astro       # Skrip Google Analytics
-│   ├── Prose.astro           # Wrapper tipografi untuk konten
-│   └── react/                # Komponen React (ModeSwitcher, LanguageSwitcher, NavbarMobile)
+│   └── Prose.astro           # Wrapper tipografi untuk konten
 ├── pages/
 │   ├── index.astro           # Beranda (English, locale default)
 │   ├── about.astro           # Halaman Tentang

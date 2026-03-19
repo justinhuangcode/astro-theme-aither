@@ -1,0 +1,190 @@
+---
+title: Primeiros passos com Astro-Theme-Aither
+date: 2026-03-14
+category: Tutorial
+description: Tudo o que você precisa para instalar, configurar, personalizar e publicar o Astro-Theme-Aither em um só guia.
+tags: [Guide, Astro]
+pinned: true
+---
+
+Este guia leva você do zero até um blog multilíngue publicado. Leia tudo com calma ou pule direto para a seção que precisa agora.
+
+## Pré-requisitos
+
+- [Node.js](https://nodejs.org/) 22 LTS ou superior
+- [pnpm](https://pnpm.io/) 10 ou superior
+- Uma conta no GitHub
+- Uma conta na [Cloudflare](https://cloudflare.com/) para deploy
+
+## Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# Instale as dependências
+pnpm install
+
+# Inicie o servidor de desenvolvimento
+pnpm dev
+```
+
+Depois, abra `http://localhost:4321`.
+
+## Estrutura do projeto
+
+```text
+src/
+├── components/        # Componentes Astro e React
+├── config/site.ts     # Nome do site, navegação, rodapé e links sociais
+├── content/posts/     # Posts organizados por locale
+├── i18n/              # Traduções da interface
+├── layouts/           # Layouts
+├── lib/               # Utilitários
+├── pages/             # Páginas e rotas
+└── styles/global.css  # Tokens de tema do Tailwind v4
+```
+
+## Configuração
+
+### Site Config
+
+`src/config/site.ts` é a fonte única de configuração do site:
+
+```typescript
+export const siteConfig = {
+  name: 'Nome do seu blog',
+  title: 'Seu slogan',
+  description: 'Sua descrição para SEO',
+  author: {
+    name: 'Seu nome',
+    avatar: '',
+  },
+};
+```
+
+### Variáveis de ambiente
+
+```bash
+cp .env.example .env
+```
+
+Se alguma variável ficar vazia, a integração correspondente será desativada automaticamente.
+
+### URL do site
+
+Defina a URL de produção em `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+});
+```
+
+## Escrevendo posts
+
+Crie um arquivo `.mdx` em `src/content/posts/en/`:
+
+```markdown
+---
+title: Meu primeiro post
+date: 2026-03-14
+category: General
+description: Um resumo curto para SEO e previews sociais.
+tags: [Topic, Another]
+pinned: false
+---
+
+Seu conteúdo começa aqui.
+```
+
+### Referência de frontmatter
+
+| Campo | Tipo | Obrigatório | Descrição |
+|------|------|-------------|-----------|
+| `title` | string | Sim | Título do post |
+| `date` | date | Sim | Data de publicação |
+| `category` | string | Não | Categoria |
+| `description` | string | Não | Descrição SEO |
+| `tags` | string[] | Não | Lista de tags |
+| `pinned` | boolean | Não | Fixar no topo |
+| `image` | string | Não | Imagem de capa |
+
+### Componentes MDX
+
+Você pode importar componentes diretamente dentro do conteúdo:
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+<MyChart data={[10, 20, 30]} />
+```
+
+## Internacionalização
+
+O tema suporta 11 idiomas por padrão. Para adicionar uma tradução, crie o mesmo nome de arquivo na pasta da locale desejada:
+
+```text
+src/content/posts/en/my-post.mdx
+src/content/posts/pt-br/my-post.mdx
+src/content/posts/zh-hans/my-post.mdx
+```
+
+Os textos de interface ficam em `src/i18n/messages/`.
+
+## Seções de conteúdo personalizadas
+
+Você pode registrar coleções como traduções, notas ou tutoriais em `src/content.config.ts` e `src/config/site.ts`. As páginas de lista e detalhe serão geradas automaticamente.
+
+## Temas
+
+O sistema funciona em duas camadas:
+
+- modo de cor: `light`, `dark`, `system`
+- estilo visual: `default` ou estilos integrados como `evolution`
+
+```typescript
+ui: {
+  defaultMode: 'system',
+  defaultStyle: 'default',
+  showMoreThemesMenu: true,
+},
+```
+
+As cores ficam em `src/styles/global.css`. A fonte padrão é uma pilha sans-serif do sistema, com monospace para blocos de código.
+
+## SEO e AI
+
+Cada página já expõe estas saídas:
+
+- `/sitemap-index.xml`
+- `/rss.xml`
+- `/robots.txt`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/posts/slug.md`
+- JSON-LD e Open Graph
+
+## Deploy
+
+### Cloudflare Pages
+
+Configure estes secrets no GitHub:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+O workflow incluído faz build e deploy automaticamente nos pushes para `main`.
+
+## Comandos úteis
+
+| Comando | Descrição |
+|--------|-----------|
+| `pnpm dev` | Inicia o servidor de desenvolvimento |
+| `pnpm build` | Gera a build de produção |
+| `pnpm preview` | Faz preview local da build |
+
+## Esquema de versão
+
+Este projeto usa [CalVer](https://calver.org/) no formato `YYYY.0M.0D`.

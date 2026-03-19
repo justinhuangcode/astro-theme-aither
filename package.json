@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
+    "check:post-coverage": "node ./scripts/check-post-coverage.mjs",
     "build": "astro build",
+    "smoke": "node ./scripts/smoke-agent-protocol.mjs",
     "preview": "astro preview",
-    "validate": "pnpm check && pnpm build",
+    "validate": "pnpm check && pnpm check:post-coverage && pnpm build && pnpm smoke",
     "astro": "astro"
   },
   "dependencies": {
@@ -17,18 +19,14 @@
     "@astrojs/react": "^5.0.0",
     "@astrojs/rss": "^4.0.17",
     "@astrojs/sitemap": "^3.7.1",
-    "@base-ui/react": "^1.0.0",
     "@fontsource/bricolage-grotesque": "^5.1.1",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.8",
     "astro": "^6.0.4",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "satori": "^0.25.0",
-    "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.8",
     "tw-animate-css": "^1.3.4"
   },

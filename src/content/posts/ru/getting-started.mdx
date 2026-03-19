@@ -1,0 +1,190 @@
+---
+title: Начало работы с Astro-Theme-Aither
+date: 2026-03-14
+category: Tutorial
+description: Всё, что нужно для установки, настройки, кастомизации и деплоя Astro-Theme-Aither, на одной странице.
+tags: [Guide, Astro]
+pinned: true
+---
+
+Это руководство проведёт вас от пустого проекта до опубликованного многоязычного блога. Его можно читать по порядку или сразу перейти к нужному разделу.
+
+## Что понадобится
+
+- [Node.js](https://nodejs.org/) 22 LTS или новее
+- [pnpm](https://pnpm.io/) 10 или новее
+- Аккаунт GitHub
+- Аккаунт [Cloudflare](https://cloudflare.com/) для деплоя
+
+## Установка
+
+```bash
+# Клонировать репозиторий
+git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+cd my-blog
+
+# Установить зависимости
+pnpm install
+
+# Запустить dev-сервер
+pnpm dev
+```
+
+После этого откройте `http://localhost:4321`.
+
+## Структура проекта
+
+```text
+src/
+├── components/        # Компоненты Astro и React
+├── config/site.ts     # Название сайта, навигация, footer, соцссылки
+├── content/posts/     # Посты по локалям
+├── i18n/              # Переводы интерфейса
+├── layouts/           # Layout-компоненты
+├── lib/               # Утилиты
+├── pages/             # Страницы и маршруты
+└── styles/global.css  # Токены темы Tailwind v4
+```
+
+## Настройка
+
+### Site Config
+
+`src/config/site.ts` — главный источник конфигурации сайта:
+
+```typescript
+export const siteConfig = {
+  name: 'Название вашего блога',
+  title: 'Ваш слоган',
+  description: 'Описание сайта для SEO',
+  author: {
+    name: 'Ваше имя',
+    avatar: '',
+  },
+};
+```
+
+### Переменные окружения
+
+```bash
+cp .env.example .env
+```
+
+Пустые значения просто отключают соответствующую интеграцию.
+
+### URL сайта
+
+Продакшн-адрес задаётся в `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  site: 'https://your-domain.pages.dev',
+});
+```
+
+## Написание статей
+
+Создайте новый `.mdx` файл в `src/content/posts/en/`:
+
+```markdown
+---
+title: Моя первая статья
+date: 2026-03-14
+category: General
+description: Краткое описание для SEO и соцсетей.
+tags: [Topic, Another]
+pinned: false
+---
+
+Здесь начинается ваш контент.
+```
+
+### Поля frontmatter
+
+| Поле | Тип | Обязательно | Описание |
+|------|-----|-------------|----------|
+| `title` | string | Да | Заголовок статьи |
+| `date` | date | Да | Дата публикации |
+| `category` | string | Нет | Категория |
+| `description` | string | Нет | SEO-описание |
+| `tags` | string[] | Нет | Список тегов |
+| `pinned` | boolean | Нет | Закрепить наверху |
+| `image` | string | Нет | Обложка |
+
+### MDX-компоненты
+
+В контент можно импортировать интерактивные компоненты:
+
+```mdx
+import MyChart from '@/components/MyChart'
+
+<MyChart data={[10, 20, 30]} />
+```
+
+## Интернационализация
+
+Тема поддерживает 11 языков из коробки. Чтобы добавить перевод статьи, создайте файл с тем же именем в нужной локали:
+
+```text
+src/content/posts/en/my-post.mdx
+src/content/posts/ru/my-post.mdx
+src/content/posts/zh-hans/my-post.mdx
+```
+
+Тексты интерфейса находятся в `src/i18n/messages/`.
+
+## Пользовательские разделы контента
+
+Можно добавить отдельные коллекции вроде переводов, заметок или туториалов через `src/content.config.ts` и `src/config/site.ts`. После этого страницы списков и деталей создадутся автоматически.
+
+## Темы и режимы
+
+Система состоит из двух уровней:
+
+- цветовой режим: `light`, `dark`, `system`
+- стиль темы: `default` или встроенный стиль вроде `evolution`
+
+```typescript
+ui: {
+  defaultMode: 'system',
+  defaultStyle: 'default',
+  showMoreThemesMenu: true,
+},
+```
+
+Цветовые токены находятся в `src/styles/global.css`. По умолчанию используется системный sans-serif стек, а для кода — monospace.
+
+## SEO и AI
+
+Каждая страница уже предоставляет:
+
+- `/sitemap-index.xml`
+- `/rss.xml`
+- `/robots.txt`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/posts/slug.md`
+- JSON-LD и Open Graph
+
+## Деплой
+
+### Cloudflare Pages
+
+Добавьте в GitHub Secrets:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Встроенный workflow будет автоматически собирать и публиковать сайт при push в `main`.
+
+## Полезные команды
+
+| Команда | Описание |
+|--------|----------|
+| `pnpm dev` | Запустить локальный dev-сервер |
+| `pnpm build` | Собрать production-версию |
+| `pnpm preview` | Просмотреть production-сборку локально |
+
+## Схема версий
+
+Проект использует [CalVer](https://calver.org/) в формате `YYYY.0M.0D`.

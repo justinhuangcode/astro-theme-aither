@@ -24,32 +24,32 @@ const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 {
   totalPages > 1 && (
     <nav
-      class="mt-8 mb-12 flex items-center justify-center gap-1"
+      class="blog-pagination mt-9 mb-14 flex items-center justify-center gap-1.5"
       aria-label="Blog pagination"
     >
       {currentPage > 1 ? (
         <a
           href={pageHref(currentPage - 1)}
-          class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          class="blog-pagination-link inline-flex items-center justify-center size-10 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           aria-label={m.blog.previous}
         >
           <ArrowLeft className="size-4" />
         </a>
       ) : (
-        <span class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground/30 cursor-not-allowed">
+        <span class="blog-pagination-link inline-flex items-center justify-center size-10 rounded-full text-muted-foreground/30 cursor-not-allowed">
           <ArrowLeft className="size-4" />
         </span>
       )}
 
       {pages.map((page) => (
         page === currentPage ? (
-          <span class="inline-flex items-center justify-center size-11 rounded-full bg-foreground text-background text-sm font-semibold">
+          <span class="blog-pagination-current inline-flex items-center justify-center size-10 rounded-full bg-foreground text-background text-sm font-semibold">
             {page}
           </span>
         ) : (
           <a
             href={pageHref(page)}
-            class="inline-flex items-center justify-center size-11 rounded-full text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            class="blog-pagination-link inline-flex items-center justify-center size-10 rounded-full text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           >
             {page}
           </a>
@@ -59,13 +59,13 @@ const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
       {currentPage < totalPages ? (
         <a
           href={pageHref(currentPage + 1)}
-          class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          class="blog-pagination-link inline-flex items-center justify-center size-10 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
           aria-label={m.blog.next}
         >
           <ArrowRight className="size-4" />
         </a>
       ) : (
-        <span class="inline-flex items-center justify-center size-11 rounded-full text-muted-foreground/30 cursor-not-allowed">
+        <span class="blog-pagination-link inline-flex items-center justify-center size-10 rounded-full text-muted-foreground/30 cursor-not-allowed">
           <ArrowRight className="size-4" />
         </span>
       )}

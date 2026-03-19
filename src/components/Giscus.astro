@@ -16,6 +16,9 @@ const { locale = 'en' } = Astro.props;
 const g = siteConfig.giscus;
 const m = getMessages(locale);
 
+// Giscus currently exposes Chinese locales as zh-CN / zh-TW,
+// so we keep a small compatibility bridge here instead of
+// leaking region tags through the rest of the app.
 const langMap: Record<string, string> = {
   en: 'en',
   'zh-hans': 'zh-CN',
