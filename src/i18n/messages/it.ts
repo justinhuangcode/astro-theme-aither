@@ -44,6 +44,8 @@ export const it = {
     },
     language: 'Lingua',
     builtWith: 'Creato con',
+    copy: 'Copia',
+    copied: 'Copiato',
   },
   about: {
     title: 'Chi siamo',

@@ -44,6 +44,8 @@ export const id = {
     },
     language: 'Bahasa',
     builtWith: 'Dibuat dengan',
+    copy: 'Salin',
+    copied: 'Disalin',
   },
   about: {
     title: 'Tentang',

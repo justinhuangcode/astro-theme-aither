@@ -44,6 +44,8 @@ export const ru = {
     },
     language: 'Язык',
     builtWith: 'Создано с',
+    copy: 'Копировать',
+    copied: 'Скопировано',
   },
   about: {
     title: 'О нас',

@@ -158,7 +158,7 @@ scripts/
 
 ## Implantação
 
-O workflow padrão usa Cloudflare Pages e espera `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` e um projeto configurado.
+O workflow padrão usa Cloudflare Pages, exige `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`, e usa o nome do repositório como nome do projeto por padrão. Defina a variável de repositório `CLOUDFLARE_PAGES_PROJECT_NAME` se precisar sobrescrever.
 
 ## Princípios
 

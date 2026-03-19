@@ -44,6 +44,8 @@ export const ko = {
     },
     language: '언어',
     builtWith: '제작',
+    copy: '복사',
+    copied: '복사됨',
   },
   about: {
     title: '소개',

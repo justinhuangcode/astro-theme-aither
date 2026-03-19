@@ -115,7 +115,7 @@ scripts/
 
 ## Развёртывание
 
-По умолчанию используется Cloudflare Pages workflow с обязательными secrets `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID`.
+По умолчанию workflow Cloudflare Pages требует secrets `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID` и использует имя репозитория как имя проекта. Если нужен другой проект, задайте переменную репозитория `CLOUDFLARE_PAGES_PROJECT_NAME`.
 
 ## Принципы
 

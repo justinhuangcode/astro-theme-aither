@@ -44,6 +44,8 @@ export const zhHant = {
     },
     language: '語言',
     builtWith: '構建於',
+    copy: '複製',
+    copied: '已複製',
   },
   about: {
     title: '關於',

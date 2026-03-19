@@ -44,6 +44,8 @@ export const ptBr = {
     },
     language: 'Idioma',
     builtWith: 'Feito com',
+    copy: 'Copiar',
+    copied: 'Copiado',
   },
   about: {
     title: 'Sobre',

@@ -44,6 +44,8 @@ export const fr = {
     },
     language: 'Langue',
     builtWith: 'Construit avec',
+    copy: 'Copier',
+    copied: 'Copié',
   },
   about: {
     title: 'À propos',

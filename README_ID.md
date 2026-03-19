@@ -113,7 +113,7 @@ scripts/
 
 ## Deployment
 
-Workflow default memakai Cloudflare Pages dan membutuhkan `CLOUDFLARE_API_TOKEN` serta `CLOUDFLARE_ACCOUNT_ID`.
+Workflow default memakai Cloudflare Pages, membutuhkan `CLOUDFLARE_API_TOKEN` dan `CLOUDFLARE_ACCOUNT_ID`, serta memakai nama repositori sebagai nama proyek secara default. Gunakan variabel repositori `CLOUDFLARE_PAGES_PROJECT_NAME` jika Anda perlu menimpanya.
 
 ## Prinsip
 

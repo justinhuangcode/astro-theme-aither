@@ -28,12 +28,10 @@ const agentTabLabel = m.forAgents.agentTab;
 const postsSectionLabel = m.blog.allPosts;
 const skillUrl = new URL('/skill.md', siteConfig.url).toString();
 const withSkillUrl = (value: string) => value.replaceAll('{skillUrl}', skillUrl);
-const copyLabels =
-  locale === 'zh-hans'
-    ? { copy: '复制', copied: '已复制' }
-    : locale === 'zh-hant'
-      ? { copy: '複製', copied: '已複製' }
-      : { copy: 'Copy', copied: 'Copied' };
+const copyLabels = {
+  copy: m.common.copy,
+  copied: m.common.copied,
+};
 
 const audienceCopy = {
   human: {
