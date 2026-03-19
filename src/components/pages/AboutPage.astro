@@ -1,5 +1,6 @@
 ---
 import Container from '@/components/Container.astro';
+import Giscus from '@/components/Giscus.astro';
 import Layout from '@/layouts/Layout.astro';
 import { siteConfig } from '@/config/site';
 import { getMessages, type Locale } from '@/i18n';
@@ -15,6 +16,7 @@ const m = getMessages(locale);
 
 <Layout
   title={`${m.about.title} | ${siteConfig.name}`}
+  enableCrisp={false}
   alternateFormats={[
     {
       type: 'text/markdown',
@@ -28,6 +30,9 @@ const m = getMessages(locale);
       <h1 class="font-body text-2xl font-semibold mb-8 leading-[1.4] max-md:text-xl text-[var(--color-link)]">{m.about.title}</h1>
       <div class="about-content text-lg leading-relaxed text-foreground">
         <p set:html={m.about.description} />
+      </div>
+      <div class="mt-10 pt-10 border-t border-border">
+        <Giscus locale={locale} />
       </div>
     </article>
   </Container>

@@ -1,0 +1,77 @@
+---
+title: Best practice per AI Agent in progetti reali (Sample)
+date: "2026-01-10T16:00:00+08:00"
+category: AI
+description: Un obiettivo chiaro, buon contesto, cicli di verifica e revisione umana rendono gli AI Agent molto più affidabili.
+tags: [AI, Agents]
+pinned: false
+---
+
+Gli AI Agent sono davvero utili quando smettono di sembrare magia e iniziano a comportarsi come uno strumento operativo. I team che ottengono i risultati migliori non chiedono a un agent di "fare tutto". Definiscono il compito, forniscono il contesto giusto e fanno in modo che il risultato sia facile da verificare.
+
+Sembra semplice, ma cambia tutto. Un agent ben istruito può muoversi velocemente e produrre un lavoro sorprendentemente solido. Un agent con un perimetro poco chiaro spreca contesto, prende deviazioni inutili e restituisce qualcosa che suona sicuro di sé ma non risolve davvero il problema.
+
+## Parti da un compito ristretto
+
+I compiti migliori per un agent sono concreti e ben delimitati.
+
+Invece di dire "migliora questa app", meglio dire "correggi la sovrapposizione della navigazione mobile nella pagina del blog" oppure "aggiungi uno smoke test per il feed RSS". Un compito ristretto dà all'agent un obiettivo stabile e riduce la probabilità che modifichi parti non correlate del sistema.
+
+Questo rende anche più facile la revisione. Quando il compito è piccolo, è più evidente cosa è cambiato, cosa va testato e se il risultato è davvero corretto.
+
+## Rendi esplicito il contesto
+
+Gli agent lavorano meglio quando il contesto importante è scritto, non lasciato implicito.
+
+Un buon brief di solito include:
+
+- l'obiettivo esatto
+- i file o le directory rilevanti
+- i vincoli e ciò che non deve cambiare
+- l'output atteso o la definizione di completato
+- il comando di validazione da eseguire alla fine
+
+Gli esseri umani riescono a dedurre molto da istruzioni incomplete. Gli agent sono più letterali. Se un dettaglio conta, va scritto.
+
+## Meglio gli strumenti delle supposizioni
+
+Un agent dovrebbe ispezionare il sistema attuale prima di proporre modifiche. Questo significa leggere i file rilevanti, controllare il setup di build e capire le convenzioni esistenti, invece di affidarsi solo a conoscenza generica.
+
+La stessa regola vale per i sistemi esterni. Se la risposta dipende da documentazione aggiornata, impostazioni di deploy o comportamento reale, l'agent dovrebbe usare strumenti per verificare lo stato reale, non indovinare a memoria.
+
+Per questo le interfacce leggibili dalle macchine contano così tanto. Struttura dei file chiara, script di validazione, schemi tipizzati e configurazione esplicita rendono gli agent più affidabili perché l'ambiente spiega se stesso.
+
+## Mantieni l'output verificabile
+
+Un buon workflow con agent non finisce con "ecco la risposta". Finisce con delle prove.
+
+Chiedi all'agent di indicare cosa è cambiato, cosa ha testato e cosa non ha potuto verificare. Meglio privilegiare output facili da controllare:
+
+- un diff piccolo
+- un comando di validazione che passa
+- uno screenshot o un'anteprima riproducibile
+- una breve nota su rischi o assunzioni
+
+La verifica trasforma un risultato plausibile in un risultato affidabile.
+
+## Progetta per recuperare velocemente
+
+Anche gli agent più forti prendono strade sbagliate. La risposta giusta non è evitarli, ma rendere economico il recupero.
+
+Usa compiti piccoli, script stabili e checkpoint. Mantieni le operazioni idempotenti quando possibile. Evita workflow in cui un singolo errore crea un grande disordine da sistemare. Se un compito può essere diviso in leggere, pianificare, implementare e verificare, fallo.
+
+Gli agent danno il meglio in sistemi facili da ispezionare, facili da testare e facili da portare avanti.
+
+## La revisione umana conta ancora
+
+Gli agent sono eccellenti per velocità, copertura e ripetizione. Gli esseri umani restano responsabili del giudizio.
+
+Tradeoff di prodotto, confini di sicurezza, tono, brand e manutenibilità nel lungo periodo dovrebbero essere ancora revisionati da una persona che capisce il contesto più ampio. L'obiettivo non è togliere gli esseri umani dal processo. L'obiettivo è far passare meno tempo sul lavoro meccanico e più tempo sulle decisioni che richiedono davvero criterio e responsabilità.
+
+## Un modello mentale pratico
+
+Tratta un AI Agent come un operatore capace, veloce, instancabile e letterale.
+
+Daggli un incarico chiaro. Dagli gli strumenti giusti. Chiedigli di mostrare il lavoro. Poi rivedi il risultato con la stessa disciplina che applicheresti a qualsiasi cambiamento importante.
+
+È lì che nasce il vero leverage.

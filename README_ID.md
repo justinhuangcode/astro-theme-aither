@@ -9,337 +9,128 @@
 [![GitHub Stars](https://img.shields.io/github/stars/justinhuangcode/astro-theme-aither?style=flat-square&logo=github)](https://github.com/justinhuangcode/astro-theme-aither/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/justinhuangcode/astro-theme-aither?style=flat-square)](https://github.com/justinhuangcode/astro-theme-aither/commits/main)
 
-**[Pratinjau Langsung](https://astro-theme-aither.pages.dev)**
+**[Live Preview](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme built around beautiful text.  ✍️
+Tema Astro AI-native yang dibangun di sekitar teks yang indah. ✍️
+
+Tipografi untuk manusia, endpoint machine-readable untuk agent AI.
+
+Aither adalah tema publishing multibahasa yang memperlakukan permukaan manusia dan agent sebagai bagian inti dari produk.
+
+## Model Pembaca / Agen
+
+- `Reader` berarti manusia yang membaca situs HTML: halaman beranda, halaman artikel, halaman About, komentar, dan kontrol tema.
+- `Agent` berarti software yang mengonsumsi permukaan publik machine-readable: `protocol.json`, `skill.md`, `agent/home.json` per locale, `llms.txt`, `api/posts.json`, dan Markdown per artikel.
+- `Read-only` berarti discovery, pengambilan, indexing, dan monitoring didukung saat ini; publish, komentar, dan write yang diautentikasi belum tersedia.
+
+```mermaid
+flowchart LR
+  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
+  A --> C["Agent Surface<br/>JSON / Markdown"]
+  B --> D["Canonical article URLs"]
+  C --> E["protocol.json -> skill.md -> agent/home.json"]
+  C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
+```
 
 ## Mengapa Aither?
 
-Tulisan yang baik layak mendapatkan tipografi yang baik. Kebanyakan tema mengubur kata-kata Anda di bawah gambar hero, animasi, dan dekorasi UI. Aither mengambil pendekatan sebaliknya — membiarkan teks menjadi desain.
+Sebagian besar tema blog mengoptimalkan hero, animasi, dan UI chrome. Aither mengoptimalkan ritme membaca, disiplin tipografi, dan kepadatan informasi.
 
-Tipografi sans-serif yang bersih dengan heading Bricolage Grotesque, ritme baca yang disetel dengan cermat, dan tata letak yang tidak menghalangi. Semuanya melayani satu tujuan: membuat tulisan Anda terlihat dan terasa indah.
+Di saat yang sama, proyek ini mengasumsikan situs akan dibaca oleh software juga. Karena itu repositori ini menyertakan surface protokol yang nyata: `protocol.json`, `skill.md`, machine docs terlokalisasi, `llms.txt`, artikel Markdown, JSON Schema, dan API post multi-locale.
 
-## Fitur
+## Yang Sudah Tersedia Hari Ini
 
-- **Tipografi sans-serif** -- Heading Bricolage Grotesque dipasangkan dengan body text system-ui dan fallback CJK (PingFang SC, Microsoft YaHei), konsisten di macOS, Windows, Linux, dan Android
-- **Mode gelap** -- Toggle Terang / Gelap / Sistem dengan persistensi localStorage, dianimasikan melalui View Transitions API (reveal melingkar)
-- **Tailwind CSS v4** -- Styling utility-first dengan token desain `@theme`, mudah dikustomisasi
-- **i18n 11 bahasa** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
-- **55 artikel contoh terlokalisasi** -- Setiap locale membawa 5 artikel awal yang sama (`11 locale x 5 slug`) agar demo dan pemeriksaan cakupan selalu sinkron
-- **Gambar OG dinamis** -- Gambar Open Graph yang dihasilkan otomatis per artikel melalui Satori + resvg-js
-- **Komentar Giscus** -- Sistem komentar berbasis GitHub Discussions
-- **Chat Crisp** -- Widget chat langsung opsional melalui Crisp
-- **Kategori dan tag** -- Organisasi artikel dengan kategori dan tag opsional
-- **Artikel disematkan** -- Atur `pinned: true` di frontmatter untuk menyematkan artikel di atas
-- **Paginasi** -- Ukuran halaman yang dapat dikonfigurasi untuk daftar blog
-- **Daftar isi** -- Dihasilkan otomatis dari heading artikel
-- **Info penulis** -- Nama dan avatar penulis yang dapat dikonfigurasi
-- **Endpoint AI-native** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, dan endpoint `.md` per artikel
-- **Feed RSS** -- `/rss.xml` bawaan melalui `@astrojs/rss`
-- **Sitemap** -- Dihasilkan otomatis melalui `@astrojs/sitemap`
-- **SEO** -- Tag Open Graph, URL kanonik, deskripsi per artikel
-- **Responsif** -- Tata letak ramah seluler yang menjaga ritme baca di semua ukuran layar
-- **Google Analytics** -- Opsional, tanpa konfigurasi melalui variabel lingkungan `PUBLIC_GA_ID`
-- **Astro Content Collections** -- Artikel Markdown type-safe dengan validasi skema Zod
-- **Cloudflare Pages** -- Workflow CI/CD disertakan untuk deployment otomatis
+- pengalaman membaca berbasis tipografi
+- dua tampilan beranda: reader dan agent
+- 41 tema terkurasi
+- surface AI-native lengkap
+- mode read-only secara default
+- 11 bahasa
+- 66 sample post terlokalisasi
+- RSS / sitemap / OG / JSON-LD / TOC / pagination
+- extensible lewat Content Collections
+- stack Astro modern
+
+## Persyaratan
+
+- **Node.js** -- `22 LTS` direkomendasikan
+- **pnpm** -- `pnpm@10.32.1`
+- **Corepack** -- jalankan `corepack enable`
+- **Cloudflare Pages** -- hanya jika memakai workflow deploy bawaan
 
 ## Mulai Cepat
-
-### Gunakan sebagai template GitHub
-
-1. Klik **"Use this template"** di [GitHub](https://github.com/justinhuangcode/astro-theme-aither)
-2. Clone repositori baru Anda:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
 cd YOUR_REPO
-```
-
-3. Instal dependensi:
-
-```bash
+corepack enable
 pnpm install
-```
-
-4. Konfigurasi situs Anda:
-
-```bash
-# astro.config.mjs -- atur URL situs Anda (satu-satunya tempat Anda perlu mengatur URL)
-site: 'https://your-domain.com'
-
-# src/config/site.ts -- atur nama, deskripsi, tautan sosial, navigasi, footer
-# (url akan otomatis dibaca dari astro.config.mjs)
-```
-
-5. Atur variabel lingkungan (opsional):
-
-```bash
-cp .env.example .env
-# Edit .env dengan nilai Anda (GA, Giscus, Crisp)
-```
-
-6. Mulai menulis:
-
-```bash
+pnpm validate
 pnpm dev
 ```
 
-7. Deploy: push ke `main`, GitHub Actions membangun dan men-deploy secara otomatis.
+## Model Konten
 
-### Instalasi manual
-
-```bash
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-rm -rf .git && git init
-pnpm install
-pnpm dev
-```
-
-## Format Artikel
-
-Buat file Markdown di `src/content/posts/{locale}/`:
-
-```markdown
----
-title: Judul Artikel
-date: 2026-01-01
-description: Deskripsi opsional untuk SEO
-category: Technology
-tags: [opsional, tag]
-pinned: false
-image: ./optional-cover.jpg
----
-
-Konten Anda di sini.
-```
-
-| Field | Tipe | Wajib | Default | Deskripsi |
-|---|---|---|---|---|
-| `title` | string | Ya | -- | Judul artikel |
-| `date` | date | Ya | -- | Tanggal publikasi (TTTT-BB-HH) |
-| `description` | string | Tidak | -- | Digunakan di feed RSS dan tag meta |
-| `category` | string | Tidak | `"General"` | Kategori artikel |
-| `tags` | string[] | Tidak | -- | Tag artikel |
-| `pinned` | boolean | Tidak | `false` | `true` menyematkan artikel di atas daftar |
-| `image` | image | Tidak | -- | Gambar sampul (path relatif atau import) |
+Konten artikel berada di `src/content/posts/{locale}/` dan menggunakan MDX.
 
 ## Perintah
 
 | Perintah | Deskripsi |
 |---|---|
-| `pnpm dev` | Mulai server pengembangan lokal |
-| `pnpm check` | Jalankan pemeriksaan tipe dan konten Astro |
-| `pnpm check:post-coverage` | Verifikasi bahwa setiap locale memiliki cakupan slug artikel yang sama |
-| `pnpm build` | Bangun situs statis ke `dist/` |
-| `pnpm smoke` | Jalankan smoke test untuk artefak protokol AI di `dist/` |
-| `pnpm preview` | Pratinjau build produksi secara lokal |
-| `pnpm validate` | Jalankan `check`, `check:post-coverage`, `build`, dan `smoke` sekaligus |
+| `pnpm dev` | Menjalankan dev server |
+| `pnpm check` | Menjalankan pemeriksaan Astro |
+| `pnpm check:post-coverage` | Memeriksa parity slug lintas locale |
+| `pnpm build` | Build ke `dist/` |
+| `pnpm smoke` | Smoke test protocol |
+| `pnpm preview` | Preview build produksi |
+| `pnpm validate` | Rangkaian validasi penuh |
 
 ## Protokol AI-native
 
-Jika Anda membangun integrasi AI atau agent, urutan baca yang disarankan adalah:
+Urutan yang direkomendasikan: `/protocol.json` -> `/skill.md` -> locale-specific `agent/home.json`.
 
-1. `/protocol.json` untuk manifes terstruktur yang ringan
-2. `/skill.md` sebagai titik masuk naratif canonical untuk protokol
-3. `/agent/home.json` untuk metadata situs saat ini dan artikel terbaru
-4. `/policy.md` untuk aturan dan batas keamanan
-5. `/reading.md` untuk panduan membaca / retrieval
-6. `/subscribe.md` untuk monitoring dan polling
-7. `/auth.md` untuk memastikan alur tulis / autentikasi masih berstatus reserved
-
-Saat ini protokol sengaja dibuat read-only. Agent dapat menemukan, mengindeks, merangkum, berlangganan, dan mengambil Markdown, tetapi tidak boleh berasumsi bahwa posting, komentar, atau write API terautentikasi sudah tersedia.
-
-Endpoint schema juga tersedia untuk integrasi yang lebih ketat:
-
-- `/schemas/agent-protocol.schema.json`
-- `/schemas/agent-home.schema.json`
-
-Best practice: jika Anda mengubah `protocol.json`, `skill.md`, `agent/home.json`, atau dokumen Markdown lain yang ditujukan untuk agent, minimal jalankan `pnpm smoke`.
+Gunakan `/api/posts.json` untuk discovery lintas locale dan `/{locale}/posts/{slug}.md` untuk body final artikel.
 
 ## Konfigurasi
 
-### Pengaturan situs (`src/config/site.ts`)
-
-```typescript
-export const siteConfig = {
-  name: 'Aither',
-  title: 'An AI-native Astro theme built around beautiful text.',
-  description: '...',
-  author: {
-    name: 'Aither',
-    avatar: '', // Import dari src/assets/ untuk optimisasi, atau gunakan string URL
-  },
-  // url dibaca otomatis dari astro.config.mjs, jadi tidak perlu diulang di sini
-  social: [
-    { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
-    { title: 'Twitter', href: '#', icon: 'x' },
-  ],
-  blog: { paginationSize: 20 },
-  analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
-  crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
-  ui: {
-    defaultMode: 'system',
-    defaultStyle: 'default',
-    enableModeSwitch: true,
-    showMoreThemesMenu: true,
-  },
-  giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
-  nav: [
-    { labelKey: 'blog', href: '/' },
-    { labelKey: 'about', href: '/about' },
-  ],
-  footer: { copyrightYear: 'auto', sections: [/* ... */] },
-};
-```
-
-Setel `ui.showMoreThemesMenu` ke `false` jika Anda ingin mempertahankan toggle Terang / Gelap / Sistem tetapi menyembunyikan pemilih tema kustom.
-
-### Konfigurasi Astro (`astro.config.mjs`)
-
-```javascript
-export default defineConfig({
-  site: 'https://your-domain.com', // Diperlukan untuk RSS dan sitemap
-  integrations: [react(), mdx(), sitemap()],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
-    routing: { prefixDefaultLocale: false },
-  },
-  vite: { plugins: [tailwindcss()] },
-});
-```
-
-### Variabel lingkungan (`.env`)
-
-```bash
-# Google Analytics (kosongkan untuk menonaktifkan)
-PUBLIC_GA_ID=
-
-# Chat Crisp (kosongkan untuk menonaktifkan)
-PUBLIC_CRISP_WEBSITE_ID=
-
-# Komentar Giscus (kosongkan semua untuk menonaktifkan)
-PUBLIC_GISCUS_REPO=
-PUBLIC_GISCUS_REPO_ID=
-PUBLIC_GISCUS_CATEGORY=
-PUBLIC_GISCUS_CATEGORY_ID=
-```
-
-### i18n
-
-Konfigurasi bahasa ada di `src/i18n/index.ts`, terjemahan di `src/i18n/messages/*.ts`.
-
-| Kode | Bahasa |
-|---|---|
-| `en` | English (default) |
-| `zh-hans` | 简体中文 |
-| `zh-hant` | 繁體中文 |
-| `ko` | 한국어 |
-| `fr` | Français |
-| `de` | Deutsch |
-| `it` | Italiano |
-| `es` | Español |
-| `ru` | Русский |
-| `id` | Bahasa Indonesia |
-| `pt-br` | Português (BR) |
-
-Locale default (`en`) tidak memiliki prefiks URL. Locale lainnya menggunakan kode mereka sebagai prefiks (misal `/id/`, `/ko/`).
+File utama: `astro.config.mjs`, `src/config/site.ts`, `src/config/themes.ts`, `src/content.config.ts`, `src/i18n/index.ts`, `src/i18n/messages/*.ts`, `.env`.
 
 ## Struktur Proyek
 
-```
+```text
 src/
 ├── config/
-│   ├── site.ts              # Nama situs, tautan sosial, navigasi, footer, analytics, Giscus, Crisp
-│   └── themes.ts            # Grup tema dan label tema yang dilokalkan
-├── content.config.ts         # Skema Content Collections (Zod)
-├── i18n/
-│   ├── index.ts              # Definisi locale, getMessages(), helper routing
-│   └── messages/             # File terjemahan (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
-├── layouts/
-│   └── Layout.astro          # Layout global (head, navigasi, pengalih tema, analytics)
-├── lib/
-│   └── theme.ts              # Helper status preferensi tema
-├── components/
-│   ├── Navbar.astro          # Navbar gaya Bootstrap 3 dengan gradien
-│   ├── NavbarMobile.astro    # Navigasi mobile dengan kontrol locale dan tema
-│   ├── ModeSwitcher.astro    # Pengalih mode/gaya tema desktop
-│   ├── LanguageSwitcher.astro# Pengalih locale desktop
-│   ├── BlogGrid.astro        # Grid artikel dengan paginasi
-│   ├── BlogCard.astro        # Kartu artikel dengan kategori, tag, tanggal
-│   ├── TableOfContents.astro # Daftar isi yang dihasilkan otomatis
-│   ├── AuthorInfo.astro      # Nama dan avatar penulis
-│   ├── Giscus.astro          # Komentar GitHub Discussions
-│   ├── Crisp.astro           # Widget chat Crisp
-│   ├── Analytics.astro       # Skrip Google Analytics
-│   └── Prose.astro           # Wrapper tipografi untuk konten
-├── pages/
-│   ├── index.astro           # Beranda (English, locale default)
-│   ├── about.astro           # Halaman Tentang
-│   ├── page/                 # Daftar blog berpaginasi
-│   ├── posts/
-│   │   ├── [slug].astro      # Detail artikel (English)
-│   │   └── [slug].md.ts      # Endpoint Markdown per artikel untuk AI
-│   ├── og/                   # Pembuatan gambar OG dinamis
-│   ├── rss.xml.ts            # Feed RSS
-│   ├── llms.txt.ts           # llms.txt untuk agen AI
-│   ├── llms-full.txt.ts      # Konten lengkap untuk LLM
-│   ├── skill.md.ts           # Deskriptor skill AI
-│   ├── api/
-│   │   └── posts.json.ts     # API JSON artikel
-│   └── [locale]/             # Halaman untuk setiap locale yang didukung
 ├── content/
-│   └── posts/
-│       ├── en/*.md           # Artikel English (locale default)
-│       └── {locale}/*.md     # Artikel untuk setiap locale yang didukung
+├── i18n/
+├── components/
+├── lib/
+├── layouts/
+├── pages/
 └── styles/
-    └── global.css            # Token @theme Tailwind CSS v4 + gaya dasar
 public/
-├── favicon.svg
-├── robots.txt
-└── .well-known/
-.github/
-└── workflows/
-    └── deploy-cloudflare-pages.yml     # Deploy Cloudflare Pages (default)
+scripts/
 ```
 
 ## Deployment
 
-### Cloudflare Pages (default)
+Workflow default memakai Cloudflare Pages dan membutuhkan `CLOUDFLARE_API_TOKEN` serta `CLOUDFLARE_ACCOUNT_ID`.
 
-Workflow yang disertakan (`.github/workflows/deploy-cloudflare-pages.yml`) men-deploy secara otomatis:
+## Prinsip
 
-1. Buka **Settings** > **Pages** > **Source** repositori: pilih **GitHub Actions**
-2. Perbarui `site` di `astro.config.mjs` dengan URL Cloudflare Pages Anda
-3. Push ke `main` — situs di-deploy secara otomatis
-
-### Platform lain
-
-Output adalah HTML statis di `dist/`, dapat di-deploy di mana saja:
-
-```bash
-pnpm build
-# Upload dist/ ke Netlify, Vercel, atau host statis mana pun
-```
-
-## Filosofi Desain
-
-1. **Tipografi adalah desain** -- Heading sans-serif Bricolage Grotesque, body text bersih system-ui, dan ritme baca yang disetel dengan cermat. Tipografi *adalah* identitas visual.
-2. **Teks itu indah** -- Teks yang diatur dengan baik di halaman yang tenang adalah antarmuka yang paling elegan.
-3. **Berfungsi di mana saja** -- Stack font lintas platform dengan fallback CJK (PingFang SC, Microsoft YaHei). Tanpa penundaan pemuatan font web, tanpa pergeseran tata letak.
-4. **AI-native** -- Discoverability LLM kelas satu dengan llms.txt, endpoint terstruktur, dan konten yang dapat dibaca mesin.
-5. **Halus, bukan rumit** -- Token desain `@theme` Tailwind CSS v4 membuat kustomisasi mudah. Satu file konfigurasi (`src/config/site.ts`) mengontrol seluruh situs.
+1. Tipografi adalah antarmuka.
+2. Manusia dan agent sama pentingnya.
+3. Paritas multibahasa harus diverifikasi.
+4. Titik ekstensi harus dekat dengan konten.
+5. Lebih sedikit magic, lebih banyak kontrak yang eksplisit.
 
 ## Penghargaan
 
-Terinspirasi oleh [yinwang.org](https://www.yinwang.org).
-
-Sistem tema terinspirasi dari [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
+- Terinspirasi oleh [yinwang.org](https://www.yinwang.org).
+- Sebagian sistem tema terinspirasi oleh [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
 
 ## Berkontribusi
 
-Kontribusi disambut. Silakan buka issue terlebih dahulu untuk mendiskusikan perubahan yang ingin Anda lakukan.
+Kontribusi diterima. Buka issue terlebih dahulu untuk mendiskusikan perubahan.
 
 ## Lisensi
 

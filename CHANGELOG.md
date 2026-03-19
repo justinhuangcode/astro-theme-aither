@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [CalVer](https://calver.org/) versioning (`YYYY.0M.0D`).
 
+## astro-theme-aither v2026.03.20
+
+### Added
+- New localized sample article `ai-agent-best-practices.mdx` across all 11 locales
+- `published_at` in `/api/posts.json` for machine consumers that need full timestamps
+- Giscus comments on the About page
+- Locale-aware Crisp runtime language mapping
+- A unified `Reader / Agent` model and implementation-aligned documentation across all README variants
+
+### Changed
+- Release version to `2026.03.20`
+- Content schema now prefers full ISO 8601 timestamps with timezone while remaining backward-compatible with date-only entries
+- Existing sample posts updated to timezone-aware frontmatter timestamps across locales
+- Date rendering now respects `siteConfig.blog.timeZone`
+- Crisp is disabled on post and about reading surfaces to keep those pages calmer and comment-focused
+- CJK font stacks now include stronger locale-specific fallback chains
+
+### Fixed
+- Markdown and JSON consumers can now distinguish canonical publish dates from full publish timestamps
+- Agent-facing and human-facing docs now describe the current product surface more accurately
+
 ## astro-theme-aither v2026.03.14
 
 ### Added

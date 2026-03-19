@@ -81,6 +81,7 @@ export const siteConfig = {
   ] satisfies SocialLink[],
   blog: {
     paginationSize: 20,
+    timeZone: 'Asia/Shanghai',
   },
   analytics: {
     googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '',

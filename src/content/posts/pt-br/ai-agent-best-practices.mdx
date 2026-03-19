@@ -1,0 +1,77 @@
+---
+title: Boas práticas para AI Agents em projetos reais (Sample)
+date: "2026-01-10T16:00:00+08:00"
+category: AI
+description: Escopo claro, bom contexto, ciclos de verificação e revisão humana tornam AI Agents muito mais confiáveis.
+tags: [AI, Agents]
+pinned: false
+---
+
+AI Agents são mais úteis quando deixam de parecer mágicos e começam a agir como uma ferramenta operacional. As equipes que obtêm os melhores resultados não pedem para um agent "resolver tudo". Elas definem a tarefa, fornecem o contexto certo e fazem com que o resultado seja fácil de verificar.
+
+Parece simples, mas muda tudo. Um agent bem orientado pode avançar rápido e produzir um trabalho surpreendentemente sólido. Um agent com escopo mal definido desperdiça contexto, faz desvios desnecessários e devolve algo que soa confiante, mas não resolve a tarefa real.
+
+## Comece com uma tarefa estreita
+
+As melhores tarefas para um agent são concretas e delimitadas.
+
+Em vez de dizer "melhore este app", diga "corrija a sobreposição da navegação mobile na página do blog" ou "adicione um smoke test para o feed RSS". Uma tarefa estreita dá ao agent um alvo estável e reduz a chance de ele editar partes não relacionadas do sistema.
+
+Isso também facilita a revisão. Quando a tarefa é pequena, fica mais claro o que mudou, o que precisa ser testado e se o resultado está realmente correto.
+
+## Torne o contexto explícito
+
+Agents trabalham melhor quando o contexto importante está escrito, e não apenas implícito.
+
+Um bom briefing normalmente inclui:
+
+- o objetivo exato
+- os arquivos ou diretórios relevantes
+- as restrições e o que não pode mudar
+- o resultado esperado ou definição de pronto
+- o comando de validação a ser executado no final
+
+Pessoas conseguem inferir muita coisa a partir de instruções incompletas. Agents são mais literais. Se um detalhe importa, escreva.
+
+## Prefira ferramentas a adivinhação
+
+Um agent deve inspecionar o sistema atual antes de propor mudanças. Isso significa ler os arquivos relevantes, verificar o setup de build e entender as convenções existentes, em vez de depender apenas de conhecimento genérico.
+
+O mesmo vale para sistemas externos. Se a resposta depende de documentação atual, configurações de deploy ou comportamento real, o agent deve usar ferramentas para verificar o estado verdadeiro, não chutar com base na memória.
+
+É por isso que interfaces legíveis por máquina importam tanto. Estrutura de arquivos clara, scripts de validação, esquemas tipados e configuração explícita tornam os agents mais confiáveis porque o próprio ambiente se explica.
+
+## Mantenha a saída verificável
+
+Um bom fluxo de trabalho com agent não termina com "aqui está a resposta". Ele termina com evidência.
+
+Peça ao agent para informar o que mudou, o que foi testado e o que ele não conseguiu verificar. Prefira saídas que possam ser conferidas rapidamente:
+
+- um diff pequeno
+- um comando de validação aprovado
+- uma captura ou preview reproduzível
+- uma nota curta sobre riscos ou suposições
+
+Verificação transforma um resultado plausível em um resultado confiável.
+
+## Desenhe para recuperar rápido
+
+Mesmo bons agents tomam caminhos errados. A resposta certa não é evitá-los, mas tornar a recuperação barata.
+
+Use tarefas pequenas, scripts estáveis e checkpoints. Mantenha operações idempotentes quando possível. Evite fluxos em que um único passo errado cria uma grande bagunça para desfazer. Se a tarefa puder ser dividida em ler, planejar, implementar e verificar, faça isso.
+
+Agents performam melhor em sistemas fáceis de inspecionar, fáceis de testar e fáceis de seguir adiante.
+
+## A revisão humana continua importante
+
+Agents são excelentes em velocidade, cobertura e repetição. Humanos continuam responsáveis por julgamento.
+
+Trade-offs de produto, limites de segurança, tom, marca e manutenibilidade de longo prazo ainda devem ser revisados por alguém que entenda o contexto mais amplo. O objetivo não é tirar humanos do circuito. O objetivo é fazer com que eles gastem menos tempo com trabalho mecânico e mais tempo com decisões que realmente exigem critério e responsabilidade.
+
+## Um modelo mental prático
+
+Trate um AI Agent como um operador capaz, rápido, incansável e literal.
+
+Dê uma tarefa clara. Dê as ferramentas certas. Peça para ele mostrar o trabalho. Depois revise o resultado com a mesma disciplina que você aplicaria a qualquer mudança importante.
+
+É aí que surge a verdadeira alavancagem.

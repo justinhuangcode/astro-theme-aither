@@ -11,43 +11,58 @@
 
 **[在线预览](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme built around beautiful text.  ✍️
+一个围绕优美文字构建的 AI 原生 Astro 主题。✍️
+
+面向人类读者强调排版，面向 AI Agent 提供机器可读端点。
+
+Aither 是一个多语言发布主题，把两种表面都当作一等产品能力来设计：对人类，是安静、克制、可读的页面；对 Agent，是公开、明确、可抓取的协议文档和 Markdown 端点。它不是一个后来才补上 AI 标签的通用博客模板。
+
+## 读者 / Agent 模型
+
+- `读者` 指阅读 HTML 站点的人类用户：首页卡片、文章页、About 页、评论和主题切换都属于这一侧。
+- `Agent` 指消费公开机器可读端点的软件客户端：`protocol.json`、`skill.md`、按 locale 的 `agent/home.json`、`llms.txt`、`api/posts.json` 以及单篇文章 Markdown。
+- `只读` 表示当前支持发现、抓取、索引和监控；不提供发布、评论或认证写入能力。
+
+```mermaid
+flowchart LR
+  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
+  A --> C["Agent Surface<br/>JSON / Markdown"]
+  B --> D["Canonical article URLs"]
+  C --> E["protocol.json -> skill.md -> agent/home.json"]
+  C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
+```
 
 ## 为什么选择 Aither？
 
-好的文字值得好的排版。大多数主题把你的文字埋在 hero 图片、动画和 UI 装饰之下。Aither 反其道而行——让文字本身成为设计。
+大多数博客主题优先堆 hero、动画和 UI 装饰。Aither 优先的是阅读节奏、排版克制和信息密度，让文字本身成为设计。
 
-统一的无衬线字体系统（Bricolage Grotesque + system-ui）、精心调校的阅读节奏、不喧宾夺主的版面。一切服务于一个目标：让你的文字看起来、读起来都很美。
+同时，它默认你的站点会被软件读取，就像会被人类阅读一样。因此仓库直接内置了一套真实协议表面：`protocol.json`、`skill.md`、本地化机器文档、`llms.txt`、Markdown 正文端点、JSON Schema，以及跨语言文章 API。
 
-## 功能特性
+## 当前包含的能力
 
-- **无衬线排版系统** -- Bricolage Grotesque 标题搭配 system-ui 正文，CJK 智能回退（PingFang SC、Microsoft YaHei），全平台优美一致
-- **暗色模式** -- 亮色 / 暗色 / 系统三档切换，localStorage 持久化，View Transitions API 圆形揭幕动画
-- **Tailwind CSS v4** -- 工具类优先的样式方案，`@theme` 设计令牌，易于自定义
-- **11 种语言** -- 内置 Astro i18n 路由，支持 English、简体中文、繁體中文、한국어、Français、Deutsch、Italiano、Español、Русский、Bahasa Indonesia、Português (BR)
-- **55 篇本地化示例文章** -- 11 种语言各自都带齐 5 篇示例文章（`11 个 locale x 5 个 slug`），演示站和覆盖率校验始终同步
-- **动态 OG 图片** -- 基于 Satori + resvg-js 自动生成社交分享图，无需手动制作
-- **Giscus 评论** -- 基于 GitHub Discussions 的评论系统，通过环境变量配置
-- **Crisp 客服** -- 可选的在线客服聊天，通过环境变量启用
-- **分类与标签** -- 文章支持分类和可选标签
-- **置顶文章** -- frontmatter 设置 `pinned: true` 即可置顶显示
-- **分页** -- 内置分页组件，默认每页 20 篇
-- **目录导航** -- 文章页自动生成 Table of Contents
-- **作者信息** -- 可配置的作者名称和头像
-- **AI 端点** -- `/protocol.json`、`/skill.md`、`/policy.md`、`/reading.md`、`/subscribe.md`、`/auth.md`、`/agent/home.json`、`/llms.txt`、`/llms-full.txt`、`/api/posts.json`、每篇文章的 `.md` 端点，LLM 友好
-- **RSS 订阅** -- 内置 `/rss.xml`，基于 `@astrojs/rss`
-- **Sitemap** -- 通过 `@astrojs/sitemap` 自动生成
-- **SEO** -- Open Graph 标签、canonical URL、每篇文章独立 description
-- **响应式** -- 移动端友好，在不同屏幕尺寸下保持阅读节奏
-- **Google Analytics** -- 可选，通过 `PUBLIC_GA_ID` 环境变量零配置启用
-- **Astro Content Collections** -- 类型安全的 Markdown 文章，frontmatter 自动校验
-- **Cloudflare Pages** -- 内置部署工作流，自动部署
+- **以排版为中心的阅读体验** -- Bricolage Grotesque 标题、系统字体正文、CJK 友好回退，以及本地打包字体资源，不依赖远程字体 CDN 也能保持质感
+- **首页双入口** -- 首页同时提供读者视图和 Agent 视图；人类看到文章卡片，Agent 直接看到 Markdown 入口，`/for-agents/` 则用自然语言解释协议
+- **41 套主题** -- 除 Light / Dark / System 外，还内置 41 个命名主题，定义在 `src/config/themes.ts` 中；如果你想保留模式切换但隐藏完整主题菜单，也可以直接配置
+- **AI 原生协议** -- `/protocol.json`、`/skill.md`、本地化 `/agent/home.json`、`/policy.md`、`/reading.md`、`/subscribe.md`、`/auth.md`、`/llms.txt`、`/llms-full.txt`、`/api/posts.json`、每篇文章的 `.md`、About Markdown、JSON Schema，以及 `/.well-known/ai-plugin.json`
+- **默认只读** -- Agent 可以发现、抓取、索引、总结、轮询和引用内容，但当前没有一方写入 API、评论 API，也没有 Agent 身份认证写操作
+- **11 语言发布** -- English、简体中文、繁體中文、한국어、Français、Deutsch、Italiano、Español、Русский、Bahasa Indonesia、Português (BR)，包含本地化 UI、hreflang、路由和 RSS
+- **66 篇本地化 sample** -- 6 个示例 slug 在 11 个 locale 中全部镜像，`11 x 6 = 66`，并由 `pnpm check:post-coverage` 强制校验
+- **完整发布能力** -- 动态 OG 图片、RSS、sitemap、JSON-LD、canonical URL、标签、置顶、分页、目录，以及可选的 Giscus / Crisp / Google Analytics
+- **不仅限于 posts** -- 路由系统已经支持通过 Astro Content Collections 和 `siteConfig.sections` 扩展更多内容集合，不只是默认的 `posts`
+- **现代 Astro 栈** -- Astro 6、MDX、按需使用的 React 19、Tailwind CSS v4 tokens，以及在部署前同时校验内容覆盖、构建产物和协议产物的验证流水线
+
+## 环境要求
+
+- **Node.js** -- 推荐 `22 LTS`。最低支持版本为 `20.19.1+` 或 `22.12.0+`
+- **pnpm** -- 仓库通过 `packageManager` 固定 `pnpm@10.32.1`
+- **Corepack** -- 先执行一次 `corepack enable`，自动使用固定的 pnpm 版本
+- **Cloudflare Pages** -- 仅在你要使用内置 GitHub Actions 部署工作流时需要
 
 ## 快速开始
 
 ### 使用 GitHub 模板
 
-1. 点击 **"Use this template"** > **"Create a new repository"**
+1. 在 [GitHub](https://github.com/justinhuangcode/astro-theme-aither) 上点击 **"Use this template"**
 2. 克隆你的新仓库：
 
 ```bash
@@ -55,9 +70,10 @@ git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
 cd YOUR_REPO
 ```
 
-3. 安装依赖：
+3. 启用 Corepack 并安装依赖：
 
 ```bash
+corepack enable
 pnpm install
 ```
 
@@ -67,62 +83,77 @@ pnpm install
 # astro.config.mjs -- 设置你的站点 URL（唯一需要设置 URL 的地方）
 site: 'https://your-domain.com'
 
-# src/config/site.ts -- 设置站点名称、社交链接、导航等
-# （url 会自动从 astro.config.mjs 读取）
+# src/config/site.ts -- 设置站点名称、描述、社交链接、导航、页脚
+# url 会自动从 astro.config.mjs 读取
 ```
 
-5. （可选）配置环境变量：
+5. 配置环境变量（可选）：
 
 ```bash
 cp .env.example .env
-# 编辑 .env 填入你的值（GA、Giscus、Crisp）
+# 按需填写 GA、Giscus、Crisp 等配置
 ```
 
-6. 开始写作：
+6. 在开始大改之前，先验证 starter：
+
+```bash
+pnpm validate
+```
+
+7. 启动本地开发：
 
 ```bash
 pnpm dev
 ```
 
-7. 部署：推送到 `main` 分支，GitHub Actions 自动构建和部署。
+8. 准备部署时，如果你要使用内置 Cloudflare Pages 工作流，请先完成[部署](#部署)章节里的设置，再推送到 `main`
 
-### 手动安装
+### 手动方式
 
 ```bash
 git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
 cd my-blog
-rm -rf .git && git init
+corepack enable
 pnpm install
+pnpm validate
 pnpm dev
 ```
 
-## 文章格式
+最佳实践：新站点优先使用 GitHub Template。若你是手动克隆上游仓库，先确认本地运行正常，再创建自己的仓库或导入到新仓库，不要在还没验证成功前就删掉 `.git`。
 
-在 `src/content/posts/{locale}/` 中创建 Markdown 文件：
+## 内容模型
+
+在 `src/content/posts/{locale}/` 中创建 MDX 文件：
 
 ```markdown
 ---
-title: 文章标题
-date: 2026-01-01
-description: 可选的描述，用于 SEO 和社交分享
-category: Tutorial
-tags: [可选, 标签]
+title: Your Post Title
+date: "2026-01-01T16:00:00+08:00"
+description: Optional description for SEO
+category: Technology
+tags: [optional, tags]
 pinned: false
 image: ./optional-cover.jpg
 ---
 
-正文内容。
+Your content here.
 ```
 
 | 字段 | 类型 | 必填 | 默认值 | 说明 |
 |---|---|---|---|---|
 | `title` | string | 是 | -- | 文章标题 |
-| `date` | date | 是 | -- | 发布日期（YYYY-MM-DD） |
-| `description` | string | 否 | -- | 用于 RSS、meta 标签和 OG 图片 |
-| `category` | string | 否 | `"General"` | 文章分类 |
-| `tags` | string[] | 否 | -- | 文章标签 |
-| `pinned` | boolean | 否 | `false` | `true` 置顶文章 |
-| `image` | image | 否 | -- | 封面图片（支持相对路径） |
+| `date` | date | 是 | -- | 发布时间，建议使用带时区的 ISO 8601 |
+| `description` | string | 否 | -- | 用于 RSS 和 meta 标签 |
+| `category` | string | 否 | `"General"` | 分类 |
+| `tags` | string[] | 否 | -- | 标签 |
+| `pinned` | boolean | 否 | `false` | 设为 `true` 后置顶 |
+| `image` | image | 否 | -- | 封面图，可用相对路径或导入 |
+
+最佳实践：
+
+- 尽量使用完整的带时区 ISO 8601 时间，例如 `2026-03-19T16:27:43+08:00`
+- 每个 locale 保持相同 slug，方便 `pnpm check:post-coverage` 以英文基线校验覆盖率
+- 把英文作为基准集合，本地化时在各语言目录下使用相同文件名
 
 ## 命令
 
@@ -130,34 +161,54 @@ image: ./optional-cover.jpg
 |---|---|
 | `pnpm dev` | 启动本地开发服务器 |
 | `pnpm check` | 运行 Astro 类型与内容校验 |
-| `pnpm check:post-coverage` | 校验每种语言是否都拥有相同的文章 slug 覆盖率 |
+| `pnpm check:post-coverage` | 校验所有 locale 是否拥有相同 slug |
 | `pnpm build` | 构建静态站点到 `dist/` |
-| `pnpm smoke` | 对 `dist/` 中的 AI 协议产物运行 smoke test |
+| `pnpm smoke` | 运行 AI 协议构建产物的 smoke test |
 | `pnpm preview` | 本地预览生产构建 |
-| `pnpm validate` | 一次运行 `check`、`check:post-coverage`、`build` 与协议 smoke test |
+| `pnpm validate` | 推荐的推送前检查：串行执行 `check`、`check:post-coverage`、`build` 和协议 smoke test |
 
 ## AI 原生协议
 
-如果你要构建 AI 或 agent 集成，推荐按下面顺序读取：
+`/for-agents/` 是给人看的说明页，但真正的机器契约如下：
 
-1. `/protocol.json` 获取轻量结构化清单
-2. `/skill.md` 获取规范化协议入口说明
-3. `/agent/home.json` 获取当前站点元信息与最新文章
-4. `/policy.md` 获取规则与安全边界
-5. `/reading.md` 获取内容读取流程建议
-6. `/subscribe.md` 获取监控与轮询建议
-7. `/auth.md` 确认当前鉴权/写入能力仍处于预留状态
+| 端点 | 范围 | 用途 |
+|---|---|---|
+| `/protocol.json` | 全局 | 轻量 manifest 和 schema 链接 |
+| `/skill.md` | 全局 | Agent 的 canonical 叙事入口 |
+| `/{locale}/agent/home.json` | 每个 locale | 当前站点状态和最新文章 |
+| `/{locale}/policy.md` | 每个 locale | 规则、发现顺序和安全边界 |
+| `/{locale}/reading.md` | 每个 locale | 推荐读取流程 |
+| `/{locale}/subscribe.md` | 每个 locale | 轮询和订阅建议 |
+| `/{locale}/auth.md` | 每个 locale | 预留的认证契约；当前仍是只读 |
+| `/{locale}/llms.txt` | 每个 locale | 给 LLM 的轻量索引 |
+| `/{locale}/llms-full.txt` | 每个 locale | 给批量 LLM 工作流的完整内联内容 |
+| `/api/posts.json` | 全部 locale | 跨语言结构化文章元数据 |
+| `/{locale}/posts/{slug}.md` | 每个 locale | 单篇文章的 canonical Markdown 正文 |
+| `/{locale}/about.md` | 每个 locale | About 页面 Markdown |
+| `/.well-known/ai-plugin.json` | 全局 | 轻量机器发现元数据 |
+| `/schemas/agent-protocol.schema.json` | 全局 | `protocol.json` 的 JSON Schema |
+| `/schemas/agent-home.schema.json` | 全局 | `agent/home.json` 的 JSON Schema |
 
-当前这套协议有意保持只读。Agent 可以发现、索引、总结、订阅和抓取 Markdown，但不应假设站点已经支持发文、评论或其他需要鉴权的写操作。
+默认 locale `en` 不带前缀。例如英文文章 Markdown 是 `/posts/{slug}.md`，简体中文则是 `/zh-hans/posts/{slug}.md`。
 
-如果你需要更严格的结构校验，还可以使用：
+最佳实践：
 
-- `/schemas/agent-protocol.schema.json`
-- `/schemas/agent-home.schema.json`
-
-最佳实践：只要你改了 `protocol.json`、`skill.md`、`agent/home.json`，或者其他面向 agent 的协议 Markdown，就至少跑一次 `pnpm smoke`。
+1. 先读 `/protocol.json`，再读 `/skill.md`，再获取对应 locale 的 `agent/home.json`
+2. 跨语言发现用 `/api/posts.json`，最终抓正文用单篇 `.md` 端点
+3. 回链给人类时引用 canonical HTML 页面，不要引用 Markdown 端点
+4. 如果信息新鲜度重要，就重新抓取，不要假设缓存永远正确
+5. 只要改动了 `protocol.json`、`skill.md`、`agent/home.json` 或任一 agent-facing Markdown 文档，最低也应跑一次 `pnpm smoke`
 
 ## 配置
+
+主要配置入口如下：
+
+- `astro.config.mjs` -- 生产站点 URL、Astro 集成和 locale 路由
+- `src/config/site.ts` -- 站点元信息、导航、页脚、分页、时区、主题控制、社交链接，以及可选内容 sections
+- `src/config/themes.ts` -- 41 套主题目录和本地化主题标签
+- `src/content.config.ts` -- Zod 内容 schema 与 collection 注册
+- `src/i18n/index.ts` 与 `src/i18n/messages/*.ts` -- locale 定义、路由 helper 和翻译文案
+- `.env` -- 可选的 Google Analytics、Crisp 与 Giscus 配置
 
 ### 站点设置（`src/config/site.ts`）
 
@@ -168,14 +219,14 @@ export const siteConfig = {
   description: '...',
   author: {
     name: 'Aither',
-    avatar: '', // 从 src/assets/ 导入优化，或使用 URL 字符串
+    avatar: '', // 可从 src/assets/ 导入，也可直接使用 URL
   },
-  // url 会自动从 astro.config.mjs 读取，这里无需重复设置
+  // url 会自动从 astro.config.mjs 读取，无需在这里重复设置
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
   ],
-  blog: { paginationSize: 20 },
+  blog: { paginationSize: 20, timeZone: 'Asia/Shanghai' },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
   ui: {
@@ -184,6 +235,10 @@ export const siteConfig = {
     enableModeSwitch: true,
     showMoreThemesMenu: true,
   },
+  sections: [
+    // 可选：除 posts 外的其他内容集合
+    // { id: 'translations', labelKey: 'translations' },
+  ],
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -193,13 +248,32 @@ export const siteConfig = {
 };
 ```
 
-如果你想保留浅色 / 深色 / 系统切换，但隐藏自定义主题选择菜单，把 `ui.showMoreThemesMenu` 设为 `false` 即可。
+如果你希望保留 Light / Dark / System 切换，但不想展示完整主题菜单，可以把 `ui.showMoreThemesMenu` 设为 `false`。
+
+### 扩展内容 sections
+
+项目已经支持不止一个 collection。新增 section 的方式如下：
+
+```typescript
+// src/config/site.ts
+sections: [{ id: 'translations', labelKey: 'translations' }]
+
+// src/content.config.ts
+const translations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/translations' }),
+  schema: contentSchema,
+});
+
+export const collections = { posts, translations };
+```
+
+然后在 `src/content/translations/{locale}/` 下创建内容。列表页和详情页会自动生成到 `/translations/`、`/{locale}/translations/` 及其 slug 路由。
 
 ### Astro 配置（`astro.config.mjs`）
 
 ```javascript
 export default defineConfig({
-  site: 'https://your-domain.com', // RSS 和 sitemap 必需
+  site: 'https://your-domain.com',
   integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
@@ -213,22 +287,22 @@ export default defineConfig({
 ### 环境变量（`.env`）
 
 ```bash
-# Google Analytics（留空则禁用）
+# Google Analytics（留空则关闭）
 PUBLIC_GA_ID=
 
-# Crisp 客服（留空则禁用）
+# Crisp Chat（留空则关闭）
 PUBLIC_CRISP_WEBSITE_ID=
 
-# Giscus 评论（全部留空则禁用）
+# Giscus Comments（全部留空则关闭）
 PUBLIC_GISCUS_REPO=
 PUBLIC_GISCUS_REPO_ID=
 PUBLIC_GISCUS_CATEGORY=
 PUBLIC_GISCUS_CATEGORY_ID=
 ```
 
-### i18n 国际化
+### i18n
 
-语言配置位于 `src/i18n/index.ts`，翻译文件位于 `src/i18n/messages/*.ts`。
+语言配置在 `src/i18n/index.ts`，翻译文案在 `src/i18n/messages/*.ts`。
 
 | 代码 | 语言 |
 |---|---|
@@ -244,102 +318,112 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | `id` | Bahasa Indonesia |
 | `pt-br` | Português (BR) |
 
-默认语言（`en`）不带 URL 前缀，其他语言使用各自的前缀路由（如 `/zh-hans/`、`/ko/`）。
+默认 locale `en` 没有 URL 前缀，其余语言使用各自代码前缀，例如 `/zh-hans/`、`/ko/`。
+
+最佳实践：把英文 slug 集合作为 canonical 基线，并在部署前用 `pnpm check:post-coverage` 抓出缺失的本地化文章。
 
 ## 项目结构
 
-```
+```text
 src/
 ├── config/
-│   ├── site.ts              # 站点名称、社交链接、导航、页脚、分析、Giscus、Crisp
-│   └── themes.ts            # 主题分组与本地化主题标签
-├── content.config.ts         # Content Collections 模式定义（Zod）
-├── i18n/
-│   ├── index.ts              # 语言定义、工具函数
-│   └── messages/             # 各语言翻译文件（en.ts、zh-hans.ts、ko.ts...）
-├── layouts/
-│   └── Layout.astro          # 全局布局（head、导航、主题切换、分析）
-├── lib/
-│   └── theme.ts              # 主题偏好状态辅助函数
-├── components/
-│   ├── Navbar.astro          # Bootstrap 3 风格渐变导航栏
-│   ├── NavbarMobile.astro    # 含语言与主题控制的移动端导航
-│   ├── ModeSwitcher.astro    # 桌面端主题模式/风格切换器
-│   ├── LanguageSwitcher.astro# 桌面端语言切换器
-│   ├── BlogGrid.astro        # 文章列表网格
-│   ├── BlogCard.astro        # 文章卡片（分类、标签、日期）
-│   ├── TableOfContents.astro # 目录导航
-│   ├── AuthorInfo.astro      # 作者信息
-│   ├── Giscus.astro          # Giscus 评论
-│   ├── Crisp.astro           # Crisp 客服
-│   ├── Analytics.astro       # Google Analytics
-│   └── Prose.astro           # 文章排版容器
-├── pages/
-│   ├── index.astro           # 首页（English，默认语言）
-│   ├── about.astro           # 关于页面
-│   ├── page/                 # 分页
-│   ├── posts/
-│   │   ├── [slug].astro      # 文章详情
-│   │   └── [slug].md.ts      # 文章 Markdown 端点（AI 友好）
-│   ├── og/                   # 动态 OG 图片生成
-│   ├── rss.xml.ts            # RSS 订阅
-│   ├── llms.txt.ts           # llms.txt 端点
-│   ├── llms-full.txt.ts      # llms-full.txt 端点
-│   ├── skill.md.ts           # AI skill 端点
-│   ├── api/
-│   │   └── posts.json.ts     # 文章 JSON API
-│   └── [locale]/             # 各语言页面
+│   ├── site.ts                     # 站点元信息、导航、页脚、主题控制、可选 sections
+│   └── themes.ts                   # 41 套主题及其本地化标签
+├── content.config.ts               # Content Collections schema（Zod）
 ├── content/
-│   └── posts/
-│       ├── en/*.md           # English 文章（默认语言）
-│       └── {locale}/*.md     # 各语言文章
-└── styles/
-    └── global.css            # Tailwind CSS v4 @theme 设计令牌 + 基础样式
+│   └── posts/{locale}/*.mdx        # 多语言文章内容
+├── i18n/
+│   ├── index.ts                    # locale 定义与路由 helper
+│   └── messages/*.ts               # 各语言 UI 文案
+├── components/
+│   ├── pages/                      # 页面级 UI：home、post、about、for-agents
+│   ├── AIAccessList.astro          # Agent 视图下的 Markdown 文章列表
+│   ├── Navbar.astro                # 导航、语言切换、主题控制
+│   ├── ModeSwitcher.astro          # Light/Dark/System + 自定义主题切换
+│   ├── TableOfContents.astro       # 基于标题生成目录
+│   └── Giscus.astro                # 可选评论组件
+├── lib/
+│   ├── agent-protocol.ts           # 协议 manifest 与 agent 文档生成
+│   ├── markdown-endpoint.ts        # Markdown 响应 helper
+│   ├── og-image.ts                 # 动态 OG 图片生成
+│   ├── posts.ts                    # 按 locale 获取与排序内容
+│   ├── site-content.ts             # 路径、分页、RSS、llms.txt 等 helper
+│   └── theme.ts                    # 主题偏好状态管理
+├── layouts/
+│   └── Layout.astro                # SEO、hreflang、JSON-LD、alternates、全局壳层
+├── pages/
+│   ├── index.astro                 # 默认 locale 首页
+│   ├── about.astro                 # About 页面
+│   ├── for-agents.astro            # 面向人类的协议说明页
+│   ├── page/[num].astro            # 首页分页
+│   ├── posts/
+│   │   ├── [slug].astro            # 文章详情页
+│   │   └── [slug].md.ts            # 单篇 Markdown 端点
+│   ├── agent/home.json.ts          # 聚合机器可读站点状态
+│   ├── protocol.json.ts            # 结构化 manifest
+│   ├── skill.md.ts                 # canonical 协议说明
+│   ├── policy.md.ts                # Agent 规则与安全约束
+│   ├── reading.md.ts               # 推荐抓取流程
+│   ├── subscribe.md.ts             # 监控与订阅建议
+│   ├── auth.md.ts                  # 预留认证契约
+│   ├── llms.txt.ts                 # 紧凑型 LLM 索引
+│   ├── llms-full.txt.ts            # 全量 LLM 内容聚合
+│   ├── api/posts.json.ts           # 跨语言文章元数据
+│   ├── schemas/*.json.ts           # 协议端点 JSON Schema
+│   ├── [section]/...               # 自动生成的额外 collection 路由
+│   └── [locale]/...                # 各主要页面的本地化路由
+├── styles/
+│   ├── fonts.css                   # 本地 Bricolage Grotesque 字体声明
+│   └── global.css                  # Tailwind v4 tokens、排版与主题变量
 public/
+├── .well-known/ai-plugin.json      # 公开机器发现元数据
 ├── favicon.svg
-├── robots.txt
-└── .well-known/
-.github/
-└── workflows/
-    └── deploy-cloudflare-pages.yml     # Cloudflare Pages 部署（默认）
+├── logo.svg / logo-dark.svg
+└── og.png
+scripts/
+├── check-post-coverage.mjs         # 校验各 locale slug 一致性
+└── smoke-agent-protocol.mjs        # 校验生成后的协议产物
 ```
 
 ## 部署
 
 ### Cloudflare Pages（默认）
 
-内置工作流自动部署：
+内置工作流 `.github/workflows/deploy-cloudflare-pages.yml` 是一条偏 Cloudflare Pages 的部署路径，并且会在部署前先完成校验。
 
-1. 在仓库 **Settings** > **Pages** 中，Source 选择 **GitHub Actions**
-2. 在 `astro.config.mjs` 中设置 `site` 为你的 Cloudflare Pages URL
-3. 推送到 `main` 分支——站点自动部署
+1. 创建一个 Cloudflare Pages 项目，或者把工作流中的默认项目名 `astro-theme-aither` 改成你自己的
+2. 在 GitHub Secrets 中添加 `CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID`
+3. 在 `astro.config.mjs` 中把 `site` 改成你的生产域名
+4. 运行 `pnpm validate`
+5. 推送到 `main`，让 GitHub Actions 自动构建并部署
+
+最佳实践：如果你是从模板创建新仓库，第一次部署前先把 `.github/workflows/deploy-cloudflare-pages.yml` 中硬编码的 Pages 项目名改掉，避免误用上游默认值。
 
 ### 其他平台
 
-输出是 `dist/` 中的纯静态 HTML，可以部署到任何平台：
+产物是 `dist/` 下的静态 HTML，因此可以部署到任意静态托管平台：
 
 ```bash
 pnpm build
-# 将 dist/ 上传到 Netlify、Vercel 或任何静态托管服务
+# 将 dist/ 上传到 Netlify、Vercel、GitHub Pages 或任意静态主机
 ```
 
-## 设计哲学
+## 原则
 
-1. **排版即设计** -- 无衬线字体系统（Bricolage Grotesque + system-ui），精心调校的阅读节奏。字体*就是*视觉识别。
-2. **文字即美** -- 排版精良的文字在安静的页面上，就是最优雅的界面。
-3. **全球化** -- 跨平台字体堆栈，CJK 智能回退（PingFang SC、Microsoft YaHei）。零网络字体加载，零布局偏移。
-4. **AI 原生** -- 内置 llms.txt、结构化端点和机器可读内容，让 AI Agent 能直接理解你的内容。
-5. **精巧不复杂** -- 一个配置文件（`src/config/site.ts`）控制整个站点。
+1. **排版就是界面** -- 好的文字不应该和主题互相抢戏。
+2. **人类与 Agent 同样重要** -- 公共协议是产品的一部分，不是后补说明。
+3. **多语言一致性需要被校验** -- locale 覆盖不是假设，而是显式检查。
+4. **扩展点应贴近内容层** -- 用 Content Collections 和配置扩展 sections，而不是额外套一层应用系统。
+5. **保持克制** -- 静态输出、明确文档和清晰契约，比隐藏魔法更可靠。
 
 ## 致谢
 
-灵感来自 [yinwang.org](https://www.yinwang.org)。
-
-主题系统灵感来自 [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish)。
+- 灵感来自 [yinwang.org](https://www.yinwang.org)。
+- 部分主题系统灵感来自 [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish)。
 
 ## 贡献
 
-欢迎贡献。请先开 issue 讨论你想要的改动。
+欢迎贡献。请先开 issue 讨论你想修改的内容。
 
 ## 许可证
 

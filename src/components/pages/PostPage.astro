@@ -64,6 +64,7 @@ const articleJsonLd = [
   description={post.data.description}
   image={post.data.image ?? getPostOgImagePath(locale, slug)}
   jsonLd={articleJsonLd}
+  enableCrisp={false}
   article={{
     publishedTime: post.data.date.toISOString(),
     author: siteConfig.author.name,

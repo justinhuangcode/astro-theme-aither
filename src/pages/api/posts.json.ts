@@ -17,6 +17,7 @@ export async function GET() {
         slug,
         title: post.data.title,
         date: post.data.date.toISOString().split('T')[0],
+        published_at: post.data.date.toISOString(),
         category: post.data.category,
         description: post.data.description || null,
         tags: post.data.tags || [],

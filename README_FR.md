@@ -9,39 +9,54 @@
 [![GitHub Stars](https://img.shields.io/github/stars/justinhuangcode/astro-theme-aither?style=flat-square&logo=github)](https://github.com/justinhuangcode/astro-theme-aither/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/justinhuangcode/astro-theme-aither?style=flat-square)](https://github.com/justinhuangcode/astro-theme-aither/commits/main)
 
-**[Aperçu en ligne](https://astro-theme-aither.pages.dev)**
+**[Aperçu en direct](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme built around beautiful text.  ✍️
+Un thème Astro AI-native construit autour de la beauté du texte. ✍️
+
+Typographie d'abord pour les humains, endpoints lisibles par machine pour les agents IA.
+
+Aither est un thème de publication multilingue qui traite les deux surfaces comme des capacités produit de premier rang : des pages calmes et lisibles pour les humains, et des documents de protocole publics avec des endpoints Markdown pour les agents. Ce n'est pas un starter de blog générique auquel on a ajouté une étiquette AI après coup.
+
+## Modèle Lecteur / Agent
+
+- `Reader` désigne une personne qui lit le site HTML : page d'accueil, articles, page About, commentaires et contrôles de thème.
+- `Agent` désigne un logiciel qui consomme la surface machine-readable publique : `protocol.json`, `skill.md`, `agent/home.json` par locale, `llms.txt`, `api/posts.json` et Markdown par article.
+- `Read-only` signifie que la découverte, la lecture, l'indexation et la surveillance sont supportées aujourd'hui ; la publication, les commentaires et les écritures authentifiées ne le sont pas.
+
+```mermaid
+flowchart LR
+  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
+  A --> C["Agent Surface<br/>JSON / Markdown"]
+  B --> D["Canonical article URLs"]
+  C --> E["protocol.json -> skill.md -> agent/home.json"]
+  C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
+```
 
 ## Pourquoi Aither ?
 
-Une bonne écriture mérite une bonne typographie. La plupart des thèmes enfouissent vos mots sous des images hero, des animations et des décorations UI. Aither prend l'approche inverse — il laisse le texte être le design.
+La plupart des thèmes de blog optimisent les hero sections, l'animation et le chrome UI. Aither optimise le rythme de lecture, la sobriété typographique et la densité d'information.
 
-Une typographie sans-serif épurée avec des titres Bricolage Grotesque, un rythme de lecture soigneusement ajusté et une mise en page qui ne gêne pas. Tout est au service d'un seul objectif : rendre votre écriture belle à voir et à lire.
+En même temps, le projet suppose que le site sera lu autant par des logiciels que par des personnes. C'est pourquoi le dépôt fournit une vraie surface de protocole : `protocol.json`, `skill.md`, des documents machine localisés, `llms.txt`, les corps d'articles en Markdown, des schémas JSON et une API d'articles cross-locale.
 
-## Fonctionnalités
+## Ce qui est inclus aujourd'hui
 
-- **Typographie sans-serif** -- Titres Bricolage Grotesque associés à un corps en system-ui, avec des fallbacks CJK (PingFang SC, Microsoft YaHei), cohérent sur macOS, Windows, Linux et Android
-- **Mode sombre** -- Basculement Clair / Sombre / Système avec persistance localStorage, animé via l'API View Transitions (révélation circulaire)
-- **Tailwind CSS v4** -- Stylisation utility-first avec des tokens de design `@theme`, facile à personnaliser
-- **i18n 11 langues** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
-- **55 articles d'exemple localisés** -- Chaque langue embarque les mêmes 5 articles de départ (`11 locales x 5 slugs`) afin que la démo et les vérifications de couverture restent alignées
-- **Images OG dynamiques** -- Images Open Graph générées automatiquement par article via Satori + resvg-js
-- **Commentaires Giscus** -- Système de commentaires basé sur GitHub Discussions
-- **Chat Crisp** -- Widget de chat en direct optionnel via Crisp
-- **Catégories et tags** -- Organisation des articles par catégories et tags optionnels
-- **Articles épinglés** -- Définir `pinned: true` dans le frontmatter pour mettre en avant un article
-- **Pagination** -- Taille de page configurable pour la liste du blog
-- **Table des matières** -- Générée automatiquement à partir des titres de l'article
-- **Informations auteur** -- Nom et avatar de l'auteur configurables
-- **Endpoints AI-natifs** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, et endpoints `.md` par article
-- **Flux RSS** -- `/rss.xml` intégré via `@astrojs/rss`
-- **Sitemap** -- Généré automatiquement via `@astrojs/sitemap`
-- **SEO** -- Balises Open Graph, URLs canoniques, descriptions par article
-- **Responsive** -- Mise en page adaptée au mobile, rythme de lecture préservé sur toutes les tailles d'écran
-- **Google Analytics** -- Optionnel, zéro configuration via la variable d'environnement `PUBLIC_GA_ID`
-- **Astro Content Collections** -- Articles Markdown typés avec validation de schéma Zod
-- **Cloudflare Pages** -- Workflow CI/CD inclus pour le déploiement automatique
+- **Lecture centrée sur la typographie** -- Titres Bricolage Grotesque, texte système, fallbacks compatibles CJK et polices empaquetées localement
+- **Deux vues d'accueil** -- La page d'accueil propose une vue lecteur et une vue agent ; les humains voient des cartes, les agents voient directement les entrées Markdown, et `/for-agents/` explique le protocole
+- **41 thèmes soignés** -- Light / Dark / System plus 41 styles nommés dans `src/config/themes.ts`
+- **Surface AI-native complète** -- `/protocol.json`, `/skill.md`, `/agent/home.json` localisés, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, `.md` par article, About Markdown, schémas JSON et `/.well-known/ai-plugin.json`
+- **Read-only par défaut** -- Les agents peuvent découvrir, lire, indexer, résumer, surveiller et citer le contenu, mais il n'existe pas encore d'API d'écriture ni de flux d'authentification agent
+- **Publication en 11 langues** -- UI localisée, hreflang, routes et flux pour 11 locales
+- **66 sample posts localisés** -- 6 slugs de départ répliqués dans 11 locales (`11 x 6 = 66`) et vérifiés par `pnpm check:post-coverage`
+- **Base éditoriale complète** -- OG dynamiques, RSS, sitemap, JSON-LD, canonical, tags, articles épinglés, pagination, TOC, Giscus / Crisp / Google Analytics optionnels
+- **Extensible au-delà des posts** -- Les routes supportent déjà d'autres collections via Astro Content Collections et `siteConfig.sections`
+- **Stack Astro moderne** -- Astro 6, MDX, React 19 lorsque utile, Tailwind CSS v4 et une pipeline de validation qui vérifie contenu, build et artefacts de protocole
+
+## Prérequis
+
+- **Node.js** -- `22 LTS` recommandé. Versions minimales : `20.19.1+` ou `22.12.0+`
+- **pnpm** -- Le dépôt épingle `pnpm@10.32.1` via `packageManager`
+- **Corepack** -- Exécutez `corepack enable` une fois pour utiliser automatiquement la version de pnpm attendue
+- **Cloudflare Pages** -- Nécessaire seulement si vous utilisez le workflow GitHub Actions fourni
 
 ## Démarrage rapide
 
@@ -55,109 +70,145 @@ git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
 cd YOUR_REPO
 ```
 
-3. Installez les dépendances :
+3. Activez Corepack puis installez les dépendances :
 
 ```bash
+corepack enable
 pnpm install
 ```
 
 4. Configurez votre site :
 
 ```bash
-# astro.config.mjs -- définir l'URL de votre site (le seul endroit où renseigner l'URL)
+# astro.config.mjs -- set your site URL (only place you need to set it)
 site: 'https://your-domain.com'
 
-# src/config/site.ts -- définir le nom, la description, les liens sociaux, la navigation, le pied de page
-# (l'url est automatiquement lue depuis astro.config.mjs)
+# src/config/site.ts -- set name, description, social links, nav, footer
+# (url is automatically read from astro.config.mjs)
 ```
 
-5. Configurer les variables d'environnement (optionnel) :
+5. Configurez les variables d'environnement (optionnel) :
 
 ```bash
 cp .env.example .env
-# Éditez .env avec vos valeurs (GA, Giscus, Crisp)
+# Edit .env with your values (GA, Giscus, Crisp)
 ```
 
-6. Commencez à écrire :
+6. Validez le starter avant de faire de gros changements :
+
+```bash
+pnpm validate
+```
+
+7. Lancez le développement :
 
 ```bash
 pnpm dev
 ```
 
-7. Déploiement : poussez vers `main`, GitHub Actions construit et déploie automatiquement.
+8. Si vous utilisez le workflow Cloudflare intégré, terminez d'abord la section [Déploiement](#déploiement) avant de pousser sur `main`
 
 ### Installation manuelle
 
 ```bash
 git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
 cd my-blog
-rm -rf .git && git init
+corepack enable
 pnpm install
+pnpm validate
 pnpm dev
 ```
 
-## Format des articles
+Bonne pratique : pour un nouveau site, préférez le flow template GitHub. Si vous clonez le dépôt upstream manuellement, vérifiez d'abord que tout fonctionne localement avant de recréer un dépôt propre.
 
-Créez des fichiers Markdown dans `src/content/posts/{locale}/` :
+## Modèle de contenu
+
+Créez des fichiers MDX dans `src/content/posts/{locale}/` :
 
 ```markdown
 ---
-title: Titre de l'article
-date: 2026-01-01
-description: Description optionnelle pour le SEO
+title: Your Post Title
+date: "2026-01-01T16:00:00+08:00"
+description: Optional description for SEO
 category: Technology
-tags: [optionnel, tags]
+tags: [optional, tags]
 pinned: false
 image: ./optional-cover.jpg
 ---
 
-Votre contenu ici.
+Your content here.
 ```
 
 | Champ | Type | Requis | Défaut | Description |
 |---|---|---|---|---|
 | `title` | string | Oui | -- | Titre de l'article |
-| `date` | date | Oui | -- | Date de publication (AAAA-MM-JJ) |
-| `description` | string | Non | -- | Utilisé dans le flux RSS et les balises meta |
-| `category` | string | Non | `"General"` | Catégorie de l'article |
-| `tags` | string[] | Non | -- | Tags de l'article |
-| `pinned` | boolean | Non | `false` | `true` met l'article en avant en haut de la liste |
-| `image` | image | Non | -- | Image de couverture (chemin relatif ou import) |
+| `date` | date | Oui | -- | Date de publication, idéalement en ISO 8601 avec fuseau |
+| `description` | string | Non | -- | Utilisée pour RSS et les métadonnées |
+| `category` | string | Non | `"General"` | Catégorie |
+| `tags` | string[] | Non | -- | Tags |
+| `pinned` | boolean | Non | `false` | Épingle l'article en tête |
+| `image` | image | Non | -- | Image de couverture |
+
+Bonnes pratiques :
+
+- Utiliser un timestamp ISO 8601 complet avec fuseau, par exemple `2026-03-19T16:27:43+08:00`
+- Garder le même slug dans chaque locale pour que `pnpm check:post-coverage` puisse vérifier la parité
+- Traiter l'anglais comme baseline et réutiliser le même nom de fichier dans chaque dossier de langue
 
 ## Commandes
 
 | Commande | Description |
 |---|---|
-| `pnpm dev` | Démarrer le serveur de développement local |
-| `pnpm check` | Exécuter les vérifications de type et de contenu Astro |
-| `pnpm check:post-coverage` | Vérifier que chaque langue possède le même ensemble de slugs d'articles |
+| `pnpm dev` | Démarrer le serveur de dev |
+| `pnpm check` | Lancer les vérifications Astro et contenu |
+| `pnpm check:post-coverage` | Vérifier la parité des slugs entre locales |
 | `pnpm build` | Construire le site statique dans `dist/` |
-| `pnpm smoke` | Exécuter les smoke tests des artefacts du protocole AI dans `dist/` |
-| `pnpm preview` | Prévisualiser la version de production localement |
-| `pnpm validate` | Lancer `check`, `check:post-coverage`, `build` et `smoke` d'un seul coup |
+| `pnpm smoke` | Lancer les smoke tests du protocole IA |
+| `pnpm preview` | Prévisualiser le build de production |
+| `pnpm validate` | Vérification recommandée avant push : `check`, `check:post-coverage`, `build`, `smoke` |
 
 ## Protocole AI-native
 
-Pour construire une intégration AI ou agent, l'ordre recommandé est le suivant :
+`/for-agents/` sert de guide humain, mais le contrat machine de référence est le suivant :
 
-1. `/protocol.json` pour un manifeste structuré léger
-2. `/skill.md` pour l'entrée narrative canonique du protocole
-3. `/agent/home.json` pour les métadonnées du site et les derniers articles
-4. `/policy.md` pour les règles et limites de sécurité
-5. `/reading.md` pour les conseils de lecture / récupération
-6. `/subscribe.md` pour les conseils de surveillance et de polling
-7. `/auth.md` pour confirmer que les flux d'écriture / d'authentification sont encore réservés
+| Endpoint | Portée | Rôle |
+|---|---|---|
+| `/protocol.json` | Global | Manifest léger et liens vers les schémas |
+| `/skill.md` | Global | Point d'entrée narratif canonique |
+| `/{locale}/agent/home.json` | Par locale | État courant du site et derniers articles |
+| `/{locale}/policy.md` | Par locale | Règles, ordre de découverte et garde-fous |
+| `/{locale}/reading.md` | Par locale | Workflow de lecture recommandé |
+| `/{locale}/subscribe.md` | Par locale | Conseils de surveillance et polling |
+| `/{locale}/auth.md` | Par locale | Contrat d'auth réservé ; le mode reste read-only |
+| `/{locale}/llms.txt` | Par locale | Index compact pour les LLM |
+| `/{locale}/llms-full.txt` | Par locale | Contenu complet inline pour les workflows bulk |
+| `/api/posts.json` | Toutes les locales | Métadonnées structurées sur l'ensemble des langues |
+| `/{locale}/posts/{slug}.md` | Par locale | Corps Markdown canonique d'un article |
+| `/{locale}/about.md` | Par locale | Page About en Markdown |
+| `/.well-known/ai-plugin.json` | Global | Métadonnées de découverte machine |
+| `/schemas/agent-protocol.schema.json` | Global | Schéma JSON de `protocol.json` |
+| `/schemas/agent-home.schema.json` | Global | Schéma JSON de `agent/home.json` |
 
-Le protocole est volontairement en lecture seule pour le moment. Les agents peuvent découvrir, indexer, résumer, s'abonner et récupérer le Markdown, mais ne doivent pas supposer que l'écriture, les commentaires ou des API authentifiées existent déjà.
+Pour la locale par défaut `en`, il n'y a pas de préfixe. Le Markdown anglais est donc sous `/posts/{slug}.md`, le français sous `/fr/posts/{slug}.md`.
 
-Des endpoints de schéma sont aussi disponibles pour des intégrations plus strictes :
+Bonnes pratiques :
 
-- `/schemas/agent-protocol.schema.json`
-- `/schemas/agent-home.schema.json`
-
-Bonne pratique : si vous modifiez `protocol.json`, `skill.md`, `agent/home.json` ou tout document Markdown destiné aux agents, exécutez au minimum `pnpm smoke`.
+1. Commencer par `/protocol.json`, puis lire `/skill.md`, puis récupérer le `agent/home.json` de la locale cible
+2. Utiliser `/api/posts.json` pour la découverte multi-locale et les endpoints `.md` pour la récupération finale
+3. Citer l'URL HTML canonique côté humain, pas l'endpoint Markdown
+4. Re-fetcher lorsque la fraîcheur compte
+5. Lancer au minimum `pnpm smoke` quand vous modifiez les documents de protocole
 
 ## Configuration
+
+Fichiers principaux à connaître :
+
+- `astro.config.mjs` -- URL de production, intégrations Astro et routing des locales
+- `src/config/site.ts` -- métadonnées, nav/footer, pagination, timezone, thèmes, liens sociaux et sections optionnelles
+- `src/config/themes.ts` -- catalogue des 41 thèmes et labels localisés
+- `src/content.config.ts` -- schéma Zod et enregistrement des collections
+- `src/i18n/index.ts` et `src/i18n/messages/*.ts` -- locales, helpers de routing et textes traduits
+- `.env` -- paramètres optionnels pour Google Analytics, Crisp et Giscus
 
 ### Paramètres du site (`src/config/site.ts`)
 
@@ -168,14 +219,14 @@ export const siteConfig = {
   description: '...',
   author: {
     name: 'Aither',
-    avatar: '', // Importer depuis src/assets/ pour l'optimisation, ou utiliser une URL
+    avatar: '', // Import from src/assets/ for optimization, or use URL string
   },
-  // l'url est automatiquement lue depuis astro.config.mjs, inutile de la répéter ici
+  // url is automatically read from astro.config.mjs — no need to set it here
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
   ],
-  blog: { paginationSize: 20 },
+  blog: { paginationSize: 20, timeZone: 'Asia/Shanghai' },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
   ui: {
@@ -184,6 +235,10 @@ export const siteConfig = {
     enableModeSwitch: true,
     showMoreThemesMenu: true,
   },
+  sections: [
+    // Optional extra collections beyond posts
+    // { id: 'translations', labelKey: 'translations' },
+  ],
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -193,13 +248,32 @@ export const siteConfig = {
 };
 ```
 
-Définissez `ui.showMoreThemesMenu` sur `false` si vous voulez conserver le sélecteur Clair / Sombre / Système tout en masquant le sélecteur de thèmes personnalisés.
+Mettez `ui.showMoreThemesMenu` à `false` si vous souhaitez garder Light / Dark / System mais masquer le picker complet.
+
+### Sections de contenu supplémentaires
+
+Le projet est déjà prêt pour plus d'une collection :
+
+```typescript
+// src/config/site.ts
+sections: [{ id: 'translations', labelKey: 'translations' }]
+
+// src/content.config.ts
+const translations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/translations' }),
+  schema: contentSchema,
+});
+
+export const collections = { posts, translations };
+```
+
+Créez ensuite le contenu dans `src/content/translations/{locale}/`. Les routes de liste et de détail sont générées automatiquement.
 
 ### Configuration Astro (`astro.config.mjs`)
 
 ```javascript
 export default defineConfig({
-  site: 'https://your-domain.com', // Requis pour RSS et sitemap
+  site: 'https://your-domain.com',
   integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
@@ -213,13 +287,13 @@ export default defineConfig({
 ### Variables d'environnement (`.env`)
 
 ```bash
-# Google Analytics (laisser vide pour désactiver)
+# Google Analytics (leave empty to disable)
 PUBLIC_GA_ID=
 
-# Chat Crisp (laisser vide pour désactiver)
+# Crisp Chat (leave empty to disable)
 PUBLIC_CRISP_WEBSITE_ID=
 
-# Commentaires Giscus (tout laisser vide pour désactiver)
+# Giscus Comments (leave all empty to disable)
 PUBLIC_GISCUS_REPO=
 PUBLIC_GISCUS_REPO_ID=
 PUBLIC_GISCUS_CATEGORY=
@@ -232,7 +306,7 @@ La configuration des langues se trouve dans `src/i18n/index.ts`, les traductions
 
 | Code | Langue |
 |---|---|
-| `en` | English (défaut) |
+| `en` | English (default) |
 | `zh-hans` | 简体中文 |
 | `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
@@ -244,102 +318,110 @@ La configuration des langues se trouve dans `src/i18n/index.ts`, les traductions
 | `id` | Bahasa Indonesia |
 | `pt-br` | Português (BR) |
 
-La locale par défaut (`en`) n'a pas de préfixe URL. Les autres locales utilisent leur code comme préfixe (ex. `/fr/`, `/ko/`).
+Bonnes pratiques : traiter l'anglais comme baseline canonique pour les slugs et utiliser `pnpm check:post-coverage` avant le déploiement.
 
 ## Structure du projet
 
-```
+```text
 src/
 ├── config/
-│   ├── site.ts              # Nom du site, liens sociaux, navigation, pied de page, analytics, Giscus, Crisp
-│   └── themes.ts            # Groupes de thèmes et libellés de thèmes localisés
-├── content.config.ts         # Schéma Content Collections (Zod)
-├── i18n/
-│   ├── index.ts              # Définitions des locales, getMessages(), helpers de routage
-│   └── messages/             # Fichiers de traduction (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
-├── layouts/
-│   └── Layout.astro          # Layout global (head, navigation, thème, analytics)
-├── lib/
-│   └── theme.ts              # Helpers d'état des préférences de thème
-├── components/
-│   ├── Navbar.astro          # Barre de navigation style Bootstrap 3 avec dégradé
-│   ├── NavbarMobile.astro    # Navigation mobile avec contrôles de locale et de thème
-│   ├── ModeSwitcher.astro    # Sélecteur desktop du mode et du style de thème
-│   ├── LanguageSwitcher.astro# Sélecteur desktop de locale
-│   ├── BlogGrid.astro        # Grille d'articles avec pagination
-│   ├── BlogCard.astro        # Carte d'article avec catégorie, tags, date
-│   ├── TableOfContents.astro # Table des matières auto-générée
-│   ├── AuthorInfo.astro      # Nom et avatar de l'auteur
-│   ├── Giscus.astro          # Commentaires GitHub Discussions
-│   ├── Crisp.astro           # Widget de chat Crisp
-│   ├── Analytics.astro       # Script Google Analytics
-│   └── Prose.astro           # Wrapper typographique pour le contenu
-├── pages/
-│   ├── index.astro           # Accueil (English, locale par défaut)
-│   ├── about.astro           # Page À propos
-│   ├── page/                 # Liste paginée du blog
-│   ├── posts/
-│   │   ├── [slug].astro      # Détail de l'article (English)
-│   │   └── [slug].md.ts      # Endpoint Markdown par article pour l'IA
-│   ├── og/                   # Génération dynamique d'images OG
-│   ├── rss.xml.ts            # Flux RSS
-│   ├── llms.txt.ts           # llms.txt pour agents IA
-│   ├── llms-full.txt.ts      # Contenu complet pour LLMs
-│   ├── skill.md.ts           # Descripteur de compétence IA
-│   ├── api/
-│   │   └── posts.json.ts     # API JSON des articles
-│   └── [locale]/             # Pages pour chaque locale supportée
+│   ├── site.ts                     # Site metadata, nav/footer, theme controls, optional sections
+│   └── themes.ts                   # 41 curated themes + localized labels
+├── content.config.ts               # Content Collections schema (Zod)
 ├── content/
-│   └── posts/
-│       ├── en/*.md           # Articles English (locale par défaut)
-│       └── {locale}/*.md     # Articles pour chaque locale supportée
-└── styles/
-    └── global.css            # Tokens @theme Tailwind CSS v4 + styles de base
+│   └── posts/{locale}/*.mdx        # Multilingual post content
+├── i18n/
+│   ├── index.ts                    # Locale definitions and routing helpers
+│   └── messages/*.ts               # UI translations for all locales
+├── components/
+│   ├── pages/                      # Page-level UI: home, post, about, for-agents
+│   ├── AIAccessList.astro          # Agent-facing Markdown post list
+│   ├── Navbar.astro                # Nav, locale switcher, theme controls
+│   ├── ModeSwitcher.astro          # Light/Dark/System + custom theme picker
+│   ├── TableOfContents.astro       # Heading-driven TOC
+│   └── Giscus.astro                # Optional comments
+├── lib/
+│   ├── agent-protocol.ts           # Protocol manifest + agent docs generation
+│   ├── markdown-endpoint.ts        # Markdown response helpers
+│   ├── og-image.ts                 # Dynamic OG image generation
+│   ├── posts.ts                    # Locale-aware content fetching + sorting
+│   ├── site-content.ts             # Paths, pagination, RSS, llms.txt helpers
+│   └── theme.ts                    # Theme preference state helpers
+├── layouts/
+│   └── Layout.astro                # SEO, hreflang, JSON-LD, alternates, global shell
+├── pages/
+│   ├── index.astro                 # Home (default locale)
+│   ├── about.astro                 # About page
+│   ├── for-agents.astro            # Human-facing protocol landing page
+│   ├── page/[num].astro            # Paginated home listing
+│   ├── posts/
+│   │   ├── [slug].astro            # Post detail
+│   │   └── [slug].md.ts            # Per-post Markdown endpoint
+│   ├── agent/home.json.ts          # Aggregated machine-readable site state
+│   ├── protocol.json.ts            # Structured manifest
+│   ├── skill.md.ts                 # Canonical narrative protocol document
+│   ├── policy.md.ts                # Agent rules and safety guidance
+│   ├── reading.md.ts               # Retrieval workflow guidance
+│   ├── subscribe.md.ts             # Monitoring guidance
+│   ├── auth.md.ts                  # Reserved auth contract
+│   ├── llms.txt.ts                 # Compact LLM index
+│   ├── llms-full.txt.ts            # Full inlined content for LLMs
+│   ├── api/posts.json.ts           # Cross-locale posts metadata
+│   ├── schemas/*.json.ts           # JSON Schemas for protocol endpoints
+│   ├── [section]/...               # Auto-generated extra collection routes
+│   └── [locale]/...                # Localized counterparts for all major routes
+├── styles/
+│   ├── fonts.css                   # Local Bricolage Grotesque font faces
+│   └── global.css                  # Tailwind v4 tokens, typography, theme variables
 public/
+├── .well-known/ai-plugin.json      # Public machine discovery metadata
 ├── favicon.svg
-├── robots.txt
-└── .well-known/
-.github/
-└── workflows/
-    └── deploy-cloudflare-pages.yml     # Déploiement Cloudflare Pages (défaut)
+├── logo.svg / logo-dark.svg
+└── og.png
+scripts/
+├── check-post-coverage.mjs         # Enforce slug parity across locales
+└── smoke-agent-protocol.mjs        # Validate generated protocol artifacts
 ```
 
 ## Déploiement
 
-### Cloudflare Pages (défaut)
+### Cloudflare Pages (par défaut)
 
-Le workflow inclus (`.github/workflows/deploy-cloudflare-pages.yml`) déploie automatiquement :
+Le workflow `.github/workflows/deploy-cloudflare-pages.yml` est orienté Cloudflare Pages et valide le site avant déploiement.
 
-1. Allez dans **Settings** > **Pages** > **Source** de votre dépôt : sélectionnez **GitHub Actions**
-2. Mettez à jour `site` dans `astro.config.mjs` avec votre URL Cloudflare Pages
-3. Poussez vers `main` — le site se déploie automatiquement
+1. Créez un projet Cloudflare Pages ou remplacez le nom par défaut `astro-theme-aither`
+2. Ajoutez `CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID` dans GitHub Secrets
+3. Mettez à jour `site` dans `astro.config.mjs`
+4. Exécutez `pnpm validate`
+5. Poussez sur `main`
+
+Bonne pratique : changez le nom de projet Pages codé en dur avant le premier déploiement si vous partez du template.
 
 ### Autres plateformes
 
-La sortie est du HTML statique dans `dist/`, déployable partout :
+La sortie est un site statique dans `dist/` :
 
 ```bash
 pnpm build
-# Uploadez dist/ vers Netlify, Vercel ou tout hébergement statique
+# Upload dist/ to Netlify, Vercel, GitHub Pages, or any static host
 ```
 
-## Philosophie de design
+## Principes
 
-1. **La typographie est le design** -- Titres sans-serif en Bricolage Grotesque, corps de texte épuré en system-ui, et un rythme de lecture soigneusement ajusté. La police *est* l'identité visuelle.
-2. **Le texte est beau** -- Un texte bien composé sur une page calme est l'interface la plus élégante.
-3. **Fonctionne partout** -- Piles de polices multi-plateformes avec fallbacks CJK (PingFang SC, Microsoft YaHei). Pas de délai de chargement de polices web, pas de décalage de mise en page.
-4. **AI-natif** -- Découvrabilité LLM de premier ordre avec llms.txt, endpoints structurés et contenu lisible par les machines.
-5. **Raffiné, pas complexe** -- Les tokens de design `@theme` de Tailwind CSS v4 rendent la personnalisation simple. Un seul fichier de configuration (`src/config/site.ts`) contrôle tout le site.
+1. **La typographie est l'interface** -- Le bon texte ne devrait pas lutter contre le thème.
+2. **Humains et agents comptent autant** -- Le protocole public fait partie du produit.
+3. **La parité multilingue se vérifie** -- Elle ne se suppose pas.
+4. **Les points d'extension restent proches du contenu** -- Via les collections et la config, pas via une couche applicative à part.
+5. **Moins de magie, plus de clarté** -- Sortie statique, docs explicites et contrats lisibles.
 
 ## Remerciements
 
-Inspiré par [yinwang.org](https://www.yinwang.org).
-
-Système de thèmes inspiré par [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
+- Inspiré par [yinwang.org](https://www.yinwang.org).
+- Des éléments du système de thèmes s'inspirent de [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
 
 ## Contribuer
 
-Les contributions sont les bienvenues. Veuillez d'abord ouvrir une issue pour discuter de ce que vous souhaitez modifier.
+Les contributions sont bienvenues. Ouvrez d'abord une issue pour discuter du changement.
 
 ## Licence
 

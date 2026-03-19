@@ -11,153 +11,204 @@
 
 **[라이브 미리보기](https://astro-theme-aither.pages.dev)**
 
-An AI-native Astro theme built around beautiful text.  ✍️
+아름다운 텍스트를 중심에 둔 AI-native Astro 테마. ✍️
+
+사람 독자에게는 타이포그래피 우선, AI 에이전트에게는 머신 리더블 엔드포인트.
+
+Aither는 다국어 퍼블리싱 테마로, 사람을 위한 차분하고 읽기 좋은 페이지와 에이전트를 위한 공개 프로토콜 문서 및 Markdown 엔드포인트를 모두 제품의 핵심 표면으로 다룹니다. 뒤늦게 AI 라벨만 붙인 일반 블로그 스타터가 아닙니다.
+
+## 독자 / 에이전트 모델
+
+- `Reader`는 HTML 사이트를 읽는 사람을 뜻합니다. 홈 카드, 글 페이지, About 페이지, 댓글, 테마 컨트롤이 여기에 속합니다.
+- `Agent`는 공개된 머신 리더블 표면을 소비하는 소프트웨어를 뜻합니다. `protocol.json`, `skill.md`, locale별 `agent/home.json`, `llms.txt`, `api/posts.json`, 글별 Markdown 엔드포인트가 포함됩니다.
+- `Read-only`는 현재 발견, 가져오기, 인덱싱, 모니터링만 지원한다는 뜻이며, 글쓰기, 댓글 작성, 인증 기반 쓰기 기능은 아직 없습니다.
+
+```mermaid
+flowchart LR
+  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
+  A --> C["Agent Surface<br/>JSON / Markdown"]
+  B --> D["Canonical article URLs"]
+  C --> E["protocol.json -> skill.md -> agent/home.json"]
+  C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
+```
 
 ## 왜 Aither인가?
 
-좋은 글에는 좋은 타이포그래피가 필요합니다. 대부분의 테마는 히어로 이미지, 애니메이션, UI 장식 아래에 글을 묻어버립니다. Aither는 정반대 — 텍스트 자체를 디자인으로 삼습니다.
+대부분의 블로그 테마는 히어로 섹션, 애니메이션, UI 장식에 집중합니다. Aither는 읽기 리듬, 타이포그래피의 절제, 정보 밀도에 집중합니다.
 
-Bricolage Grotesque 헤딩과 깔끔한 산세리프 타이포그래피, 세심하게 조정된 읽기 리듬, 방해하지 않는 레이아웃. 모든 것이 하나의 목표를 위해 존재합니다: 글을 아름답게 보이고 읽히게 만드는 것.
+동시에 이 프로젝트는 사이트가 사람뿐 아니라 소프트웨어에도 읽힌다고 가정합니다. 그래서 `protocol.json`, `skill.md`, 로컬라이즈된 머신 문서, `llms.txt`, Markdown 본문, JSON Schema, 다국어 posts API까지 실제 프로토콜 표면을 포함합니다.
 
-## 기능
+## 현재 포함된 것
 
-- **산세리프 타이포그래피** -- Bricolage Grotesque 헤딩에 system-ui 본문, CJK 인식 폴백(PingFang SC, Microsoft YaHei), macOS, Windows, Linux, Android 전체 일관
-- **다크 모드** -- 라이트 / 다크 / 시스템 전환, localStorage 지속, View Transitions API 원형 공개 애니메이션
-- **Tailwind CSS v4** -- 유틸리티 우선 스타일링, `@theme` 디자인 토큰, 쉬운 커스터마이징
-- **11개 언어 i18n** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR)
-- **55개의 로컬라이즈된 샘플 글** -- 모든 로케일에 동일한 5개 스타터 글이 포함되어 (`11개 로케일 x 5개 slug`) 데모와 커버리지 검사가 항상 일치합니다
-- **동적 OG 이미지** -- Satori + resvg-js를 통한 게시글별 자동 Open Graph 이미지 생성
-- **Giscus 댓글** -- GitHub Discussions 기반 댓글 시스템
-- **Crisp 채팅** -- 선택적 실시간 채팅 위젯
-- **카테고리 및 태그** -- 게시글 분류 및 선택적 태그 지원
-- **고정 게시글** -- frontmatter에서 `pinned: true` 설정으로 상단 고정
-- **페이지네이션** -- 블로그 목록 페이지 크기 설정 가능
-- **목차** -- 게시글 헤딩에서 자동 생성
-- **저자 정보** -- 설정 가능한 저자 이름 및 아바타
-- **AI 네이티브 엔드포인트** -- `/protocol.json`, `/skill.md`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/agent/home.json`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, 게시글별 `.md` 엔드포인트
-- **RSS 피드** -- `@astrojs/rss` 기반 내장 `/rss.xml`
-- **사이트맵** -- `@astrojs/sitemap`으로 자동 생성
-- **SEO** -- Open Graph 메타 태그, canonical URL, 게시글별 description
-- **반응형** -- 모바일 친화적 레이아웃, 화면 크기별 읽기 리듬 유지
-- **Google Analytics** -- 선택적, `PUBLIC_GA_ID` 환경 변수로 제로 설정 활성화
-- **Astro Content Collections** -- Zod 스키마 검증이 포함된 타입 안전 Markdown 게시글
-- **Cloudflare Pages** -- 자동 배포를 위한 CI/CD 워크플로우 포함
+- **타이포그래피 중심 읽기 경험** -- Bricolage Grotesque 헤딩, 시스템 본문, CJK 대응 폴백, 로컬 번들 폰트
+- **홈 이중 뷰** -- 독자 뷰와 에이전트 뷰를 모두 제공하며 `/for-agents/`가 프로토콜을 설명합니다
+- **41개 큐레이션 테마** -- Light / Dark / System + `src/config/themes.ts`의 41개 테마
+- **AI-native 프로토콜 표면** -- `/protocol.json`, `/skill.md`, 로컬라이즈된 `/agent/home.json`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, 글별 `.md`, About Markdown, JSON Schema, `/.well-known/ai-plugin.json`
+- **기본 read-only** -- 에이전트는 발견, 읽기, 인덱싱, 요약, 모니터링, 인용만 가능하며 쓰기 API는 없습니다
+- **11개 언어** -- UI, hreflang, 라우트, 피드까지 11개 locale 지원
+- **66개 로컬라이즈드 sample 글** -- 6개 슬러그가 11개 locale에 복제되어 `pnpm check:post-coverage`로 검증됩니다
+- **완성된 퍼블리싱 기능** -- 동적 OG, RSS, sitemap, JSON-LD, canonical, tags, pinned posts, pagination, TOC, optional Giscus / Crisp / GA
+- **posts 외 확장 가능** -- Astro Content Collections와 `siteConfig.sections`로 다른 섹션도 확장 가능합니다
+- **현대적인 Astro 스택** -- Astro 6, MDX, React 19, Tailwind CSS v4, 그리고 content / build / protocol validation 파이프라인
+
+## 요구 사항
+
+- **Node.js** -- `22 LTS` 권장. 최소 버전 `20.19.1+` 또는 `22.12.0+`
+- **pnpm** -- `packageManager`로 `pnpm@10.32.1` 고정
+- **Corepack** -- `corepack enable`을 한 번 실행
+- **Cloudflare Pages** -- 포함된 GitHub Actions 배포를 쓸 때만 필요
 
 ## 빠른 시작
 
 ### GitHub 템플릿 사용
 
 1. [GitHub](https://github.com/justinhuangcode/astro-theme-aither)에서 **"Use this template"** 클릭
-2. 새 저장소 클론:
+2. 새 저장소를 clone:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
 cd YOUR_REPO
 ```
 
-3. 의존성 설치:
+3. Corepack 활성화 및 설치:
 
 ```bash
+corepack enable
 pnpm install
 ```
 
 4. 사이트 설정:
 
 ```bash
-# astro.config.mjs -- 사이트 URL 설정 (URL은 여기 한 곳에서만 설정하면 됩니다)
+# astro.config.mjs -- set your site URL (only place you need to set it)
 site: 'https://your-domain.com'
 
-# src/config/site.ts -- 이름, 설명, 소셜 링크, 내비게이션, 푸터 설정
-# (url은 astro.config.mjs에서 자동으로 읽어옵니다)
+# src/config/site.ts -- set name, description, social links, nav, footer
+# (url is automatically read from astro.config.mjs)
 ```
 
-5. 환경 변수 설정 (선택):
+5. 환경 변수 설정(선택):
 
 ```bash
 cp .env.example .env
-# .env에 값 입력 (GA, Giscus, Crisp)
+# Edit .env with your values (GA, Giscus, Crisp)
 ```
 
-6. 작성 시작:
+6. 큰 변경 전에 스타터 검증:
+
+```bash
+pnpm validate
+```
+
+7. 개발 시작:
 
 ```bash
 pnpm dev
 ```
 
-7. 배포: `main`에 푸시하면 GitHub Actions가 자동으로 빌드 및 배포합니다.
+8. Cloudflare workflow를 사용할 경우 먼저 [배포](#배포) 섹션을 완료한 뒤 `main`에 push하세요
 
-### 수동 설치
+### 수동 설정
 
 ```bash
 git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
 cd my-blog
-rm -rf .git && git init
+corepack enable
 pnpm install
+pnpm validate
 pnpm dev
 ```
 
-## 게시글 형식
+권장 방식은 GitHub Template입니다. 수동으로 upstream을 clone했다면 먼저 로컬에서 정상 동작을 확인하세요.
 
-`src/content/posts/{locale}/`에 Markdown 파일을 생성하세요:
+## 콘텐츠 모델
+
+`src/content/posts/{locale}/` 아래에 MDX 파일을 만듭니다.
 
 ```markdown
 ---
-title: 게시글 제목
-date: 2026-01-01
-description: SEO용 선택적 설명
+title: Your Post Title
+date: "2026-01-01T16:00:00+08:00"
+description: Optional description for SEO
 category: Technology
-tags: [선택적, 태그]
+tags: [optional, tags]
 pinned: false
 image: ./optional-cover.jpg
 ---
 
-내용을 여기에 작성하세요.
+Your content here.
 ```
 
 | 필드 | 타입 | 필수 | 기본값 | 설명 |
 |---|---|---|---|---|
-| `title` | string | 예 | -- | 게시글 제목 |
-| `date` | date | 예 | -- | 발행일 (YYYY-MM-DD) |
-| `description` | string | 아니오 | -- | RSS 피드 및 메타 태그에 사용 |
-| `category` | string | 아니오 | `"General"` | 게시글 카테고리 |
-| `tags` | string[] | 아니오 | -- | 게시글 태그 |
-| `pinned` | boolean | 아니오 | `false` | `true`면 목록 상단에 고정 |
-| `image` | image | 아니오 | -- | 커버 이미지 (상대 경로 또는 import) |
+| `title` | string | 예 | -- | 글 제목 |
+| `date` | date | 예 | -- | 발행 시각, ISO 8601 with timezone 권장 |
+| `description` | string | 아니오 | -- | RSS / meta 용도 |
+| `category` | string | 아니오 | `"General"` | 카테고리 |
+| `tags` | string[] | 아니오 | -- | 태그 |
+| `pinned` | boolean | 아니오 | `false` | 상단 고정 |
+| `image` | image | 아니오 | -- | 커버 이미지 |
+
+권장 사항:
+
+- `2026-03-19T16:27:43+08:00` 같은 전체 ISO 8601 timestamp 사용
+- 모든 locale에서 같은 slug 유지
+- 영어를 baseline으로 보고 같은 파일명을 재사용
 
 ## 명령어
 
 | 명령어 | 설명 |
 |---|---|
 | `pnpm dev` | 로컬 개발 서버 시작 |
-| `pnpm check` | Astro 타입 및 콘텐츠 검사 실행 |
-| `pnpm check:post-coverage` | 모든 로케일이 동일한 게시글 slug 구성을 갖는지 확인 |
-| `pnpm build` | `dist/`에 정적 사이트 빌드 |
-| `pnpm smoke` | `dist/`의 AI 프로토콜 산출물 smoke test 실행 |
-| `pnpm preview` | 프로덕션 빌드 로컬 미리보기 |
-| `pnpm validate` | `check`, `check:post-coverage`, `build`, `smoke`를 한 번에 실행 |
+| `pnpm check` | Astro 타입 및 콘텐츠 검사 |
+| `pnpm check:post-coverage` | locale 간 slug parity 검사 |
+| `pnpm build` | `dist/`로 정적 빌드 |
+| `pnpm smoke` | AI protocol smoke test |
+| `pnpm preview` | 프로덕션 빌드 미리보기 |
+| `pnpm validate` | push 전 권장 검사 세트 |
 
 ## AI 네이티브 프로토콜
 
-AI 또는 agent 통합을 만들 때는 다음 순서대로 읽는 것을 권장합니다:
+`/for-agents/`는 사람용 가이드이며, 실제 머신 계약은 아래 엔드포인트입니다.
 
-1. `/protocol.json` -- 가벼운 구조화 매니페스트
-2. `/skill.md` -- canonical 내러티브 프로토콜 엔트리
-3. `/agent/home.json` -- 현재 사이트 메타데이터와 최신 게시글
-4. `/policy.md` -- 규칙과 안전 경계
-5. `/reading.md` -- 읽기 / 검색 가이드
-6. `/subscribe.md` -- 모니터링 및 폴링 가이드
-7. `/auth.md` -- 쓰기 / 인증 흐름이 아직 예약 상태인지 확인
+| 엔드포인트 | 범위 | 용도 |
+|---|---|---|
+| `/protocol.json` | 전역 | 가벼운 manifest와 schema 링크 |
+| `/skill.md` | 전역 | canonical narrative entry |
+| `/{locale}/agent/home.json` | locale별 | 현재 사이트 상태와 최신 글 |
+| `/{locale}/policy.md` | locale별 | 규칙과 안전 경계 |
+| `/{locale}/reading.md` | locale별 | 권장 retrieval workflow |
+| `/{locale}/subscribe.md` | locale별 | polling / monitoring 가이드 |
+| `/{locale}/auth.md` | locale별 | 예약된 auth 계약, 현재는 read-only |
+| `/{locale}/llms.txt` | locale별 | compact LLM index |
+| `/{locale}/llms-full.txt` | locale별 | bulk LLM용 전체 inline content |
+| `/api/posts.json` | 전체 locale | 구조화된 cross-locale metadata |
+| `/{locale}/posts/{slug}.md` | locale별 | canonical Markdown body |
+| `/{locale}/about.md` | locale별 | About Markdown |
+| `/.well-known/ai-plugin.json` | 전역 | discovery metadata |
+| `/schemas/agent-protocol.schema.json` | 전역 | `protocol.json` schema |
+| `/schemas/agent-home.schema.json` | 전역 | `agent/home.json` schema |
 
-현재 프로토콜은 의도적으로 읽기 전용입니다. Agent는 Markdown을 발견, 인덱싱, 요약, 구독, 가져오기 할 수 있지만 글 작성, 댓글 작성, 인증된 쓰기 API가 있다고 가정하면 안 됩니다.
+기본 locale `en`에는 접두사가 없습니다. 영어는 `/posts/{slug}.md`, 한국어는 `/ko/posts/{slug}.md`를 사용합니다.
 
-더 엄격한 구조 검증이 필요하다면 다음 schema 엔드포인트도 사용할 수 있습니다:
+권장 사항:
 
-- `/schemas/agent-protocol.schema.json`
-- `/schemas/agent-home.schema.json`
-
-Best practice: `protocol.json`, `skill.md`, `agent/home.json` 또는 agent 대상 Markdown 프로토콜 문서를 바꿨다면 최소한 `pnpm smoke`는 꼭 실행하세요.
+1. `/protocol.json` -> `/skill.md` -> locale별 `agent/home.json` 순서로 읽기
+2. 다국어 검색은 `/api/posts.json`, 최종 본문은 `.md` 엔드포인트 사용
+3. 사람에게 링크할 때는 canonical HTML URL 인용
+4. 최신성이 중요하면 다시 fetch
+5. protocol 문서를 바꾸면 최소 `pnpm smoke` 실행
 
 ## 설정
+
+주요 파일:
+
+- `astro.config.mjs` -- production URL, integrations, locale routing
+- `src/config/site.ts` -- site metadata, nav/footer, pagination, timezone, theme controls, optional sections
+- `src/config/themes.ts` -- 41-theme catalog and localized labels
+- `src/content.config.ts` -- Zod schema and collections
+- `src/i18n/index.ts` / `src/i18n/messages/*.ts` -- locales and translated UI
+- `.env` -- optional Google Analytics / Crisp / Giscus
 
 ### 사이트 설정 (`src/config/site.ts`)
 
@@ -168,14 +219,14 @@ export const siteConfig = {
   description: '...',
   author: {
     name: 'Aither',
-    avatar: '', // src/assets/에서 import하여 최적화하거나 URL 문자열 사용
+    avatar: '', // Import from src/assets/ for optimization, or use URL string
   },
-  // url은 astro.config.mjs에서 자동으로 읽어오므로 여기서 다시 설정할 필요가 없습니다
+  // url is automatically read from astro.config.mjs — no need to set it here
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '#', icon: 'x' },
   ],
-  blog: { paginationSize: 20 },
+  blog: { paginationSize: 20, timeZone: 'Asia/Shanghai' },
   analytics: { googleAnalyticsId: import.meta.env.PUBLIC_GA_ID || '' },
   crisp: { websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '' },
   ui: {
@@ -184,6 +235,10 @@ export const siteConfig = {
     enableModeSwitch: true,
     showMoreThemesMenu: true,
   },
+  sections: [
+    // Optional extra collections beyond posts
+    // { id: 'translations', labelKey: 'translations' },
+  ],
   giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
   nav: [
     { labelKey: 'blog', href: '/' },
@@ -193,13 +248,32 @@ export const siteConfig = {
 };
 ```
 
-라이트 / 다크 / 시스템 전환은 유지하고 사용자 정의 테마 피커만 숨기고 싶다면 `ui.showMoreThemesMenu`를 `false`로 설정하세요.
+큰 theme picker를 숨기고 싶다면 `ui.showMoreThemesMenu`를 `false`로 두면 됩니다.
+
+### 추가 콘텐츠 섹션
+
+프로젝트는 이미 여러 collection을 지원합니다.
+
+```typescript
+// src/config/site.ts
+sections: [{ id: 'translations', labelKey: 'translations' }]
+
+// src/content.config.ts
+const translations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/translations' }),
+  schema: contentSchema,
+});
+
+export const collections = { posts, translations };
+```
+
+이후 `src/content/translations/{locale}/` 아래에 콘텐츠를 만들면 라우트가 자동 생성됩니다.
 
 ### Astro 설정 (`astro.config.mjs`)
 
 ```javascript
 export default defineConfig({
-  site: 'https://your-domain.com', // RSS 및 사이트맵에 필요
+  site: 'https://your-domain.com',
   integrations: [react(), mdx(), sitemap()],
   i18n: {
     defaultLocale: 'en',
@@ -213,13 +287,13 @@ export default defineConfig({
 ### 환경 변수 (`.env`)
 
 ```bash
-# Google Analytics (비워두면 비활성화)
+# Google Analytics (leave empty to disable)
 PUBLIC_GA_ID=
 
-# Crisp 채팅 (비워두면 비활성화)
+# Crisp Chat (leave empty to disable)
 PUBLIC_CRISP_WEBSITE_ID=
 
-# Giscus 댓글 (모두 비워두면 비활성화)
+# Giscus Comments (leave all empty to disable)
 PUBLIC_GISCUS_REPO=
 PUBLIC_GISCUS_REPO_ID=
 PUBLIC_GISCUS_CATEGORY=
@@ -228,11 +302,11 @@ PUBLIC_GISCUS_CATEGORY_ID=
 
 ### i18n
 
-언어 설정은 `src/i18n/index.ts`에, 번역 파일은 `src/i18n/messages/*.ts`에 있습니다.
+언어 설정은 `src/i18n/index.ts`, 번역은 `src/i18n/messages/*.ts`에 있습니다.
 
 | 코드 | 언어 |
 |---|---|
-| `en` | English (기본) |
+| `en` | English (default) |
 | `zh-hans` | 简体中文 |
 | `zh-hant` | 繁體中文 |
 | `ko` | 한국어 |
@@ -244,102 +318,108 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | `id` | Bahasa Indonesia |
 | `pt-br` | Português (BR) |
 
-기본 로케일(`en`)은 URL 접두사가 없습니다. 다른 로케일은 코드를 접두사로 사용합니다 (예: `/ko/`, `/zh-hans/`).
+권장 사항: 영어 slug 집합을 canonical baseline으로 보고 `pnpm check:post-coverage`를 배포 전에 실행하세요.
 
 ## 프로젝트 구조
 
-```
+```text
 src/
 ├── config/
-│   ├── site.ts              # 사이트 이름, 소셜 링크, 내비게이션, 푸터, 분석, Giscus, Crisp
-│   └── themes.ts            # 테마 그룹과 로컬라이즈된 테마 라벨
-├── content.config.ts         # Content Collections 스키마 (Zod)
-├── i18n/
-│   ├── index.ts              # 로케일 정의, getMessages(), 라우팅 헬퍼
-│   └── messages/             # 번역 파일 (en.ts, zh-hans.ts, ko.ts, fr.ts, ...)
-├── layouts/
-│   └── Layout.astro          # 글로벌 레이아웃 (head, 내비게이션, 테마 전환, 분석)
-├── lib/
-│   └── theme.ts              # 테마 선호 상태 헬퍼
-├── components/
-│   ├── Navbar.astro          # Bootstrap 3 스타일 그래디언트 내비바
-│   ├── NavbarMobile.astro    # 로케일 및 테마 제어가 포함된 모바일 내비게이션
-│   ├── ModeSwitcher.astro    # 데스크톱 테마 모드/스타일 전환기
-│   ├── LanguageSwitcher.astro# 데스크톱 로케일 전환기
-│   ├── BlogGrid.astro        # 페이지네이션이 포함된 게시글 그리드
-│   ├── BlogCard.astro        # 카테고리, 태그, 날짜가 포함된 게시글 카드
-│   ├── TableOfContents.astro # 헤딩에서 자동 생성된 목차
-│   ├── AuthorInfo.astro      # 저자 이름 및 아바타
-│   ├── Giscus.astro          # GitHub Discussions 댓글
-│   ├── Crisp.astro           # Crisp 채팅 위젯
-│   ├── Analytics.astro       # Google Analytics 스크립트
-│   └── Prose.astro           # 게시글 콘텐츠 타이포그래피 래퍼
-├── pages/
-│   ├── index.astro           # 홈 (English, 기본 로케일)
-│   ├── about.astro           # 소개 페이지
-│   ├── page/                 # 페이지네이션된 블로그 목록
-│   ├── posts/
-│   │   ├── [slug].astro      # 게시글 상세 (English)
-│   │   └── [slug].md.ts      # 게시글별 Markdown 엔드포인트 (AI용)
-│   ├── og/                   # 동적 OG 이미지 생성
-│   ├── rss.xml.ts            # RSS 피드
-│   ├── llms.txt.ts           # AI 에이전트 친화적 llms.txt
-│   ├── llms-full.txt.ts      # LLM을 위한 전체 콘텐츠
-│   ├── skill.md.ts           # AI 스킬 디스크립터
-│   ├── api/
-│   │   └── posts.json.ts     # 게시글 JSON API
-│   └── [locale]/             # 각 지원 로케일의 페이지
+│   ├── site.ts                     # Site metadata, nav/footer, theme controls, optional sections
+│   └── themes.ts                   # 41 curated themes + localized labels
+├── content.config.ts               # Content Collections schema (Zod)
 ├── content/
-│   └── posts/
-│       ├── en/*.md           # English 게시글 (기본 로케일)
-│       └── {locale}/*.md     # 각 지원 로케일의 게시글
-└── styles/
-    └── global.css            # Tailwind CSS v4 @theme 토큰 + 기본 스타일
+│   └── posts/{locale}/*.mdx        # Multilingual post content
+├── i18n/
+│   ├── index.ts                    # Locale definitions and routing helpers
+│   └── messages/*.ts               # UI translations for all locales
+├── components/
+│   ├── pages/                      # Page-level UI: home, post, about, for-agents
+│   ├── AIAccessList.astro          # Agent-facing Markdown post list
+│   ├── Navbar.astro                # Nav, locale switcher, theme controls
+│   ├── ModeSwitcher.astro          # Light/Dark/System + custom theme picker
+│   ├── TableOfContents.astro       # Heading-driven TOC
+│   └── Giscus.astro                # Optional comments
+├── lib/
+│   ├── agent-protocol.ts           # Protocol manifest + agent docs generation
+│   ├── markdown-endpoint.ts        # Markdown response helpers
+│   ├── og-image.ts                 # Dynamic OG image generation
+│   ├── posts.ts                    # Locale-aware content fetching + sorting
+│   ├── site-content.ts             # Paths, pagination, RSS, llms.txt helpers
+│   └── theme.ts                    # Theme preference state helpers
+├── layouts/
+│   └── Layout.astro                # SEO, hreflang, JSON-LD, alternates, global shell
+├── pages/
+│   ├── index.astro                 # Home (default locale)
+│   ├── about.astro                 # About page
+│   ├── for-agents.astro            # Human-facing protocol landing page
+│   ├── page/[num].astro            # Paginated home listing
+│   ├── posts/
+│   │   ├── [slug].astro            # Post detail
+│   │   └── [slug].md.ts            # Per-post Markdown endpoint
+│   ├── agent/home.json.ts          # Aggregated machine-readable site state
+│   ├── protocol.json.ts            # Structured manifest
+│   ├── skill.md.ts                 # Canonical narrative protocol document
+│   ├── policy.md.ts                # Agent rules and safety guidance
+│   ├── reading.md.ts               # Retrieval workflow guidance
+│   ├── subscribe.md.ts             # Monitoring guidance
+│   ├── auth.md.ts                  # Reserved auth contract
+│   ├── llms.txt.ts                 # Compact LLM index
+│   ├── llms-full.txt.ts            # Full inlined content for LLMs
+│   ├── api/posts.json.ts           # Cross-locale posts metadata
+│   ├── schemas/*.json.ts           # JSON Schemas for protocol endpoints
+│   ├── [section]/...               # Auto-generated extra collection routes
+│   └── [locale]/...                # Localized counterparts for all major routes
+├── styles/
+│   ├── fonts.css                   # Local Bricolage Grotesque font faces
+│   └── global.css                  # Tailwind v4 tokens, typography, theme variables
 public/
+├── .well-known/ai-plugin.json      # Public machine discovery metadata
 ├── favicon.svg
-├── robots.txt
-└── .well-known/
-.github/
-└── workflows/
-    └── deploy-cloudflare-pages.yml     # Cloudflare Pages 배포 (기본)
+├── logo.svg / logo-dark.svg
+└── og.png
+scripts/
+├── check-post-coverage.mjs         # Enforce slug parity across locales
+└── smoke-agent-protocol.mjs        # Validate generated protocol artifacts
 ```
 
 ## 배포
 
 ### Cloudflare Pages (기본)
 
-포함된 워크플로우(`.github/workflows/deploy-cloudflare-pages.yml`)가 자동으로 배포합니다:
+`.github/workflows/deploy-cloudflare-pages.yml` workflow는 Cloudflare Pages 기준이며 배포 전에 validation을 수행합니다.
 
-1. 저장소 **Settings** > **Pages** > **Source**에서 **GitHub Actions** 선택
-2. `astro.config.mjs`의 `site`를 Cloudflare Pages URL로 업데이트
-3. `main`에 푸시 — 사이트가 자동으로 배포됩니다
+1. Cloudflare Pages 프로젝트를 만들거나 기본 이름 `astro-theme-aither`를 변경
+2. GitHub Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` 추가
+3. `astro.config.mjs`의 `site` 업데이트
+4. `pnpm validate` 실행
+5. `main`에 push
 
-### 기타 플랫폼
+### 다른 플랫폼
 
-출력은 `dist/`의 정적 HTML이므로 어디든 배포할 수 있습니다:
+출력은 `dist/`의 정적 HTML입니다.
 
 ```bash
 pnpm build
-# dist/를 Netlify, Vercel 또는 아무 정적 호스팅에 업로드
+# Upload dist/ to Netlify, Vercel, GitHub Pages, or any static host
 ```
 
-## 디자인 철학
+## 원칙
 
-1. **타이포그래피가 디자인이다** -- Bricolage Grotesque 산세리프 헤딩, system-ui 깔끔한 본문, 세심하게 조정된 읽기 리듬. 서체가 곧 시각적 아이덴티티.
-2. **텍스트는 아름답다** -- 잘 조판된 텍스트가 조용한 페이지 위에 있는 것, 그것이 가장 우아한 인터페이스.
-3. **어디서나 작동** -- CJK 인식 폴백(PingFang SC, Microsoft YaHei)이 포함된 크로스 플랫폼 폰트 스택. 웹 폰트 로딩 지연 없음, 레이아웃 시프트 없음.
-4. **AI 네이티브** -- llms.txt, 구조화된 엔드포인트, 기계 판독 가능 콘텐츠로 1등급 LLM 발견 가능성.
-5. **정교하지만 복잡하지 않다** -- Tailwind CSS v4 `@theme` 디자인 토큰으로 쉬운 커스터마이징. 하나의 설정 파일(`src/config/site.ts`)이 전체 사이트를 제어.
+1. **타이포그래피가 인터페이스다**
+2. **사람과 에이전트 모두 중요하다**
+3. **다국어 parity는 검증되어야 한다**
+4. **확장 포인트는 콘텐츠 가까이에 있어야 한다**
+5. **숨은 마법보다 명시적 계약이 낫다**
 
 ## 감사
 
-[yinwang.org](https://www.yinwang.org)에서 영감을 받았습니다.
-
-테마 시스템은 다음에서 영감을 받았습니다: [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish).
+- [yinwang.org](https://www.yinwang.org)에서 영감을 받았습니다.
+- 테마 시스템 일부는 [Raphael Publish](https://github.com/liuxiaopai-ai/raphael-publish)에서 영감을 받았습니다.
 
 ## 기여
 
-기여를 환영합니다. 변경하고 싶은 내용에 대해 먼저 이슈를 열어주세요.
+기여를 환영합니다. 먼저 issue를 열어 변경 사항을 논의해 주세요.
 
 ## 라이선스
 

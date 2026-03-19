@@ -1,0 +1,77 @@
+---
+title: AI Agent Best Practices for Real Projects (Sample)
+date: "2026-01-10T16:00:00+08:00"
+category: AI
+description: Clear scope, good context, verification loops, and human review make AI agents dramatically more reliable.
+tags: [AI, Agents]
+pinned: false
+---
+
+AI agents are most useful when they stop feeling magical and start feeling operational. The teams that get the best results do not ask an agent to "handle everything." They define the job, provide the right context, and make the result easy to verify.
+
+That sounds simple, but it changes everything. A well-briefed agent can move quickly and produce surprisingly solid work. A poorly scoped agent will waste tokens, take unnecessary detours, and return something that looks confident but misses the real task.
+
+## Start with a Narrow Job
+
+The best agent tasks are concrete and bounded.
+
+Instead of saying "improve this app," say "fix the mobile navigation overlap on the blog page" or "add a smoke test for the RSS feed." A narrow task gives the agent a stable target and reduces the chance that it edits unrelated parts of the system.
+
+This also makes review easier. When the task is small, it is obvious what changed, what should be tested, and whether the result is actually correct.
+
+## Make Context Explicit
+
+Agents work better when the important context is written down instead of implied.
+
+A strong task brief usually includes:
+
+- the exact goal
+- the relevant files or directories
+- constraints and things that must not change
+- the expected output or definition of done
+- the validation command to run at the end
+
+Humans can infer a lot from half-finished instructions. Agents are more literal. If a detail matters, write it down.
+
+## Prefer Tools Over Guessing
+
+An agent should inspect the current system before proposing changes. That means reading the relevant files, checking the build setup, and looking at existing conventions instead of relying on generic knowledge.
+
+The same rule applies to external systems. If the answer depends on current documentation, deployment settings, or live behavior, the agent should use tools to verify the real state instead of guessing from memory.
+
+This is one reason machine-readable interfaces matter so much. Clear file structure, validation scripts, typed schemas, and explicit config make agents more reliable because the environment explains itself.
+
+## Keep the Output Verifiable
+
+A good agent workflow does not end with "here is the answer." It ends with evidence.
+
+Ask the agent to report what changed, what it tested, and what it could not verify. Prefer outputs that can be checked quickly:
+
+- a small diff
+- a passing validation command
+- a reproducible screenshot or preview
+- a short note about risks or assumptions
+
+Verification turns agent work from plausible to dependable.
+
+## Design for Recovery
+
+Even strong agents take wrong turns. The right response is not to avoid agents, but to make recovery cheap.
+
+Use small tasks, stable scripts, and checkpoints. Keep operations idempotent when possible. Avoid workflows where one mistaken step creates a large mess to unwind. If the task can be broken into read, plan, implement, and verify, do that.
+
+Agents perform best in systems that are easy to inspect, easy to test, and easy to roll forward.
+
+## Human Review Still Matters
+
+Agents are excellent at speed, coverage, and repetition. Humans are still responsible for judgment.
+
+Product tradeoffs, security boundaries, tone, brand, and long-term maintainability should still be reviewed by a person who understands the wider context. The goal is not to remove humans from the loop. The goal is to let humans spend less time on mechanical work and more time on decisions that actually need taste and accountability.
+
+## A Practical Mental Model
+
+Treat an AI agent like a capable operator who is fast, tireless, and literal.
+
+Give it a clear assignment. Give it the right tools. Ask it to show its work. Then review the result with the same discipline you would apply to any important change.
+
+That is where the real leverage comes from.

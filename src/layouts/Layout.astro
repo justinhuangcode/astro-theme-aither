@@ -24,6 +24,7 @@ interface Props {
   description?: string;
   image?: string | ImageMetadata;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  enableCrisp?: boolean;
   article?: {
     publishedTime: string;
     author: string;
@@ -41,6 +42,7 @@ const {
   description = siteConfig.description,
   image: imageProp,
   jsonLd,
+  enableCrisp = true,
   article,
   alternateFormats,
 } = Astro.props;
@@ -125,7 +127,7 @@ const alternateUrls = locales.map((l) => ({
       <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     ) : null}
     <Analytics />
-    <Crisp />
+    {enableCrisp && <Crisp locale={locale} />}
     <script
       is:inline
       define:vars={{

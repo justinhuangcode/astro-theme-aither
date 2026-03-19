@@ -4,12 +4,35 @@
  * Renders nothing when the ID is empty.
  */
 import { siteConfig } from '@/config/site';
+import type { Locale } from '@/i18n';
 
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
 const crispId = siteConfig.crisp.websiteId;
+const crispLocaleMap: Record<Locale, string> = {
+  en: 'en',
+  'zh-hans': 'zh',
+  'zh-hant': 'zh',
+  ko: 'ko',
+  fr: 'fr',
+  de: 'de',
+  it: 'it',
+  es: 'es',
+  ru: 'ru',
+  id: 'id',
+  'pt-br': 'pt',
+};
+const crispLocale = crispLocaleMap[locale];
 ---
 
 {crispId && (
-  <script is:inline define:vars={{ crispId }}>
+  <script is:inline define:vars={{ crispId, crispLocale }}>
+    window.CRISP_RUNTIME_CONFIG = {
+      locale: crispLocale,
+    };
     window.$crisp = [];
     window.CRISP_WEBSITE_ID = crispId;
     (function () {

@@ -234,13 +234,17 @@ html.rose {
 }
 
 html:lang(zh-Hans) {
-  --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-body: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC",
+    "Microsoft YaHei", "Microsoft YaHei UI", system-ui, sans-serif;
+  --font-heading: var(--font-body);
+  --font-ui: var(--font-body);
 }
 
 html:lang(zh-Hant) {
-  --font-body: -apple-system, BlinkMacSystemFont, "PingFang TC",
-    "Microsoft JhengHei", "Heiti TC", system-ui, sans-serif;
+  --font-body: "PingFang TC", "Hiragino Sans CNS", "Noto Sans TC",
+    "Microsoft JhengHei", "Microsoft JhengHei UI", "Heiti TC", system-ui, sans-serif;
+  --font-heading: var(--font-body);
+  --font-ui: var(--font-body);
 }
 
 @layer base {
