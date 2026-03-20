@@ -1,5 +1,4 @@
 import { createAgentHomeResponse } from '@/lib/agent-protocol';
+import { createRootRouteHandler } from '@/lib/route-helpers';
 
-export async function GET() {
-  return createAgentHomeResponse('en');
-}
+export const GET = createRootRouteHandler(createAgentHomeResponse);

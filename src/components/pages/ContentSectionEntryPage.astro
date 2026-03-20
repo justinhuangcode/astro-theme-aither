@@ -1,0 +1,83 @@
+---
+import type { CollectionKey } from 'astro:content';
+import { render } from 'astro:content';
+import ArticlePageBody from '@/components/pages/ArticlePageBody.astro';
+import Layout from '@/layouts/Layout.astro';
+import { siteConfig, type ContentSection } from '@/config/site';
+import { getSlug, type LocalizedEntry } from '@/lib/posts';
+import {
+  getLocaleBasePath,
+  translateNav,
+  type Locale,
+} from '@/i18n';
+
+interface Props {
+  locale: Locale;
+  section: ContentSection;
+  entry: LocalizedEntry<CollectionKey>;
+  prevEntry: LocalizedEntry<CollectionKey> | null;
+  nextEntry: LocalizedEntry<CollectionKey> | null;
+}
+
+const {
+  locale,
+  section,
+  entry,
+  prevEntry,
+  nextEntry,
+} = Astro.props;
+const { Content, headings } = await render(entry);
+const slug = getSlug(entry.id);
+const basePath = getLocaleBasePath(locale);
+const entryUrl = `${siteConfig.url}${basePath}/${section.id}/${slug}/`;
+const sectionTitle = translateNav(section.labelKey, locale);
+const prevLink = prevEntry
+  ? { href: `${basePath}/${section.id}/${getSlug(prevEntry.id)}/`, title: prevEntry.data.title }
+  : null;
+const nextLink = nextEntry
+  ? { href: `${basePath}/${section.id}/${getSlug(nextEntry.id)}/`, title: nextEntry.data.title }
+  : null;
+
+const articleJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: entry.data.title,
+    description: entry.data.description,
+    datePublished: entry.data.date.toISOString(),
+    author: { '@type': 'Person', name: siteConfig.author.name },
+    publisher: { '@type': 'Organization', name: siteConfig.name },
+    url: entryUrl,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: siteConfig.name, item: siteConfig.url },
+      { '@type': 'ListItem', position: 2, name: sectionTitle, item: `${siteConfig.url}${basePath}/${section.id}/` },
+      { '@type': 'ListItem', position: 3, name: entry.data.title, item: entryUrl },
+    ],
+  },
+];
+---
+
+<Layout
+  title={`${entry.data.title} | ${siteConfig.name}`}
+  description={entry.data.description}
+  image={entry.data.image ?? siteConfig.ogImage}
+  jsonLd={articleJsonLd}
+  article={{
+    publishedTime: entry.data.date.toISOString(),
+    author: siteConfig.author.name,
+    tags: entry.data.tags,
+  }}
+>
+  <ArticlePageBody
+    locale={locale}
+    entry={entry}
+    content={Content}
+    headings={headings}
+    prevLink={prevLink}
+    nextLink={nextLink}
+  />
+</Layout>

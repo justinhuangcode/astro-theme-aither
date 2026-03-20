@@ -2,8 +2,9 @@
 import Layout from '@/layouts/Layout.astro';
 import Container from '@/components/Container.astro';
 import { getMessages } from '@/i18n';
+import { rootLocale } from '@/lib/route-helpers';
 
-const m = getMessages('en');
+const m = getMessages(rootLocale);
 ---
 
 <Layout title="404 — Not Found">

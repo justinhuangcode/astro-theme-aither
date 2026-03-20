@@ -5,38 +5,26 @@
  * otherwise shows a placeholder.
  */
 import { siteConfig } from '@/config/site';
-import { getMessages, type Locale } from '@/i18n';
+import {
+  defaultLocale,
+  getMessages,
+  giscusLocales,
+  type Locale,
+} from '@/i18n';
 import { IconMessage } from '@/components/icons';
 
 interface Props {
   locale?: Locale;
 }
 
-const { locale = 'en' } = Astro.props;
+const { locale = defaultLocale } = Astro.props;
 const g = siteConfig.giscus;
 const m = getMessages(locale);
-
-// Giscus currently exposes Chinese locales as zh-CN / zh-TW,
-// so we keep a small compatibility bridge here instead of
-// leaking region tags through the rest of the app.
-const langMap: Record<string, string> = {
-  en: 'en',
-  'zh-hans': 'zh-CN',
-  'zh-hant': 'zh-TW',
-  ko: 'ko',
-  fr: 'fr',
-  de: 'de',
-  it: 'it',
-  es: 'es',
-  ru: 'ru',
-  id: 'id',
-  'pt-br': 'pt',
-};
-const lang = langMap[locale] || 'en';
+const lang = giscusLocales[locale];
 const enabled = g.repo !== '' && g.repoId !== '' && g.categoryId !== '';
 ---
 
-<div class="giscus-wrapper mt-10">
+<div class="giscus-wrapper mt-10" data-giscus>
   <p class="text-sm font-semibold mb-4 text-foreground">{m.blog.comments}</p>
 
   {enabled ? (
@@ -67,25 +55,31 @@ const enabled = g.repo !== '' && g.repoId !== '' && g.categoryId !== '';
 </div>
 
 <script>
-  function updateGiscusTheme() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const theme = isDark ? 'dark' : 'light';
-    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
-    if (iframe) {
-      iframe.contentWindow?.postMessage(
-        { giscus: { setConfig: { theme } } },
-        'https://giscus.app'
-      );
-    }
-  }
+  import { bootstrapRootInit } from '@/lib/dom-init';
 
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (mutation.attributeName === 'class') {
-        updateGiscusTheme();
+  bootstrapRootInit('giscus', '[data-giscus]', (root, signal) => {
+    const updateGiscusTheme = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      const theme = isDark ? 'dark' : 'light';
+      const iframe = root.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+      if (iframe) {
+        iframe.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme } } },
+          'https://giscus.app'
+        );
       }
-    }
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          updateGiscusTheme();
+        }
+      }
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+    document.addEventListener('astro:after-swap', updateGiscusTheme, { signal });
+    updateGiscusTheme();
   });
-  observer.observe(document.documentElement, { attributes: true });
-  document.addEventListener('astro:after-swap', updateGiscusTheme);
 </script>

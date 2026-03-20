@@ -3,7 +3,12 @@ import SocialIcon from '@/components/icons/SocialIcon.astro';
 import Container from './Container.astro';
 import BuiltWithButton from './BuiltWithButton.astro';
 import { siteConfig, type FooterSection, type SocialLink } from '@/config/site';
-import { getMessages, getLocalizedPath, type Locale } from '@/i18n';
+import {
+  getMessages,
+  getLocalizedPath,
+  translateNav,
+  type Locale,
+} from '@/i18n';
 
 interface Props {
   locale: Locale;
@@ -12,7 +17,6 @@ interface Props {
 const { locale } = Astro.props;
 const m = getMessages(locale);
 const currentPath = Astro.url.pathname;
-const navLabels = m.nav as Record<string, string>;
 const footerSections: FooterSection[] = siteConfig.footer.sections;
 
 function resolveInternalHref(href: string): string {
@@ -91,7 +95,7 @@ const socialLinks = siteConfig.social.filter(isConfiguredSocialLink);
                         : "text-muted-foreground",
                     ]}
                   >
-                    {item.labelKey ? (navLabels[item.labelKey] ?? item.title) : item.title}
+                    {item.labelKey ? translateNav(item.labelKey, locale) : item.title}
                   </a>
                 </li>
               ))}

@@ -1,17 +1,10 @@
 ---
 import BlogIndexPage from '@/components/pages/BlogIndexPage.astro';
-import {
-  nonDefaultLocales,
-  type Locale,
-} from '@/i18n';
+import { type Locale } from '@/i18n';
+import { createLocaleOnlyStaticPaths } from '@/lib/route-helpers';
 import { getPaginatedPosts } from '@/lib/site-content';
 
-export function getStaticPaths() {
-  return nonDefaultLocales.map((locale) => ({
-    params: { locale },
-    props: { locale },
-  }));
-}
+export const getStaticPaths = createLocaleOnlyStaticPaths;
 
 const { locale } = Astro.props as { locale: Locale };
 const { posts, totalPages } = await getPaginatedPosts(locale, 1);

@@ -1,5 +1,4 @@
 import { createAuthResponse } from '@/lib/agent-protocol';
+import { createRootRouteHandler } from '@/lib/route-helpers';
 
-export function GET() {
-  return createAuthResponse('en');
-}
+export const GET = createRootRouteHandler(createAuthResponse);

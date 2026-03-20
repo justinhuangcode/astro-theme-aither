@@ -1,17 +1,8 @@
 ---
 import { render } from 'astro:content';
-import BlogCoverImage from '@/components/BlogCoverImage.astro';
-import CategoryPill from '@/components/CategoryPill.astro';
-import Container from '@/components/Container.astro';
-import Giscus from '@/components/Giscus.astro';
-import { IconArrowLeft as ArrowLeft } from '@/components/icons';
-import { IconArrowRight as ArrowRight } from '@/components/icons';
+import ArticlePageBody from '@/components/pages/ArticlePageBody.astro';
 import Layout from '@/layouts/Layout.astro';
-import Prose from '@/components/Prose.astro';
-import TableOfContents from '@/components/TableOfContents.astro';
-import Tag from '@/components/Tag.astro';
 import { siteConfig } from '@/config/site';
-import { formatDate, readingTime, wordCount } from '@/lib/formatter';
 import { getSlug, type PostEntry } from '@/lib/posts';
 import {
   getLocaleHomePath,
@@ -36,6 +27,12 @@ const slug = getSlug(post.id);
 const postPath = getPostPath(locale, slug);
 const postUrl = toAbsoluteSiteUrl(postPath);
 const homeUrl = toAbsoluteSiteUrl(getLocaleHomePath(locale));
+const prevLink = prevPost
+  ? { href: getPostPath(locale, getSlug(prevPost.id)), title: prevPost.data.title }
+  : null;
+const nextLink = nextPost
+  ? { href: getPostPath(locale, getSlug(nextPost.id)), title: nextPost.data.title }
+  : null;
 const articleJsonLd = [
   {
     '@context': 'https://schema.org',
@@ -78,80 +75,12 @@ const articleJsonLd = [
     },
   ]}
 >
-  <Container class="py-16 px-4">
-    <div class="xl:grid xl:grid-cols-[1fr_220px] xl:gap-8">
-      <article>
-        <div class="mb-4 flex flex-wrap items-center gap-2">
-          <CategoryPill category={post.data.category} locale={locale} />
-          {post.data.tags?.map((tag) => <Tag tag={tag} locale={locale} />)}
-        </div>
-
-        <h1 class="text-xl sm:text-2xl md:text-[31px] font-semibold mb-4 leading-[1.4] text-[var(--color-link)] break-words">{post.data.title}</h1>
-
-        <div class="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground/60 text-xs font-mono" title={m.blog.readingTimeTooltip.replace('{words}', String(wordCount(post.body ?? ''))).replace('{minutes}', String(readingTime(post.body ?? '')))}>
-          <span>{formatDate(post.data.date)}</span>
-          <span>·</span>
-          <span>{wordCount(post.body ?? '')} {m.blog.wordCount}</span>
-          <span>·</span>
-          <span>{readingTime(post.body ?? '')} {m.blog.minRead}</span>
-        </div>
-
-        {
-          post.data.description && (
-            <p class="mt-4 text-muted-foreground text-lg leading-relaxed">
-              {post.data.description}
-            </p>
-          )
-        }
-
-        {post.data.image && (
-          <div class="mt-6">
-            <BlogCoverImage image={post.data.image} alt={post.data.title} />
-          </div>
-        )}
-
-        <div class="mt-6 pt-10 border-t border-border">
-          <Prose>
-            <Content />
-          </Prose>
-        </div>
-
-        <div class="mt-10 flex items-center gap-4">
-          <span class="flex-1 border-t border-border"></span>
-          <span class="text-sm text-muted-foreground">{m.blog.endOfPost}{m.blog.thanksForReading}</span>
-          <span class="flex-1 border-t border-border"></span>
-        </div>
-
-        <nav class="mt-6 flex flex-col sm:flex-row items-stretch justify-between gap-4">
-          {prevPost ? (
-            <a
-              href={getPostPath(locale, getSlug(prevPost.id))}
-              class="group flex flex-col items-start text-sm hover:text-foreground sm:max-w-[45%] py-2"
-            >
-              <span class="inline-flex items-center gap-1 text-muted-foreground group-hover:text-foreground">
-                <ArrowLeft className="size-3.5" />
-                {m.blog.prevPost}
-              </span>
-              <span class="mt-1 text-[var(--color-link)] group-hover:text-[var(--color-link-hover)]">{prevPost.data.title}</span>
-            </a>
-          ) : <span />}
-          {nextPost ? (
-            <a
-              href={getPostPath(locale, getSlug(nextPost.id))}
-              class="group flex flex-col items-start sm:items-end text-sm hover:text-foreground sm:max-w-[45%] sm:ml-auto py-2"
-            >
-              <span class="inline-flex items-center gap-1 text-muted-foreground group-hover:text-foreground">
-                {m.blog.nextPost}
-                <ArrowRight className="size-3.5" />
-              </span>
-              <span class="mt-1 text-[var(--color-link)] group-hover:text-[var(--color-link-hover)]">{nextPost.data.title}</span>
-            </a>
-          ) : <span />}
-        </nav>
-
-        <Giscus locale={locale} />
-      </article>
-      <TableOfContents headings={headings} label={m.blog.onThisPage} />
-    </div>
-  </Container>
+  <ArticlePageBody
+    locale={locale}
+    entry={post}
+    content={Content}
+    headings={headings}
+    prevLink={prevLink}
+    nextLink={nextLink}
+  />
 </Layout>

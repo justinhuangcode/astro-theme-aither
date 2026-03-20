@@ -23,7 +23,7 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
 {filtered.length > 0 && (
-  <nav aria-label="Table of contents" class="toc hidden xl:block">
+  <nav aria-label="Table of contents" class="toc hidden xl:block" data-toc-root>
     <div class="sticky top-[80px] max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-none">
       <div class="flex items-center justify-between mb-3">
         <p class="text-sm font-semibold text-foreground">{label}</p>
@@ -56,14 +56,15 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 )}
 
 <script>
-  function initToc() {
-    const links = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+  import { bootstrapRootInit } from '@/lib/dom-init';
+
+  bootstrapRootInit('toc', '[data-toc-root]', (root, signal) => {
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.toc-link'));
     if (!links.length) return;
 
-    // Toggle
-    const toggle = document.querySelector('.toc-toggle');
-    const wrapper = document.querySelector<HTMLElement>('.toc-list-wrapper');
-    const chevron = document.querySelector('.toc-chevron');
+    const toggle = root.querySelector<HTMLButtonElement>('.toc-toggle');
+    const wrapper = root.querySelector<HTMLElement>('.toc-list-wrapper');
+    const chevron = root.querySelector<HTMLElement>('.toc-chevron');
 
     if (toggle && wrapper) {
       toggle.addEventListener('click', () => {
@@ -71,10 +72,9 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         toggle.setAttribute('aria-expanded', String(!expanded));
         wrapper.style.gridTemplateRows = expanded ? '0fr' : '1fr';
         chevron?.classList.toggle('toc-chevron-collapsed', expanded);
-      });
+      }, { signal });
     }
 
-    // Scroll spy — find the heading closest to top of viewport
     const headingEls: HTMLElement[] = [];
     links.forEach((link) => {
       const slug = link.dataset.slug;
@@ -86,7 +86,7 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
     if (!headingEls.length) return;
 
-    const OFFSET = 100; // nav height + buffer
+    const OFFSET = 100;
 
     function updateActive() {
       let current = '';
@@ -100,14 +100,13 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         }
       }
 
-      // If no heading has passed the offset, highlight the first one
       if (!current && headingEls.length) {
         current = headingEls[0].id;
       }
 
       links.forEach((l) => l.classList.remove('toc-active'));
       if (current) {
-        const active = document.querySelector(`.toc-link[data-slug="${current}"]`);
+        const active = root.querySelector(`.toc-link[data-slug="${current}"]`);
         active?.classList.add('toc-active');
       }
     }
@@ -123,12 +122,9 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
     updateActive();
-  }
-
-  initToc();
-  document.addEventListener('astro:after-swap', initToc);
+  });
 </script>
 
 <style>

@@ -52,12 +52,12 @@ const { currentLocale, currentPath } = Astro.props;
 </div>
 
 <script>
+  import { bootstrapRootInit } from '@/lib/dom-init';
+  import { preferredLocaleStorageKey } from '@/i18n';
+
   const DESKTOP_MENU_EVENT = 'aither:desktop-menu-open';
 
-  document.querySelectorAll('[data-language-switcher]').forEach((root) => {
-    if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') return;
-    root.dataset.bound = 'true';
-
+  bootstrapRootInit('language-switcher', '[data-language-switcher]', (root, signal) => {
     const trigger = root.querySelector('[data-language-trigger]');
     const panel = root.querySelector('[data-language-panel]');
     const links = Array.from(root.querySelectorAll('[data-language-link]'));
@@ -86,36 +86,36 @@ const { currentLocale, currentPath } = Astro.props;
       } else {
         closeMenu();
       }
-    });
+    }, { signal });
 
     links.forEach((link) => {
       if (!(link instanceof HTMLAnchorElement)) return;
       link.addEventListener('click', () => {
         const locale = link.dataset.languageLink;
         if (locale) {
-          localStorage.setItem('preferred-locale', locale);
+          localStorage.setItem(preferredLocaleStorageKey, locale);
         }
         closeMenu();
-      });
+      }, { signal });
     });
 
     document.addEventListener('click', (event) => {
       if (!(event.target instanceof Node) || !root.contains(event.target)) {
         closeMenu();
       }
-    });
+    }, { signal });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeMenu();
       }
-    });
+    }, { signal });
 
     window.addEventListener(DESKTOP_MENU_EVENT, (event) => {
       const customEvent = event as CustomEvent<{ owner?: string }>;
       if (customEvent.detail?.owner !== 'language') {
         closeMenu();
       }
-    });
+    }, { signal });
   });
 </script>
