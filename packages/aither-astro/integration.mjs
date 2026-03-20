@@ -1,11 +1,14 @@
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import astroExpressiveCode from 'astro-expressive-code';
 import tailwindcss from '@tailwindcss/vite';
 import { AITHER_DEFAULT_LOCALE, AITHER_LOCALES } from './constants.mjs';
+import { aitherMarkdownConfig } from './markdown.mjs';
 
 const BUNDLED_INTEGRATION_FACTORIES = [
   ['@astrojs/react', react],
+  ['astro-expressive-code', astroExpressiveCode],
   ['@astrojs/mdx', mdx],
   ['@astrojs/sitemap', sitemap],
 ];
@@ -24,6 +27,17 @@ export function aither(options = {}) {
         const activeIntegrationNames = new Set(
           (config.integrations ?? []).map((integration) => integration.name),
         );
+
+        if (
+          activeIntegrationNames.has('@astrojs/mdx') &&
+          !activeIntegrationNames.has('astro-expressive-code')
+        ) {
+          throw new Error(
+            '@aither/astro requires astro-expressive-code to run before @astrojs/mdx. ' +
+              'Remove your manual mdx() integration and let aither() manage the markdown stack, ' +
+              'or add astroExpressiveCode() before mdx().',
+          );
+        }
 
         const integrations = [];
         const skipped = [];
@@ -45,6 +59,7 @@ export function aither(options = {}) {
               prefixDefaultLocale,
             },
           },
+          markdown: aitherMarkdownConfig(),
           vite: {
             plugins: [tailwindcss()],
           },

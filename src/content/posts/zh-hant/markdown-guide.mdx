@@ -129,6 +129,8 @@ function getPublishedPosts(posts: Post[]): Post[] {
 }
 ```
 
+程式碼區塊現在預設會顯示行號，寫教學、做程式碼審閱，或引用較長範例時都更順手。
+
 ### 程式碼區塊的技巧
 
 撰寫包含程式碼的技術文章時，以下技巧能讓你的文章更具可讀性：
@@ -146,6 +148,51 @@ active_users = [
     if user.is_active           # 只保留活躍使用者
 ]
 ```
+
+## 數學公式
+
+行內公式可以直接寫在句子裡，例如 `$E = mc^2$`；較大的公式則適合使用區塊形式：
+
+$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$
+
+這些公式會在建置階段透過 KaTeX 轉成靜態輸出，因此頁面不需要額外載入瀏覽器端數學引擎。
+
+## Mermaid 圖表
+
+如果你要展示流程、順序或結構關係，可以使用 `mermaid` 程式碼區塊：
+
+```mermaid
+flowchart TD
+  Draft["Markdown 草稿"] --> Build["Astro 建置"]
+  Build --> Html["面向讀者的 HTML 頁面"]
+  Build --> Protocol["面向智慧體的 Markdown 與 JSON"]
+  Html --> Reader["人類讀者"]
+  Protocol --> Agent["AI 智慧體"]
+```
+
+這類圖表會在 Astro 建置時直接轉成 SVG，不需要等到前端再執行 Mermaid。
+
+## 心智圖
+
+如果你想從 Markdown 層級直接生成真正的心智圖，可以使用 `markmap` 程式碼區塊：
+
+```markmap
+# Aither 寫作
+## Markdown 基礎
+### 標題
+### 表格
+## 豐富內容
+### KaTeX 數學公式
+### Mermaid 圖表
+### Markmap 心智圖
+## 發布介面
+### 面向讀者的頁面
+### 面向智慧體的端點
+```
+
+它和一般圖表不同：Markmap 會保留內容層級，並提供輕量互動，適合整理綱要、課程內容或複雜主題。
 
 ## 表格
 

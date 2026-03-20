@@ -152,6 +152,8 @@ function getPublishedPosts(posts: Post[]): Post[] {
 }
 ```
 
+Code blocks now ship with line numbers by default, so longer examples are easier to reference in tutorials, reviews, and pair-writing sessions.
+
 ### Code Block Tips
 
 Always specify the language identifier after the opening triple backticks. This enables syntax highlighting, which dramatically improves readability. Common identifiers include `typescript`, `javascript`, `css`, `html`, `bash`, `json`, `python`, and `markdown`.
@@ -183,6 +185,51 @@ For JSON configuration files:
 ```
 
 Keep code blocks focused. Show only the relevant lines rather than pasting an entire file. If context is needed, add a comment indicating where the code lives.
+
+## Math
+
+Inline math works inside a sentence, for example `$E = mc^2$`, and display math works for larger expressions:
+
+$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$
+
+Math is rendered with KaTeX at build time, so it stays crisp without adding a client-side math runtime to the page.
+
+## Mermaid diagrams
+
+Use fenced `mermaid` blocks for flowcharts, sequence diagrams, ER diagrams, and other visual structures:
+
+```mermaid
+flowchart TD
+  Draft["Draft in Markdown"] --> Build["Astro build"]
+  Build --> Html["Readable HTML page"]
+  Build --> Protocol["Agent-facing Markdown and JSON"]
+  Html --> Reader["Reader"]
+  Protocol --> Agent["AI agent"]
+```
+
+These diagrams are rendered during the Astro build, so the final page ships actual SVG instead of waiting for Mermaid to run in the browser.
+
+## Mind maps
+
+Use fenced `markmap` blocks when you want a real mind map from Markdown structure:
+
+```markmap
+# Aither authoring
+## Markdown basics
+### Headings
+### Tables
+## Rich content
+### KaTeX math
+### Mermaid diagrams
+### Markmap mind maps
+## Publishing surface
+### Reader pages
+### Agent endpoints
+```
+
+This is different from a regular diagram block: Markmap keeps the content in a mind-map-friendly hierarchy and adds lightweight client-side interaction for exploring larger structures.
 
 ## Tables
 

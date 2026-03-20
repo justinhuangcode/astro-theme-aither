@@ -49,6 +49,10 @@
       "types": "./content.d.ts",
       "default": "./content.mjs"
     },
+    "./markdown": {
+      "types": "./markdown.d.ts",
+      "default": "./markdown.mjs"
+    },
     "./agent-protocol": {
       "types": "./agent-protocol.d.ts",
       "default": "./agent-protocol.mjs"
@@ -78,6 +82,8 @@
     "content.d.ts",
     "constants.mjs",
     "constants.d.ts",
+    "markdown.mjs",
+    "markdown.d.ts",
     "locale.mjs",
     "locale.d.ts",
     "integration.mjs",
@@ -94,7 +100,14 @@
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/react": "^5.0.0",
     "@astrojs/sitemap": "^3.7.1",
-    "@tailwindcss/vite": "^4.1.8"
+    "@expressive-code/plugin-line-numbers": "^0.41.7",
+    "@tailwindcss/vite": "^4.1.8",
+    "astro-expressive-code": "^0.41.7",
+    "playwright": "^1.58.2",
+    "rehype-katex": "^7.0.1",
+    "rehype-mermaid": "^3.0.0",
+    "remark-math": "^6.0.0",
+    "unist-util-visit": "^5.1.0"
   },
   "peerDependencies": {
     "astro": "^6.0.0"

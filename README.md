@@ -48,6 +48,7 @@ At the same time, it assumes your site may be read by software as often as by pe
 - **11-locale publishing** -- English, 简体中文, 繁體中文, 한국어, Français, Deutsch, Italiano, Español, Русский, Bahasa Indonesia, Português (BR), all with localized UI, hreflang, routes, and feeds
 - **66 localized sample posts** -- 6 starter slugs mirrored across 11 locales (`11 x 6 = 66`), with coverage enforced by `pnpm check:post-coverage`
 - **Publishing essentials** -- Dynamic OG images, RSS, sitemap, JSON-LD, canonical URLs, tags, pinned posts, pagination, TOC, and optional Giscus / Crisp / Google Analytics
+- **Enhanced Markdown authoring** -- Expressive Code blocks with line numbers, KaTeX math, Mermaid diagrams, and Markmap mind maps integrated into the shared markdown pipeline
 - **Extensible beyond posts** -- The route system already supports additional content sections through Astro Content Collections and `siteConfig.sections`, not just the default `posts` collection
 - **Modern Astro stack** -- Astro 6, MDX, React 19 where useful, Tailwind CSS v4 tokens, and a validation pipeline that checks content parity, build output, and protocol artifacts before deploy
 
@@ -56,6 +57,7 @@ At the same time, it assumes your site may be read by software as often as by pe
 - **Node.js** -- `22 LTS` recommended. Minimum supported versions are `20.19.1+` or `22.12.0+`
 - **pnpm** -- This repo pins `pnpm@10.32.1` via `packageManager`
 - **Corepack** -- Run `corepack enable` once so the pinned pnpm version is used automatically
+- **Chromium for Mermaid in CI** -- If your content includes Mermaid diagrams, install it with `pnpm exec playwright install --with-deps chromium` in CI before building
 - **Cloudflare Pages** -- Only required if you want to use the included GitHub Actions deployment workflow
 
 ## Quick Start
@@ -165,6 +167,7 @@ Best practices:
 - Use a full ISO 8601 timestamp with timezone when possible, for example `2026-03-19T16:27:43+08:00`
 - Keep the same slug in every locale so `pnpm check:post-coverage` can verify parity against English
 - Treat English as the baseline collection; add the same file name under each locale directory when localizing a post
+- Use fenced `mermaid` blocks for diagrams, fenced `markmap` blocks for mind maps, and `$...$` / `$$...$$` for math
 
 ## Commands
 
@@ -174,8 +177,9 @@ Best practices:
 | `pnpm check` | Run Astro type and content checks |
 | `pnpm check:post-coverage` | Verify that every locale ships the same post slug coverage |
 | `pnpm build` | Build static site to `dist/` |
+| `pnpm smoke:markdown` | Verify built markdown samples render code blocks, math, Mermaid, and Markmap |
 | `pnpm smoke:package` | Verify the `@aither/astro` package surface and export map |
-| `pnpm smoke` | Run package + AI-native protocol smoke tests |
+| `pnpm smoke` | Build the site, then run markdown, package, and AI-native protocol smoke tests |
 | `pnpm preview` | Preview production build locally |
 | `pnpm validate` | Recommended pre-push check: run `check`, `check:post-coverage`, `build`, and both smoke suites together |
 

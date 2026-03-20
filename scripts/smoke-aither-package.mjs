@@ -35,6 +35,7 @@ import {
   isoDateOnly,
   isoDateTimeWithSeconds,
 } from '@aither/astro/content';
+import { aitherMarkdownConfig } from '@aither/astro/markdown';
 import {
   createAitherSiteContentRuntime,
   stripHtmlTags,
@@ -72,14 +73,31 @@ assert.equal(
   'integration should expose astro:config:setup',
 );
 
+assert.throws(
+  () =>
+    integration.hooks['astro:config:setup']({
+      config: {
+        integrations: [{ name: '@astrojs/mdx' }],
+      },
+      logger: {
+        info() {},
+      },
+      updateConfig() {},
+    }),
+  /astro-expressive-code to run before @astrojs\/mdx/,
+  'integration should fail fast when mdx is present without expressive code',
+);
+
 const config = aitherConfig();
 assert.deepEqual(config.i18n, {
   defaultLocale: AITHER_DEFAULT_LOCALE,
   locales: [...AITHER_LOCALES],
   routing: { prefixDefaultLocale: false },
 });
-assert.equal(config.integrations?.length, 3);
+assert.equal(config.integrations?.length, 4);
 assert.equal(config.vite?.plugins?.length, 1);
+assert.equal(config.markdown?.remarkPlugins?.length, 2);
+assert.equal(config.markdown?.rehypePlugins?.length, 2);
 
 assert.equal(AITHER_DEFAULT_LOCALE, 'en');
 assert.equal(AITHER_LOCALES.length, 11);
@@ -110,6 +128,9 @@ assert.equal(
   true,
 );
 assert.equal(aitherContentDate.parse('2026-03-20').toISOString(), '2026-03-20T00:00:00.000Z');
+const markdownConfig = aitherMarkdownConfig();
+assert.equal(markdownConfig.remarkPlugins.length, 2);
+assert.equal(markdownConfig.rehypePlugins.length, 2);
 
 const schema = createAitherContentSchema({ image: () => z.string() });
 const parsed = schema.parse({
@@ -280,6 +301,10 @@ assert.deepEqual(packageManifest.exports['./agent-protocol'], {
 assert.deepEqual(packageManifest.exports['./locale'], {
   types: './locale.d.ts',
   default: './locale.mjs',
+});
+assert.deepEqual(packageManifest.exports['./markdown'], {
+  types: './markdown.d.ts',
+  default: './markdown.mjs',
 });
 
 const postsRuntimeSource = await readFile(path.join(packageDir, 'posts.mjs'), 'utf8');

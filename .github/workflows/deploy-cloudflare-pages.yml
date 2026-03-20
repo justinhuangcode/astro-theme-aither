@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install Playwright browser for Mermaid rendering
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Validate
         run: pnpm validate
 

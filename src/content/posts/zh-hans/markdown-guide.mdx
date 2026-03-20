@@ -115,6 +115,8 @@ function getPublishedPosts(posts: Post[]): Post[] {
 }
 ```
 
+代码块现在默认带行号，写教程、做代码评审，或者引用较长示例时都会更顺手。
+
 代码块在技术写作中至关重要。始终为代码块指定语言标识符（如 `typescript`、`css`、`python`），这样渲染引擎才能正确地进行语法高亮。对于命令行指令，可以使用 `bash` 或 `shell` 作为语言标识符：
 
 ```bash
@@ -123,6 +125,51 @@ pnpm dev
 ```
 
 行内代码适合在文本中提及变量名、函数名、文件路径等短小的代码片段。比如提到 `getPublishedPosts` 函数或 `src/config.ts` 文件时，用行内代码将它们标记出来，读者能够一眼区分代码和普通文本。
+
+## 数学公式
+
+行内公式可以直接写在句子里，例如 `$E = mc^2$`；较复杂的表达式则适合用块级公式：
+
+$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$
+
+这些公式会在构建阶段通过 KaTeX 渲染成静态输出，因此页面不需要额外依赖浏览器端数学引擎。
+
+## Mermaid 图表
+
+如果你要写流程图、时序图或结构图，可以使用 `mermaid` 代码块：
+
+```mermaid
+flowchart TD
+  Draft["Markdown 草稿"] --> Build["Astro 构建"]
+  Build --> Html["面向读者的 HTML 页面"]
+  Build --> Protocol["面向智能体的 Markdown 与 JSON"]
+  Html --> Reader["人类读者"]
+  Protocol --> Agent["AI 智能体"]
+```
+
+这类图表会在 Astro 构建时直接变成 SVG，而不是等到前端再运行 Mermaid。
+
+## 思维导图
+
+如果你想从 Markdown 层级直接生成真正的思维导图，可以使用 `markmap` 代码块：
+
+```markmap
+# Aither 写作
+## Markdown 基础
+### 标题
+### 表格
+## 富文本能力
+### KaTeX 数学公式
+### Mermaid 图表
+### Markmap 思维导图
+## 发布界面
+### 面向读者的页面
+### 面向智能体的端点
+```
+
+它和普通图表不同：Markmap 会保留层级结构，并提供轻量交互，适合整理大纲、课程内容或复杂主题。
 
 ## 表格
 
