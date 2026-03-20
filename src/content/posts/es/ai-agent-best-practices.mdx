@@ -1,13 +1,13 @@
 ---
-title: Buenas prácticas para AI Agents en proyectos reales (Sample)
+title: Buenas prácticas para agentes de IA en proyectos reales (Ejemplo)
 date: "2026-01-10T16:00:00+08:00"
 category: AI
-description: Alcance claro, buen contexto, bucles de verificación y revisión humana vuelven a los AI Agents mucho más fiables.
-tags: [AI, Agents]
+description: Alcance claro, buen contexto, bucles de verificación y revisión humana vuelven a los agentes de IA mucho más fiables.
+tags: [IA, Agentes]
 pinned: false
 ---
 
-Los AI Agents son más útiles cuando dejan de sentirse mágicos y empiezan a comportarse como una herramienta operativa. Los equipos que obtienen mejores resultados no le piden a un agente que "se encargue de todo". Definen el trabajo, proporcionan el contexto correcto y hacen que el resultado sea fácil de verificar.
+Los agentes de IA son más útiles cuando dejan de sentirse mágicos y empiezan a comportarse como una herramienta operativa. Los equipos que obtienen mejores resultados no le piden a un agente que "se encargue de todo". Definen el trabajo, proporcionan el contexto correcto y hacen que el resultado sea fácil de verificar.
 
 Suena sencillo, pero cambia por completo la calidad del resultado. Un agente bien guiado puede avanzar rápido y producir trabajo sorprendentemente sólido. Un agente mal acotado desperdicia contexto, toma desvíos innecesarios y devuelve algo que suena seguro, pero no resuelve la tarea real.
 
@@ -15,7 +15,7 @@ Suena sencillo, pero cambia por completo la calidad del resultado. Un agente bie
 
 Las mejores tareas para un agente son concretas y limitadas.
 
-En lugar de decir "mejora esta aplicación", di "corrige la superposición de la navegación móvil en la página del blog" o "añade un smoke test para el feed RSS". Una tarea estrecha le da al agente un objetivo estable y reduce la probabilidad de que modifique partes no relacionadas del sistema.
+En lugar de decir "mejora esta aplicación", di "corrige la superposición de la navegación móvil en la página del blog" o "añade una prueba rápida para el feed RSS". Una tarea estrecha le da al agente un objetivo estable y reduce la probabilidad de que modifique partes no relacionadas del sistema.
 
 Eso también facilita la revisión. Cuando la tarea es pequeña, es más evidente qué cambió, qué debe probarse y si el resultado es realmente correcto.
 
@@ -23,7 +23,7 @@ Eso también facilita la revisión. Cuando la tarea es pequeña, es más evident
 
 Los agentes trabajan mejor cuando el contexto importante está escrito y no solo implícito.
 
-Un buen brief suele incluir:
+Un buen encargo inicial suele incluir:
 
 - el objetivo exacto
 - los archivos o directorios relevantes
@@ -49,7 +49,7 @@ Pídele al agente que informe qué cambió, qué probó y qué no pudo verificar
 
 - un diff pequeño
 - un comando de validación que pase
-- una captura o preview reproducible
+- una captura o vista previa reproducible
 - una nota breve sobre riesgos o supuestos
 
 La verificación convierte un resultado plausible en uno confiable.
@@ -58,7 +58,7 @@ La verificación convierte un resultado plausible en uno confiable.
 
 Incluso los buenos agentes toman caminos equivocados. La respuesta correcta no es evitarlos, sino hacer barata la recuperación.
 
-Usa tareas pequeñas, scripts estables y puntos de control. Mantén las operaciones idempotentes siempre que sea posible. Evita workflows en los que un solo paso erróneo deje un gran desastre detrás. Si una tarea puede dividirse en leer, planificar, implementar y verificar, hazlo.
+Usa tareas pequeñas, scripts estables y puntos de control. Mantén las operaciones idempotentes siempre que sea posible. Evita flujos de trabajo en los que un solo paso erróneo deje un gran desastre detrás. Si una tarea puede dividirse en leer, planificar, implementar y verificar, hazlo.
 
 Los agentes rinden mejor en sistemas que son fáciles de inspeccionar, fáciles de probar y fáciles de seguir mejorando.
 
@@ -70,7 +70,7 @@ Las decisiones de producto, los límites de seguridad, el tono, la marca y la ma
 
 ## Un modelo mental útil
 
-Piensa en un AI Agent como en un operador capaz, rápido, incansable y literal.
+Piensa en un agente de IA como en un operador capaz, rápido, incansable y literal.
 
 Dale una tarea clara. Dale las herramientas adecuadas. Pídele que muestre su trabajo. Después revisa el resultado con la misma disciplina que aplicarías a cualquier cambio importante.
 

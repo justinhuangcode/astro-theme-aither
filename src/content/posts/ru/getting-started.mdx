@@ -19,14 +19,11 @@ pinned: true
 ## Установка
 
 ```bash
-# Клонировать репозиторий
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-
-# Установить зависимости
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+corepack enable
 pnpm install
-
-# Запустить dev-сервер
+pnpm validate
 pnpm dev
 ```
 
@@ -77,8 +74,12 @@ cp .env.example .env
 Продакшн-адрес задаётся в `astro.config.mjs`:
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.pages.dev',
+  integrations: [aither()],
 });
 ```
 
@@ -170,21 +171,24 @@ ui: {
 
 ### Cloudflare Pages
 
+Лучшая практика: сначала создайте проект Pages. Процесс по умолчанию использует имя репозитория, а для переопределения можно задать `CLOUDFLARE_PAGES_PROJECT_NAME`.
+
 Добавьте в GitHub Secrets:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-Встроенный workflow будет автоматически собирать и публиковать сайт при push в `main`.
+Затем выполните `pnpm validate` и только после этого делайте push в `main`.
 
 ## Полезные команды
 
 | Команда | Описание |
 |--------|----------|
-| `pnpm dev` | Запустить локальный dev-сервер |
-| `pnpm build` | Собрать production-версию |
-| `pnpm preview` | Просмотреть production-сборку локально |
+| `pnpm dev` | Запустить локальный сервер разработки |
+| `pnpm validate` | Запустить полную валидацию перед push |
+| `pnpm build` | Собрать производственную версию |
+| `pnpm preview` | Просмотреть производственную сборку локально |
 
 ## Схема версий
 
-Проект использует [CalVer](https://calver.org/) в формате `YYYY.0M.0D`.
+Публичные теги релизов используют имена в стиле CalVer, например `v2026.03.20`.

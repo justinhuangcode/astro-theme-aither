@@ -9,44 +9,44 @@
 [![GitHub Stars](https://img.shields.io/github/stars/justinhuangcode/astro-theme-aither?style=flat-square&logo=github)](https://github.com/justinhuangcode/astro-theme-aither/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/justinhuangcode/astro-theme-aither?style=flat-square)](https://github.com/justinhuangcode/astro-theme-aither/commits/main)
 
-**[Live Preview](https://astro-theme-aither.pages.dev)**
+**[Pratinjau Langsung](https://astro-theme-aither.pages.dev)**
 
-Tema Astro AI-native yang dibangun di sekitar teks yang indah. ✍️
+Tema Astro yang dirancang untuk AI dan dibangun di sekitar teks yang indah. ✍️
 
-Tipografi untuk manusia, endpoint machine-readable untuk agent AI.
+Tipografi untuk manusia, endpoint yang dapat dibaca mesin untuk agen AI.
 
-Aither adalah tema publishing multibahasa yang memperlakukan permukaan manusia dan agent sebagai bagian inti dari produk.
+Aither adalah tema penerbitan multibahasa yang memperlakukan permukaan manusia dan agen sebagai bagian inti dari produk.
 
 ## Model Pembaca / Agen
 
-- `Reader` berarti manusia yang membaca situs HTML: halaman beranda, halaman artikel, halaman About, komentar, dan kontrol tema.
-- `Agent` berarti software yang mengonsumsi permukaan publik machine-readable: `protocol.json`, `skill.md`, `agent/home.json` per locale, `llms.txt`, `api/posts.json`, dan Markdown per artikel.
-- `Read-only` berarti discovery, pengambilan, indexing, dan monitoring didukung saat ini; publish, komentar, dan write yang diautentikasi belum tersedia.
+- `Pembaca` berarti manusia yang membaca situs HTML: halaman beranda, halaman artikel, halaman Tentang, komentar, dan kontrol tema.
+- `Agen` berarti perangkat lunak yang mengonsumsi permukaan publik yang dapat dibaca mesin: `protocol.json`, `skill.md`, `agent/home.json` per locale, `llms.txt`, `api/posts.json`, dan Markdown per artikel.
+- `Baca-saja` berarti penemuan, pengambilan, pengindeksan, dan pemantauan didukung saat ini; publikasi, komentar, dan penulisan yang diautentikasi belum tersedia.
 
 ```mermaid
 flowchart LR
-  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
-  A --> C["Agent Surface<br/>JSON / Markdown"]
-  B --> D["Canonical article URLs"]
+  A["Aither"] --> B["Permukaan pembaca<br/>Halaman HTML"]
+  A --> C["Permukaan agen<br/>JSON / Markdown"]
+  B --> D["URL artikel kanonis"]
   C --> E["protocol.json -> skill.md -> agent/home.json"]
   C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
 ```
 
 ## Mengapa Aither?
 
-Sebagian besar tema blog mengoptimalkan hero, animasi, dan UI chrome. Aither mengoptimalkan ritme membaca, disiplin tipografi, dan kepadatan informasi.
+Sebagian besar tema blog mengoptimalkan bagian hero, animasi, dan ornamen antarmuka. Aither mengoptimalkan ritme membaca, disiplin tipografi, dan kepadatan informasi.
 
-Di saat yang sama, proyek ini mengasumsikan situs akan dibaca oleh software juga. Karena itu repositori ini menyertakan surface protokol yang nyata: `protocol.json`, `skill.md`, machine docs terlokalisasi, `llms.txt`, artikel Markdown, JSON Schema, dan API post multi-locale.
+Di saat yang sama, proyek ini mengasumsikan situs akan dibaca oleh software juga. Karena itu repositori ini menyertakan permukaan protokol yang nyata: `protocol.json`, `skill.md`, dokumen mesin terlokalisasi, `llms.txt`, artikel Markdown, JSON Schema, dan API post multi-locale.
 
 ## Yang Sudah Tersedia Hari Ini
 
 - pengalaman membaca berbasis tipografi
-- dua tampilan beranda: reader dan agent
+- dua tampilan beranda: pembaca dan agen
 - 41 tema terkurasi
-- surface AI-native lengkap
-- mode read-only secara default
+- permukaan protokol AI yang lengkap
+- mode baca-saja secara default
 - 11 bahasa
-- 66 sample post terlokalisasi
+- 66 artikel contoh terlokalisasi
 - RSS / sitemap / OG / JSON-LD / TOC / pagination
 - extensible lewat Content Collections
 - stack Astro modern
@@ -56,7 +56,7 @@ Di saat yang sama, proyek ini mengasumsikan situs akan dibaca oleh software juga
 - **Node.js** -- `22 LTS` direkomendasikan
 - **pnpm** -- `pnpm@10.32.1`
 - **Corepack** -- jalankan `corepack enable`
-- **Cloudflare Pages** -- hanya jika memakai workflow deploy bawaan
+- **Cloudflare Pages** -- hanya jika memakai alur deploy bawaan
 
 ## Mulai Cepat
 
@@ -77,23 +77,40 @@ Konten artikel berada di `src/content/posts/{locale}/` dan menggunakan MDX.
 
 | Perintah | Deskripsi |
 |---|---|
-| `pnpm dev` | Menjalankan dev server |
+| `pnpm dev` | Menjalankan server pengembangan |
 | `pnpm check` | Menjalankan pemeriksaan Astro |
-| `pnpm check:post-coverage` | Memeriksa parity slug lintas locale |
+| `pnpm check:post-coverage` | Memeriksa kesesuaian slug lintas locale |
 | `pnpm build` | Build ke `dist/` |
-| `pnpm smoke` | Smoke test protocol |
-| `pnpm preview` | Preview build produksi |
-| `pnpm validate` | Rangkaian validasi penuh |
+| `pnpm smoke:package` | Memeriksa permukaan paket `@aither/astro` dan peta export |
+| `pnpm smoke` | Menjalankan pengujian cepat untuk paket dan protokol |
+| `pnpm preview` | Meninjau build produksi secara lokal |
+| `pnpm validate` | Rangkaian validasi penuh: check + coverage + build + dua pengujian cepat |
 
-## Protokol AI-native
+## Memperbarui situs yang sudah ada
 
-Urutan yang direkomendasikan: `/protocol.json` -> `/skill.md` -> locale-specific `agent/home.json`.
+Aither saat ini didistribusikan sebagai tema `starter-first`, bukan paket integrasi Astro yang bisa langsung di-upgrade dengan `pnpm up`. Untuk situs yang sudah dibuat, gunakan upgrade berbasis release dan Git. Jika Anda menyimpan clone upstream yang bersih, Anda juga bisa menjalankan `pnpm upgrade:diff -- --from <tag-lama> --to <tag-baru>` untuk melihat diff yang sudah dikelompokkan sebelum memindahkan perubahan. Panduan lengkap ada di [UPGRADING.md](./UPGRADING.md).
 
-Gunakan `/api/posts.json` untuk discovery lintas locale dan `/{locale}/posts/{slug}.md` untuk body final artikel.
+## Protokol untuk AI
+
+Urutan yang direkomendasikan: `/protocol.json` -> `/skill.md` -> `agent/home.json` untuk locale yang dituju.
+
+Gunakan `/api/posts.json` untuk penemuan lintas locale dan `/{locale}/posts/{slug}.md` untuk isi final artikel.
 
 ## Konfigurasi
 
 File utama: `astro.config.mjs`, `src/config/site.ts`, `src/config/themes.ts`, `src/content.config.ts`, `src/i18n/index.ts`, `src/i18n/messages/*.ts`, `.env`.
+
+### Konfigurasi Astro (`astro.config.mjs`)
+
+```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
+export default defineConfig({
+  site: 'https://your-domain.com',
+  integrations: [aither()],
+});
+```
 
 ## Struktur Proyek
 

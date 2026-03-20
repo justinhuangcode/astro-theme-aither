@@ -13,28 +13,28 @@
 
 Un thème Astro AI-native construit autour de la beauté du texte. ✍️
 
-Typographie d'abord pour les humains, endpoints lisibles par machine pour les agents IA.
+Typographie d'abord pour les humains, points d'accès lisibles par machine pour les agents IA.
 
-Aither est un thème de publication multilingue qui traite les deux surfaces comme des capacités produit de premier rang : des pages calmes et lisibles pour les humains, et des documents de protocole publics avec des endpoints Markdown pour les agents. Ce n'est pas un starter de blog générique auquel on a ajouté une étiquette AI après coup.
+Aither est un thème de publication multilingue qui traite les deux surfaces comme des capacités produit de premier rang : des pages calmes et lisibles pour les humains, et des documents de protocole publics avec des points d'accès Markdown pour les agents. Ce n'est pas un starter de blog générique auquel on a ajouté une étiquette IA après coup.
 
 ## Modèle Lecteur / Agent
 
-- `Reader` désigne une personne qui lit le site HTML : page d'accueil, articles, page About, commentaires et contrôles de thème.
-- `Agent` désigne un logiciel qui consomme la surface machine-readable publique : `protocol.json`, `skill.md`, `agent/home.json` par locale, `llms.txt`, `api/posts.json` et Markdown par article.
-- `Read-only` signifie que la découverte, la lecture, l'indexation et la surveillance sont supportées aujourd'hui ; la publication, les commentaires et les écritures authentifiées ne le sont pas.
+- `Lecteur` désigne une personne qui lit le site HTML : page d'accueil, articles, page About, commentaires et contrôles de thème.
+- `Agent` désigne un logiciel qui consomme la surface publique lisible par machine : `protocol.json`, `skill.md`, `agent/home.json` par locale, `llms.txt`, `api/posts.json` et Markdown par article.
+- `Lecture seule` signifie que la découverte, la lecture, l'indexation et la surveillance sont supportées aujourd'hui ; la publication, les commentaires et les écritures authentifiées ne le sont pas.
 
 ```mermaid
 flowchart LR
-  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
-  A --> C["Agent Surface<br/>JSON / Markdown"]
-  B --> D["Canonical article URLs"]
+  A["Aither"] --> B["Surface lecteur<br/>Pages HTML"]
+  A --> C["Surface agent<br/>JSON / Markdown"]
+  B --> D["URL canoniques des articles"]
   C --> E["protocol.json -> skill.md -> agent/home.json"]
   C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
 ```
 
 ## Pourquoi Aither ?
 
-La plupart des thèmes de blog optimisent les hero sections, l'animation et le chrome UI. Aither optimise le rythme de lecture, la sobriété typographique et la densité d'information.
+La plupart des thèmes de blog optimisent les sections hero, l'animation et l'habillage visuel. Aither optimise le rythme de lecture, la sobriété typographique et la densité d'information.
 
 En même temps, le projet suppose que le site sera lu autant par des logiciels que par des personnes. C'est pourquoi le dépôt fournit une vraie surface de protocole : `protocol.json`, `skill.md`, des documents machine localisés, `llms.txt`, les corps d'articles en Markdown, des schémas JSON et une API d'articles cross-locale.
 
@@ -44,10 +44,10 @@ En même temps, le projet suppose que le site sera lu autant par des logiciels q
 - **Deux vues d'accueil** -- La page d'accueil propose une vue lecteur et une vue agent ; les humains voient des cartes, les agents voient directement les entrées Markdown, et `/for-agents/` explique le protocole
 - **41 thèmes soignés** -- Light / Dark / System plus 41 styles nommés dans `src/config/themes.ts`
 - **Surface AI-native complète** -- `/protocol.json`, `/skill.md`, `/agent/home.json` localisés, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, `.md` par article, About Markdown, schémas JSON et `/.well-known/ai-plugin.json`
-- **Read-only par défaut** -- Les agents peuvent découvrir, lire, indexer, résumer, surveiller et citer le contenu, mais il n'existe pas encore d'API d'écriture ni de flux d'authentification agent
+- **Lecture seule par défaut** -- Les agents peuvent découvrir, lire, indexer, résumer, surveiller et citer le contenu, mais il n'existe pas encore d'API d'écriture ni de flux d'authentification agent
 - **Publication en 11 langues** -- UI localisée, hreflang, routes et flux pour 11 locales
-- **66 sample posts localisés** -- 6 slugs de départ répliqués dans 11 locales (`11 x 6 = 66`) et vérifiés par `pnpm check:post-coverage`
-- **Base éditoriale complète** -- OG dynamiques, RSS, sitemap, JSON-LD, canonical, tags, articles épinglés, pagination, TOC, Giscus / Crisp / Google Analytics optionnels
+- **66 articles d'exemple localisés** -- 6 slugs de départ répliqués dans 11 locales (`11 x 6 = 66`) et vérifiés par `pnpm check:post-coverage`
+- **Base éditoriale complète** -- OG dynamiques, RSS, sitemap, JSON-LD, liens canoniques, tags, articles épinglés, pagination, TOC, Giscus / Crisp / Google Analytics optionnels
 - **Extensible au-delà des posts** -- Les routes supportent déjà d'autres collections via Astro Content Collections et `siteConfig.sections`
 - **Stack Astro moderne** -- Astro 6, MDX, React 19 lorsque utile, Tailwind CSS v4 et une pipeline de validation qui vérifie contenu, build et artefacts de protocole
 
@@ -56,7 +56,7 @@ En même temps, le projet suppose que le site sera lu autant par des logiciels q
 - **Node.js** -- `22 LTS` recommandé. Versions minimales : `20.19.1+` ou `22.12.0+`
 - **pnpm** -- Le dépôt épingle `pnpm@10.32.1` via `packageManager`
 - **Corepack** -- Exécutez `corepack enable` une fois pour utiliser automatiquement la version de pnpm attendue
-- **Cloudflare Pages** -- Nécessaire seulement si vous utilisez le workflow GitHub Actions fourni
+- **Cloudflare Pages** -- Nécessaire seulement si vous utilisez le flux GitHub Actions fourni
 
 ## Démarrage rapide
 
@@ -80,18 +80,18 @@ pnpm install
 4. Configurez votre site :
 
 ```bash
-# astro.config.mjs -- set your site URL (only place you need to set it)
+# astro.config.mjs -- definir l'URL du site (uniquement ici)
 site: 'https://your-domain.com'
 
-# src/config/site.ts -- set name, description, social links, nav, footer
-# (url is automatically read from astro.config.mjs)
+# src/config/site.ts -- definir nom, description, liens sociaux, nav et footer
+# l'URL est lue automatiquement depuis astro.config.mjs
 ```
 
 5. Configurez les variables d'environnement (optionnel) :
 
 ```bash
 cp .env.example .env
-# Edit .env with your values (GA, Giscus, Crisp)
+# Renseignez vos valeurs dans .env (GA, Giscus, Crisp)
 ```
 
 6. Validez le starter avant de faire de gros changements :
@@ -106,7 +106,7 @@ pnpm validate
 pnpm dev
 ```
 
-8. Si vous utilisez le workflow Cloudflare intégré, terminez d'abord la section [Déploiement](#déploiement) avant de pousser sur `main`
+8. Si vous utilisez le flux Cloudflare intégré, terminez d'abord la section [Déploiement](#déploiement) avant de pousser sur `main`
 
 ### Installation manuelle
 
@@ -119,7 +119,11 @@ pnpm validate
 pnpm dev
 ```
 
-Bonne pratique : pour un nouveau site, préférez le flow template GitHub. Si vous clonez le dépôt upstream manuellement, vérifiez d'abord que tout fonctionne localement avant de recréer un dépôt propre.
+Bonne pratique : pour un nouveau site, préférez le flux GitHub Template. Si vous clonez le dépôt upstream manuellement, vérifiez d'abord que tout fonctionne localement avant de recréer un dépôt propre.
+
+## Mettre à jour un site existant
+
+Aither est actuellement distribué comme un thème `starter-first`, pas comme un paquet d'intégration Astro installable. Pour un site existant, la bonne méthode est une mise à jour par release et par Git, pas via `pnpm up`. Si vous gardez un clone upstream propre, vous pouvez aussi lancer `pnpm upgrade:diff -- --from <ancien-tag> --to <nouveau-tag>` pour voir un diff classé avant de reporter les changements. Le guide complet se trouve dans [UPGRADING.md](./UPGRADING.md).
 
 ## Modèle de contenu
 
@@ -127,11 +131,11 @@ Créez des fichiers MDX dans `src/content/posts/{locale}/` :
 
 ```markdown
 ---
-title: Your Post Title
+title: Titre de votre article
 date: "2026-01-01T16:00:00+08:00"
-description: Optional description for SEO
+description: Description optionnelle pour le SEO
 category: Technology
-tags: [optional, tags]
+tags: [exemple, tags]
 pinned: false
 image: ./optional-cover.jpg
 ---
@@ -163,9 +167,10 @@ Bonnes pratiques :
 | `pnpm check` | Lancer les vérifications Astro et contenu |
 | `pnpm check:post-coverage` | Vérifier la parité des slugs entre locales |
 | `pnpm build` | Construire le site statique dans `dist/` |
-| `pnpm smoke` | Lancer les smoke tests du protocole IA |
+| `pnpm smoke:package` | Vérifier la surface du package `@aither/astro` et sa carte d'exports |
+| `pnpm smoke` | Lance les tests de vérification du package et du protocole IA |
 | `pnpm preview` | Prévisualiser le build de production |
-| `pnpm validate` | Vérification recommandée avant push : `check`, `check:post-coverage`, `build`, `smoke` |
+| `pnpm validate` | Vérification recommandée avant push : `check`, `check:post-coverage`, `build` et les deux smoke suites |
 
 ## Protocole AI-native
 
@@ -179,9 +184,9 @@ Bonnes pratiques :
 | `/{locale}/policy.md` | Par locale | Règles, ordre de découverte et garde-fous |
 | `/{locale}/reading.md` | Par locale | Workflow de lecture recommandé |
 | `/{locale}/subscribe.md` | Par locale | Conseils de surveillance et polling |
-| `/{locale}/auth.md` | Par locale | Contrat d'auth réservé ; le mode reste read-only |
+| `/{locale}/auth.md` | Par locale | Contrat d'auth réservé ; le mode reste en lecture seule |
 | `/{locale}/llms.txt` | Par locale | Index compact pour les LLM |
-| `/{locale}/llms-full.txt` | Par locale | Contenu complet inline pour les workflows bulk |
+| `/{locale}/llms-full.txt` | Par locale | Contenu complet inline pour les flux par lots |
 | `/api/posts.json` | Toutes les locales | Métadonnées structurées sur l'ensemble des langues |
 | `/{locale}/posts/{slug}.md` | Par locale | Corps Markdown canonique d'un article |
 | `/{locale}/about.md` | Par locale | Page About en Markdown |
@@ -203,7 +208,7 @@ Bonnes pratiques :
 
 Fichiers principaux à connaître :
 
-- `astro.config.mjs` -- URL de production, intégrations Astro et routing des locales
+- `astro.config.mjs` -- URL de production et defaults partagés `@aither/astro` pour les intégrations, Vite et le routing des locales
 - `src/config/site.ts` -- métadonnées, nav/footer, pagination, timezone, thèmes, liens sociaux et sections optionnelles
 - `src/config/themes.ts` -- catalogue des 41 thèmes et labels localisés
 - `src/content.config.ts` -- schéma Zod et enregistrement des collections
@@ -219,9 +224,9 @@ export const siteConfig = {
   description: '...',
   author: {
     name: 'Aither',
-    avatar: '', // Import from src/assets/ for optimization, or use URL string
+    avatar: '', // Importez depuis src/assets/ pour l'optimisation ou utilisez une URL directe
   },
-  // url is automatically read from astro.config.mjs — no need to set it here
+  // l'URL est lue automatiquement depuis astro.config.mjs — inutile de la répéter ici
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '', icon: 'x' },
@@ -272,15 +277,12 @@ Créez ensuite le contenu dans `src/content/translations/{locale}/`. Les routes 
 ### Configuration Astro (`astro.config.mjs`)
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.com',
-  integrations: [react(), mdx(), sitemap()],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
-    routing: { prefixDefaultLocale: false },
-  },
-  vite: { plugins: [tailwindcss()] },
+  integrations: [aither()],
 });
 ```
 
@@ -325,71 +327,71 @@ Bonnes pratiques : traiter l'anglais comme baseline canonique pour les slugs et 
 ```text
 src/
 ├── config/
-│   ├── site.ts                     # Site metadata, nav/footer, theme controls, optional sections
-│   └── themes.ts                   # 41 curated themes + localized labels
-├── content.config.ts               # Content Collections schema (Zod)
+│   ├── site.ts                     # Métadonnées du site, nav/footer, thèmes et sections optionnelles
+│   └── themes.ts                   # 41 thèmes sélectionnés + libellés localisés
+├── content.config.ts               # schéma des Content Collections (Zod)
 ├── content/
-│   └── posts/{locale}/*.mdx        # Multilingual post content
+│   └── posts/{locale}/*.mdx        # contenu multilingue des articles
 ├── i18n/
-│   ├── index.ts                    # Locale definitions and routing helpers
-│   └── messages/*.ts               # UI translations for all locales
+│   ├── index.ts                    # définitions de locale et utilitaires de routage
+│   └── messages/*.ts               # traductions d'interface pour toutes les locales
 ├── components/
-│   ├── pages/                      # Page-level UI: home, post, about, for-agents
-│   ├── AIAccessList.astro          # Agent-facing Markdown post list
-│   ├── Navbar.astro                # Nav, locale switcher, theme controls
-│   ├── ModeSwitcher.astro          # Light/Dark/System + custom theme picker
-│   ├── TableOfContents.astro       # Heading-driven TOC
-│   └── Giscus.astro                # Optional comments
+│   ├── pages/                      # interface des pages : accueil, article, about, for-agents
+│   ├── AIAccessList.astro          # Liste Markdown des articles pour agents
+│   ├── Navbar.astro                # Navigation, sélecteur de langue et contrôles de thème
+│   ├── ModeSwitcher.astro          # Light/Dark/System + sélecteur de thème personnalisé
+│   ├── TableOfContents.astro       # Table des matières pilotée par les titres
+│   └── Giscus.astro                # Commentaires optionnels
 ├── lib/
-│   ├── agent-protocol.ts           # Protocol manifest + agent docs generation
-│   ├── markdown-endpoint.ts        # Markdown response helpers
-│   ├── og-image.ts                 # Dynamic OG image generation
-│   ├── posts.ts                    # Locale-aware content fetching + sorting
-│   ├── site-content.ts             # Paths, pagination, RSS, llms.txt helpers
-│   └── theme.ts                    # Theme preference state helpers
+│   ├── agent-protocol.ts           # Génération du manifeste de protocole et des documents agent
+│   ├── markdown-endpoint.ts        # Utilitaires de réponse Markdown
+│   ├── og-image.ts                 # Génération dynamique des images OG
+│   ├── posts.ts                    # Chargement et tri du contenu selon la locale
+│   ├── site-content.ts             # Utilitaires pour chemins, pagination, RSS et llms.txt
+│   └── theme.ts                    # État et utilitaires de préférence de thème
 ├── layouts/
-│   └── Layout.astro                # SEO, hreflang, JSON-LD, alternates, global shell
+│   └── Layout.astro                # SEO, hreflang, JSON-LD, alternates et enveloppe globale
 ├── pages/
-│   ├── index.astro                 # Home (default locale)
-│   ├── about.astro                 # About page
-│   ├── for-agents.astro            # Human-facing protocol landing page
-│   ├── page/[num].astro            # Paginated home listing
+│   ├── index.astro                 # Accueil (locale par défaut)
+│   ├── about.astro                 # Page About
+│   ├── for-agents.astro            # Page d'entrée du protocole pour les humains
+│   ├── page/[num].astro            # Liste paginée de l'accueil
 │   ├── posts/
-│   │   ├── [slug].astro            # Post detail
-│   │   └── [slug].md.ts            # Per-post Markdown endpoint
-│   ├── agent/home.json.ts          # Aggregated machine-readable site state
-│   ├── protocol.json.ts            # Structured manifest
-│   ├── skill.md.ts                 # Canonical narrative protocol document
-│   ├── policy.md.ts                # Agent rules and safety guidance
-│   ├── reading.md.ts               # Retrieval workflow guidance
-│   ├── subscribe.md.ts             # Monitoring guidance
-│   ├── auth.md.ts                  # Reserved auth contract
-│   ├── llms.txt.ts                 # Compact LLM index
-│   ├── llms-full.txt.ts            # Full inlined content for LLMs
-│   ├── api/posts.json.ts           # Cross-locale posts metadata
-│   ├── schemas/*.json.ts           # JSON Schemas for protocol endpoints
-│   ├── [section]/...               # Auto-generated extra collection routes
-│   └── [locale]/...                # Localized counterparts for all major routes
+│   │   ├── [slug].astro            # Détail d'un article
+│   │   └── [slug].md.ts            # Endpoint Markdown par article
+│   ├── agent/home.json.ts          # Etat agrégé lisible par machine
+│   ├── protocol.json.ts            # Manifeste structuré
+│   ├── skill.md.ts                 # Document narratif canonique du protocole
+│   ├── policy.md.ts                # Règles pour agents et garde-fous
+│   ├── reading.md.ts               # Workflow de récupération recommandé
+│   ├── subscribe.md.ts             # Guide de surveillance
+│   ├── auth.md.ts                  # Contrat d'authentification réservé
+│   ├── llms.txt.ts                 # Index compact pour les LLM
+│   ├── llms-full.txt.ts            # Contenu complet inline pour les LLM
+│   ├── api/posts.json.ts           # Métadonnées d'articles entre locales
+│   ├── schemas/*.json.ts           # Schémas JSON pour les endpoints du protocole
+│   ├── [section]/...               # Routes supplémentaires générées automatiquement
+│   └── [locale]/...                # Équivalents localisés des routes principales
 ├── styles/
-│   ├── fonts.css                   # Local Bricolage Grotesque font faces
-│   └── global.css                  # Tailwind v4 tokens, typography, theme variables
+│   ├── fonts.css                   # Polices Bricolage Grotesque locales
+│   └── global.css                  # Tokens Tailwind v4, typographie et variables de thème
 public/
-├── .well-known/ai-plugin.json      # Public machine discovery metadata
+├── .well-known/ai-plugin.json      # Métadonnées publiques de découverte machine
 ├── favicon.svg
 ├── logo.svg / logo-dark.svg
 └── og.png
 scripts/
-├── check-post-coverage.mjs         # Enforce slug parity across locales
-└── smoke-agent-protocol.mjs        # Validate generated protocol artifacts
+├── check-post-coverage.mjs         # Garantit la parité des slugs entre locales
+└── smoke-agent-protocol.mjs        # Valide les artefacts de protocole générés
 ```
 
 ## Déploiement
 
 ### Cloudflare Pages (par défaut)
 
-Le workflow `.github/workflows/deploy-cloudflare-pages.yml` est orienté Cloudflare Pages et valide le site avant déploiement.
+Le flux `.github/workflows/deploy-cloudflare-pages.yml` est orienté Cloudflare Pages et valide le site avant déploiement.
 
-1. Créez un projet Cloudflare Pages. Le workflow utilise par défaut le nom du dépôt, ou `CLOUDFLARE_PAGES_PROJECT_NAME` si vous voulez le surcharger
+1. Créez un projet Cloudflare Pages. Le flux utilise par défaut le nom du dépôt, ou `CLOUDFLARE_PAGES_PROJECT_NAME` si vous voulez le surcharger
 2. Ajoutez `CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID` dans GitHub Secrets
 3. Mettez à jour `site` dans `astro.config.mjs`
 4. Exécutez `pnpm validate`
@@ -403,7 +405,7 @@ La sortie est un site statique dans `dist/` :
 
 ```bash
 pnpm build
-# Upload dist/ to Netlify, Vercel, GitHub Pages, or any static host
+# Envoyez dist/ vers Netlify, Vercel, GitHub Pages ou n'importe quel hébergeur statique
 ```
 
 ## Principes

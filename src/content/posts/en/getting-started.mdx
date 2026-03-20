@@ -19,14 +19,11 @@ This guide covers everything you need to go from zero to a fully deployed, multi
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-
-# Install dependencies
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+corepack enable
 pnpm install
-
-# Start the dev server
+pnpm validate
 pnpm dev
 ```
 
@@ -106,9 +103,12 @@ Leave any variable empty to disable that service. No code changes needed.
 The site URL is configured in one place — `astro.config.mjs`:
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.pages.dev',
-  // ...
+  integrations: [aither()],
 });
 ```
 
@@ -316,21 +316,16 @@ Every page is optimized for search engines and AI agents:
 
 ### Cloudflare Pages
 
-The included GitHub Actions workflow handles CI/CD automatically.
+Best practice: create the Pages project first. The workflow uses your repository name by default, or `CLOUDFLARE_PAGES_PROJECT_NAME` if you need to override it.
 
-**Step 1** — Set GitHub Secrets:
+Set these GitHub Secrets:
 
 | Secret | Where to get it |
 |--------|----------------|
 | `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → API Tokens |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → Account Home |
 
-**Step 2** — Push to GitHub. The workflow will:
-
-1. Build the site on every push and PR
-2. Deploy to Cloudflare Pages on push to `main`
-
-Your site will be live at `https://your-project.pages.dev`.
+Then run `pnpm validate` and push to `main`.
 
 ### Custom Domain
 
@@ -343,7 +338,7 @@ Add a custom domain in the Cloudflare Pages dashboard under your project → Cus
 | Framework | Astro 6 (SSG) |
 | UI Islands | React 19 |
 | Styling | Tailwind CSS v4 |
-| Components | shadcn/ui (base-nova) |
+| Components | Custom Astro components + small React islands |
 | Content | MDX with Content Collections |
 | OG Images | Satori + resvg-js |
 | i18n | 11 locales |
@@ -356,9 +351,10 @@ Add a custom domain in the Cloudflare Pages dashboard under your project → Cus
 | Command | Description |
 |---------|-------------|
 | `pnpm dev` | Start dev server at `localhost:4321` |
+| `pnpm validate` | Run the full pre-push validation suite |
 | `pnpm build` | Build for production |
 | `pnpm preview` | Preview production build locally |
 
 ## Version Scheme
 
-This project uses [CalVer](https://calver.org/) — `YYYY.0M.0D`. Same-day patches append a suffix: `2026.03.14.1`, `2026.03.14.2`, etc.
+Public release tags follow CalVer-style names such as `v2026.03.20`.

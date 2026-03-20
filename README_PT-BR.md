@@ -19,24 +19,24 @@ Aither é um tema de publicação multilíngue que trata as duas superfícies co
 
 ## Modelo Leitor / Agente
 
-- `Reader` significa uma pessoa lendo o site HTML: home, páginas de artigo, página About, comentários e controles de tema.
-- `Agent` significa software consumindo a superfície pública machine-readable: `protocol.json`, `skill.md`, `agent/home.json` por locale, `llms.txt`, `api/posts.json` e Markdown por artigo.
-- `Read-only` significa que hoje há suporte para descoberta, leitura, indexação e monitoramento; publicação, comentários e escrita autenticada não estão expostos.
+- `Leitor` significa uma pessoa lendo o site HTML: home, páginas de artigo, página About, comentários e controles de tema.
+- `Agente` significa software consumindo a superfície pública legível por máquina: `protocol.json`, `skill.md`, `agent/home.json` por locale, `llms.txt`, `api/posts.json` e Markdown por artigo.
+- `Somente leitura` significa que hoje há suporte para descoberta, leitura, indexação e monitoramento; publicação, comentários e escrita autenticada não estão expostos.
 
 ```mermaid
 flowchart LR
-  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
-  A --> C["Agent Surface<br/>JSON / Markdown"]
-  B --> D["Canonical article URLs"]
+  A["Aither"] --> B["Superfície do leitor<br/>Páginas HTML"]
+  A --> C["Superfície de agentes<br/>JSON / Markdown"]
+  B --> D["URLs canônicas de artigos"]
   C --> E["protocol.json -> skill.md -> agent/home.json"]
   C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
 ```
 
 ## Por que Aither?
 
-A maioria dos temas de blog otimiza hero sections, animações e chrome visual. Aither otimiza ritmo de leitura, sobriedade tipográfica e densidade de informação.
+A maioria dos temas de blog otimiza seções hero, animações e enfeites visuais. Aither otimiza ritmo de leitura, sobriedade tipográfica e densidade de informação.
 
-Ao mesmo tempo, o projeto assume que o site será lido tanto por software quanto por pessoas. Por isso o repositório inclui uma superfície real de protocolo: `protocol.json`, `skill.md`, documentos machine-readable localizados, `llms.txt`, corpos em Markdown, JSON Schema e uma API de posts cross-locale.
+Ao mesmo tempo, o projeto assume que o site será lido tanto por software quanto por pessoas. Por isso o repositório inclui uma superfície real de protocolo: `protocol.json`, `skill.md`, documentos legíveis por máquina localizados, `llms.txt`, corpos em Markdown, JSON Schema e uma API de posts entre locales.
 
 ## O que já vem incluído
 
@@ -44,9 +44,9 @@ Ao mesmo tempo, o projeto assume que o site será lido tanto por software quanto
 - **Duas visões na home**
 - **41 temas curados**
 - **Superfície AI-native completa**
-- **Modo read-only por padrão**
+- **Modo somente leitura por padrão**
 - **11 idiomas**
-- **66 sample posts localizados**
+- **66 posts de exemplo localizados**
 - **Base editorial completa**
 - **Extensível além de posts**
 - **Stack Astro moderna**
@@ -56,7 +56,7 @@ Ao mesmo tempo, o projeto assume que o site será lido tanto por software quanto
 - **Node.js** -- `22 LTS` recomendado. Mínimo `20.19.1+` ou `22.12.0+`
 - **pnpm** -- `pnpm@10.32.1` fixado via `packageManager`
 - **Corepack** -- execute `corepack enable` uma vez
-- **Cloudflare Pages** -- só se você usar o workflow incluído
+- **Cloudflare Pages** -- só se você usar o fluxo incluído
 
 ## Início Rápido
 
@@ -80,18 +80,18 @@ pnpm install
 4. Configure o site:
 
 ```bash
-# astro.config.mjs -- set your site URL (only place you need to set it)
+# astro.config.mjs -- defina a URL do site (apenas aqui)
 site: 'https://your-domain.com'
 
-# src/config/site.ts -- set name, description, social links, nav, footer
-# (url is automatically read from astro.config.mjs)
+# src/config/site.ts -- defina nome, descrição, links sociais, nav e footer
+# a URL é lida automaticamente de astro.config.mjs
 ```
 
 5. Configure variáveis de ambiente (opcional):
 
 ```bash
 cp .env.example .env
-# Edit .env with your values (GA, Giscus, Crisp)
+# Preencha o .env com seus valores (GA, Giscus, Crisp)
 ```
 
 6. Valide antes de grandes mudanças:
@@ -106,6 +106,10 @@ pnpm validate
 pnpm dev
 ```
 
+## Atualizar sites existentes
+
+Aither hoje é distribuído como um tema `starter-first`, não como um pacote de integração Astro instalável. Para sites já criados, a atualização correta é por release e por Git, não por `pnpm up`. Se você mantiver um clone upstream limpo, também pode executar `pnpm upgrade:diff -- --from <tag-antiga> --to <tag-nova>` para ver um diff categorizado antes de portar mudanças. O fluxo completo está em [UPGRADING.md](./UPGRADING.md).
+
 ## Modelo de conteúdo
 
 Crie arquivos MDX em `src/content/posts/{locale}/`.
@@ -118,9 +122,10 @@ Crie arquivos MDX em `src/content/posts/{locale}/`.
 | `pnpm check` | Executa checagens do Astro |
 | `pnpm check:post-coverage` | Verifica paridade de slugs |
 | `pnpm build` | Gera `dist/` |
-| `pnpm smoke` | Executa smoke tests do protocolo |
+| `pnpm smoke:package` | Verifica a superfície do pacote `@aither/astro` e o mapa de exports |
+| `pnpm smoke` | Executa os testes de verificação do pacote e do protocolo |
 | `pnpm preview` | Faz preview do build |
-| `pnpm validate` | Executa check + coverage + build + smoke |
+| `pnpm validate` | Executa check + coverage + build + as duas suites de smoke |
 
 ## Protocolo AI-native
 
@@ -140,6 +145,18 @@ Arquivos principais:
 - `src/i18n/messages/*.ts`
 - `.env`
 
+### Configuração do Astro (`astro.config.mjs`)
+
+```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
+export default defineConfig({
+  site: 'https://your-domain.com',
+  integrations: [aither()],
+});
+```
+
 ## Estrutura do Projeto
 
 ```text
@@ -158,7 +175,7 @@ scripts/
 
 ## Implantação
 
-O workflow padrão usa Cloudflare Pages, exige `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`, e usa o nome do repositório como nome do projeto por padrão. Defina a variável de repositório `CLOUDFLARE_PAGES_PROJECT_NAME` se precisar sobrescrever.
+O fluxo padrão usa Cloudflare Pages, exige `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`, e usa o nome do repositório como nome do projeto por padrão. Defina a variável de repositório `CLOUDFLARE_PAGES_PROJECT_NAME` se precisar sobrescrever.
 
 ## Princípios
 

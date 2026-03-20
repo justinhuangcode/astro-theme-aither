@@ -1,21 +1,21 @@
 ---
-title: Bonnes pratiques pour les AI Agents sur de vrais projets (Sample)
+title: Bonnes pratiques pour les agents IA sur de vrais projets (Exemple)
 date: "2026-01-10T16:00:00+08:00"
 category: AI
-description: Un scope clair, un bon contexte, des boucles de vérification et une revue humaine rendent les AI Agents bien plus fiables.
-tags: [AI, Agents]
+description: Un périmètre clair, un bon contexte, des boucles de vérification et une revue humaine rendent les agents IA bien plus fiables.
+tags: [IA, Agents]
 pinned: false
 ---
 
-Les AI Agents deviennent vraiment utiles quand ils cessent de paraître magiques et commencent à se comporter comme un outil de travail fiable. Les équipes qui obtiennent les meilleurs résultats ne demandent pas à un agent de "tout gérer". Elles définissent la tâche, fournissent le bon contexte et s'assurent que le résultat reste facile à vérifier.
+Les agents IA deviennent vraiment utiles quand ils cessent de paraître magiques et commencent à se comporter comme un outil de travail fiable. Les équipes qui obtiennent les meilleurs résultats ne demandent pas à un agent de "tout gérer". Elles définissent la tâche, fournissent le bon contexte et s'assurent que le résultat reste facile à vérifier.
 
-Cela paraît simple, mais cela change tout. Un agent bien briefé peut avancer vite et produire un travail étonnamment solide. Un agent mal cadré gaspille du contexte, prend des détours inutiles et renvoie quelque chose qui semble sûr de lui, mais qui ne traite pas vraiment le vrai besoin.
+Cela paraît simple, mais cela change tout. Un agent bien préparé peut avancer vite et produire un travail étonnamment solide. Un agent mal cadré gaspille du contexte, prend des détours inutiles et renvoie quelque chose qui semble sûr de lui, mais qui ne traite pas vraiment le vrai besoin.
 
 ## Commencer par une tâche étroite
 
 Les meilleures tâches pour un agent sont concrètes et limitées.
 
-Au lieu de dire "améliore cette application", dites "corrige le chevauchement de la navigation mobile sur la page du blog" ou "ajoute un smoke test pour le flux RSS". Une tâche bien délimitée donne à l'agent une cible stable et réduit le risque de modifications hors sujet.
+Au lieu de dire "améliore cette application", dites "corrige le chevauchement de la navigation mobile sur la page du blog" ou "ajoute un test rapide pour le flux RSS". Une tâche bien délimitée donne à l'agent une cible stable et réduit le risque de modifications hors sujet.
 
 Cela simplifie aussi la revue. Quand la tâche est petite, il est plus facile de voir ce qui a changé, ce qu'il faut tester et si le résultat est réellement correct.
 
@@ -23,7 +23,7 @@ Cela simplifie aussi la revue. Quand la tâche est petite, il est plus facile de
 
 Les agents travaillent mieux quand le contexte important est écrit noir sur blanc plutôt que laissé à l'implicite.
 
-Un bon brief contient généralement :
+Une bonne consigne initiale contient généralement :
 
 - l'objectif exact
 - les fichiers ou dossiers concernés
@@ -43,7 +43,7 @@ C'est aussi pour cela que les interfaces lisibles par machine comptent autant. U
 
 ## Garder une sortie vérifiable
 
-Un bon workflow avec un agent ne se termine pas par "voici la réponse". Il se termine par des preuves.
+Un bon flux de travail avec un agent ne se termine pas par "voici la réponse". Il se termine par des preuves.
 
 Demandez à l'agent d'indiquer ce qu'il a modifié, ce qu'il a testé et ce qu'il n'a pas pu vérifier. Préférez des livrables rapides à contrôler :
 
@@ -58,7 +58,7 @@ La vérification transforme un résultat plausible en résultat fiable.
 
 Même de bons agents prennent parfois une mauvaise direction. La bonne réponse n'est pas d'éviter les agents, mais de rendre la récupération peu coûteuse.
 
-Utilisez de petites tâches, des scripts stables et des points de contrôle. Gardez des opérations idempotentes quand c'est possible. Évitez les workflows où une seule erreur crée un grand désordre difficile à corriger. Si une tâche peut être découpée en lecture, planification, implémentation et vérification, faites-le.
+Utilisez de petites tâches, des scripts stables et des points de contrôle. Gardez des opérations idempotentes quand c'est possible. Évitez les flux de travail où une seule erreur crée un grand désordre difficile à corriger. Si une tâche peut être découpée en lecture, planification, implémentation et vérification, faites-le.
 
 Les agents donnent le meilleur d'eux-mêmes dans des systèmes faciles à inspecter, faciles à tester et faciles à faire évoluer.
 
@@ -70,7 +70,7 @@ Les arbitrages produit, les limites de sécurité, le ton, la marque et la maint
 
 ## Un modèle mental pratique
 
-Considérez un AI Agent comme un opérateur compétent, rapide, infatigable et littéral.
+Considérez un agent IA comme un opérateur compétent, rapide, infatigable et littéral.
 
 Donnez-lui une mission claire. Donnez-lui les bons outils. Demandez-lui de montrer son travail. Puis examinez le résultat avec la même rigueur que pour n'importe quel changement important.
 
