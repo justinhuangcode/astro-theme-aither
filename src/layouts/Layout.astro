@@ -10,6 +10,7 @@ import ThemeEffects from '@/components/ThemeEffects.astro';
 import Analytics from '@/components/Analytics.astro';
 import Crisp from '@/components/Crisp.astro';
 import LocaleBanner from '@/components/LocaleBanner.astro';
+import WeChatShare from '@/components/WeChatShare.astro';
 import { siteConfig } from '@/config/site';
 import { CUSTOM_THEME_KEYS } from '@/lib/theme';
 import {
@@ -191,6 +192,9 @@ if (typeof imageSource === 'string') {
   }
 }
 const primaryShareImage = shareImages[0];
+const wechatShareImage =
+  shareImages.find((image) => image.width && image.height && image.width === image.height) ??
+  primaryShareImage;
 
 // Canonical URL
 const pathname = Astro.url.pathname;
@@ -261,6 +265,12 @@ const alternateUrls = locales.map((l) => ({
     ) : jsonLd ? (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     ) : null}
+    <WeChatShare
+      title={title}
+      description={description}
+      link={canonicalUrl}
+      imgUrl={wechatShareImage.url}
+    />
     <Analytics />
     {enableCrisp && <Crisp locale={locale} />}
     <script
