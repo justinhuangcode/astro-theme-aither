@@ -40,38 +40,19 @@ const { currentLocale, currentPath, allMessages } = Astro.props;
 </div>
 
 <script>
-  import { getLocalizedPath, localeLabels, type Locale } from '@/i18n';
+  import { bootstrapRootInit } from '@/lib/dom-init';
+  import {
+    defaultLocale,
+    detectLocaleFromLanguageTag,
+    getLocalizedPath,
+    localeBannerDismissedSessionKey,
+    localeLabels,
+    preferredLocaleStorageKey,
+    type Locale,
+  } from '@/i18n';
 
-  const DISMISSED_KEY = 'locale-banner-dismissed';
-  const PREFERRED_KEY = 'preferred-locale';
-
-  function detectLocale() {
-    const lang = (navigator.language || '').toLowerCase();
-    const code = lang.split('-')[0];
-
-    if (code === 'zh') {
-      if (lang.includes('tw') || lang.includes('hk') || lang.includes('hant')) {
-        return 'zh-hant';
-      }
-      return 'zh-hans';
-    }
-    if (code === 'ko') return 'ko';
-    if (code === 'fr') return 'fr';
-    if (code === 'de') return 'de';
-    if (code === 'it') return 'it';
-    if (code === 'es') return 'es';
-    if (code === 'ru') return 'ru';
-    if (code === 'id' || code === 'ms') return 'id';
-    if (code === 'pt') return 'pt-br';
-    if (code === 'en') return 'en';
-    return null;
-  }
-
-  document.querySelectorAll('[data-locale-banner]').forEach((banner) => {
-    if (!(banner instanceof HTMLElement) || banner.dataset.bound === 'true') return;
-    banner.dataset.bound = 'true';
-
-    const currentLocale = (banner.dataset.currentLocale ?? 'en') as Locale;
+  bootstrapRootInit('locale-banner', '[data-locale-banner]', (banner, signal) => {
+    const currentLocale = (banner.dataset.currentLocale ?? defaultLocale) as Locale;
     const currentPath = banner.dataset.currentPath ?? '/';
     const messagesNode = banner.querySelector('[data-locale-banner-messages]');
     const text = banner.querySelector('[data-locale-banner-text]');
@@ -106,12 +87,15 @@ const { currentLocale, currentPath, allMessages } = Astro.props;
       resetOffset();
     };
 
-    if (localStorage.getItem(PREFERRED_KEY) || sessionStorage.getItem(DISMISSED_KEY)) {
+    if (
+      localStorage.getItem(preferredLocaleStorageKey) ||
+      sessionStorage.getItem(localeBannerDismissedSessionKey)
+    ) {
       hideBanner();
       return;
     }
 
-    const detected = detectLocale();
+    const detected = detectLocaleFromLanguageTag(navigator.language || '');
     if (!detected || detected === currentLocale) {
       hideBanner();
       return;
@@ -127,17 +111,17 @@ const { currentLocale, currentPath, allMessages } = Astro.props;
 
     switchButton.addEventListener('click', () => {
       if (!targetLocale) return;
-      localStorage.setItem(PREFERRED_KEY, targetLocale);
-      sessionStorage.setItem(DISMISSED_KEY, '1');
+      localStorage.setItem(preferredLocaleStorageKey, targetLocale);
+      sessionStorage.setItem(localeBannerDismissedSessionKey, '1');
       window.location.href = getLocalizedPath(currentPath, targetLocale);
-    });
+    }, { signal });
 
     dismissButton.addEventListener('click', () => {
-      sessionStorage.setItem(DISMISSED_KEY, '1');
+      sessionStorage.setItem(localeBannerDismissedSessionKey, '1');
       hideBanner();
-    });
+    }, { signal });
 
-    window.addEventListener('resize', applyOffset);
-    window.addEventListener('pagehide', resetOffset, { once: true });
+    window.addEventListener('resize', applyOffset, { signal });
+    window.addEventListener('pagehide', resetOffset, { once: true, signal });
   });
 </script>

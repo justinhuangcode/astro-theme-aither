@@ -1,5 +1,4 @@
 import { createRssResponse } from '@/lib/site-content';
+import { createRootRouteHandler } from '@/lib/route-helpers';
 
-export async function GET() {
-  return createRssResponse('en');
-}
+export const GET = createRootRouteHandler(createRssResponse);

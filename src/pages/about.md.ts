@@ -1,5 +1,4 @@
 import { createAboutMarkdownResponse } from '@/lib/site-content';
+import { createRootRouteHandler } from '@/lib/route-helpers';
 
-export function GET() {
-  return createAboutMarkdownResponse('en');
-}
+export const GET = createRootRouteHandler(createAboutMarkdownResponse);

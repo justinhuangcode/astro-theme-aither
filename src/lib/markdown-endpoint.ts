@@ -5,14 +5,12 @@ import type { Locale } from '@/i18n';
 
 const CONTENT_DIR = resolve(process.cwd(), 'src/content/posts');
 
-export function createMarkdownStaticPaths(locale: Locale) {
-  return async () => {
-    const posts = await getPostsByLocale(locale);
-    return posts.map((post) => ({
-      params: { slug: getSlug(post.id) },
-      props: { postId: post.id },
-    }));
-  };
+export async function getMarkdownStaticPaths(locale: Locale) {
+  const posts = await getPostsByLocale(locale);
+  return posts.map((post) => ({
+    params: { slug: getSlug(post.id) },
+    props: { postId: post.id },
+  }));
 }
 
 export function createMarkdownResponse(postId: string) {

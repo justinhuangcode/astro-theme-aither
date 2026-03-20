@@ -5,7 +5,12 @@ import ModeSwitcher from './ModeSwitcher.astro';
 import NavbarMobile from './NavbarMobile.astro';
 import { siteConfig } from '@/config/site';
 import { getLocalizedThemeLabels } from '@/config/themes';
-import { getMessages, getLocalizedPath, type Locale } from '@/i18n';
+import {
+  getMessages,
+  getLocalizedPath,
+  translateNav,
+  type Locale,
+} from '@/i18n';
 
 interface Props {
   locale: Locale;
@@ -15,7 +20,6 @@ const { locale } = Astro.props;
 const m = getMessages(locale);
 const themeLabels = getLocalizedThemeLabels(locale);
 const currentPath = Astro.url.pathname;
-const navLabels = m.nav as Record<string, string>;
 const showModeSwitch = siteConfig.ui.enableModeSwitch;
 const showMoreThemes = siteConfig.ui.showMoreThemesMenu;
 
@@ -66,9 +70,9 @@ const allNavItems = [
                         ? 'nav-link-active font-semibold text-[var(--color-nav-text-active)]'
                         : 'text-[var(--color-nav-text)]',
                     ]}
-                    data-text={navLabels[item.labelKey] ?? item.labelKey}
+                    data-text={translateNav(item.labelKey, locale)}
                   >
-                    <span class="col-start-1 row-start-1">{navLabels[item.labelKey] ?? item.labelKey}</span>
+                    <span class="col-start-1 row-start-1">{translateNav(item.labelKey, locale)}</span>
                   </a>
                 </li>
               );
@@ -95,7 +99,7 @@ const allNavItems = [
       locale={locale}
       currentPath={currentPath}
       siteName={siteConfig.name}
-      navLinks={allNavItems.map((item) => ({ title: navLabels[item.labelKey] ?? item.labelKey, href: getLocalizedPath(item.href, locale) }))}
+      navLinks={allNavItems.map((item) => ({ title: translateNav(item.labelKey, locale), href: getLocalizedPath(item.href, locale) }))}
       languageLabel={m.common.language}
       modeLabels={m.common.mode}
       themeLabels={themeLabels}

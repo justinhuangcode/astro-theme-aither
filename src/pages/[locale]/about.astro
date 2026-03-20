@@ -1,16 +1,9 @@
 ---
 import AboutPage from '@/components/pages/AboutPage.astro';
-import {
-  nonDefaultLocales,
-  type Locale,
-} from '@/i18n';
+import { type Locale } from '@/i18n';
+import { createLocaleOnlyStaticPaths } from '@/lib/route-helpers';
 
-export function getStaticPaths() {
-  return nonDefaultLocales.map((locale) => ({
-    params: { locale },
-    props: { locale },
-  }));
-}
+export const getStaticPaths = createLocaleOnlyStaticPaths;
 
 const { locale } = Astro.props as { locale: Locale };
 ---

@@ -1,16 +1,8 @@
 import {
-  nonDefaultLocales,
-  type Locale,
-} from '@/i18n';
+  createLocaleOnlyStaticPaths,
+  createLocaleRouteHandler,
+} from '@/lib/route-helpers';
 import { createAboutMarkdownResponse } from '@/lib/site-content';
 
-export function getStaticPaths() {
-  return nonDefaultLocales.map((locale) => ({
-    params: { locale },
-    props: { locale },
-  }));
-}
-
-export function GET({ props }: { props: { locale: Locale } }) {
-  return createAboutMarkdownResponse(props.locale);
-}
+export const getStaticPaths = createLocaleOnlyStaticPaths;
+export const GET = createLocaleRouteHandler(createAboutMarkdownResponse);

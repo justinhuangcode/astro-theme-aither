@@ -2374,14 +2374,31 @@
     resizeCanvas();
     syncMatrixScene();
 
+    const controllers = (window.__aitherThemeEffectControllers ??= new Map());
+    controllers.get('matrix')?.abort();
+    const controller = new AbortController();
+    controllers.set('matrix', controller);
+
     const observer = new MutationObserver(syncMatrixScene);
     observer.observe(root, {
       attributes: true,
       attributeFilter: ['class', 'data-theme'],
     });
 
-    window.addEventListener('resize', syncMatrixScene);
-    media.addEventListener('change', syncMatrixScene);
+    controller.signal.addEventListener('abort', () => {
+      observer.disconnect();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      clearCanvas();
+      if (controllers.get('matrix') === controller) {
+        controllers.delete('matrix');
+      }
+    }, { once: true });
+
+    window.addEventListener('resize', syncMatrixScene, { signal: controller.signal });
+    media.addEventListener('change', syncMatrixScene, { signal: controller.signal });
   })();
 </script>
 
@@ -2551,14 +2568,31 @@
     resizeCanvas();
     syncBlackMirrorScene();
 
+    const controllers = (window.__aitherThemeEffectControllers ??= new Map());
+    controllers.get('blackmirror')?.abort();
+    const controller = new AbortController();
+    controllers.set('blackmirror', controller);
+
     const observer = new MutationObserver(syncBlackMirrorScene);
     observer.observe(root, {
       attributes: true,
       attributeFilter: ['class', 'data-theme'],
     });
 
-    window.addEventListener('resize', syncBlackMirrorScene);
-    media.addEventListener('change', syncBlackMirrorScene);
+    controller.signal.addEventListener('abort', () => {
+      observer.disconnect();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      clearCanvas();
+      if (controllers.get('blackmirror') === controller) {
+        controllers.delete('blackmirror');
+      }
+    }, { once: true });
+
+    window.addEventListener('resize', syncBlackMirrorScene, { signal: controller.signal });
+    media.addEventListener('change', syncBlackMirrorScene, { signal: controller.signal });
   })();
 </script>
 
@@ -2787,14 +2821,31 @@
     resizeCanvas();
     syncProtossScene();
 
+    const controllers = (window.__aitherThemeEffectControllers ??= new Map());
+    controllers.get('protoss')?.abort();
+    const controller = new AbortController();
+    controllers.set('protoss', controller);
+
     const observer = new MutationObserver(syncProtossScene);
     observer.observe(root, {
       attributes: true,
       attributeFilter: ['class', 'data-theme'],
     });
 
-    window.addEventListener('resize', syncProtossScene);
-    media.addEventListener('change', syncProtossScene);
+    controller.signal.addEventListener('abort', () => {
+      observer.disconnect();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      clearCanvas();
+      if (controllers.get('protoss') === controller) {
+        controllers.delete('protoss');
+      }
+    }, { once: true });
+
+    window.addEventListener('resize', syncProtossScene, { signal: controller.signal });
+    media.addEventListener('change', syncProtossScene, { signal: controller.signal });
   })();
 </script>
 
@@ -4044,13 +4095,30 @@
     resizeCanvas();
     syncScene();
 
+    const controllers = (window.__aitherThemeEffectControllers ??= new Map());
+    controllers.get('evomap')?.abort();
+    const controller = new AbortController();
+    controllers.set('evomap', controller);
+
     const observer = new MutationObserver(syncScene);
     observer.observe(root, {
       attributes: true,
       attributeFilter: ['class', 'data-theme'],
     });
 
-    window.addEventListener('resize', syncScene);
-    media.addEventListener('change', syncScene);
+    controller.signal.addEventListener('abort', () => {
+      observer.disconnect();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      clearCanvas();
+      if (controllers.get('evomap') === controller) {
+        controllers.delete('evomap');
+      }
+    }, { once: true });
+
+    window.addEventListener('resize', syncScene, { signal: controller.signal });
+    media.addEventListener('change', syncScene, { signal: controller.signal });
   })();
 </script>

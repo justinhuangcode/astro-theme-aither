@@ -1,5 +1,6 @@
 import { createLlmsResponse } from '@/lib/site-content';
+import { createRootRouteHandler } from '@/lib/route-helpers';
 
-export async function GET() {
-  return createLlmsResponse('en', 'full');
-}
+export const GET = createRootRouteHandler((locale) =>
+  createLlmsResponse(locale, 'full'),
+);

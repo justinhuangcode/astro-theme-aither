@@ -1,32 +1,12 @@
 ---
 import PostPage from '@/components/pages/PostPage.astro';
-import {
-  nonDefaultLocales,
-  type Locale,
-} from '@/i18n';
+import { type Locale } from '@/i18n';
+import { createLocalizedStaticPaths } from '@/lib/route-helpers';
 import { getPostStaticPaths } from '@/lib/site-content';
 import type { PostEntry } from '@/lib/posts';
 
 export async function getStaticPaths() {
-  const paths: Array<{
-    params: { locale: string; slug: string };
-    props: {
-      locale: Locale;
-      post: PostEntry;
-      prevPost: PostEntry | null;
-      nextPost: PostEntry | null;
-    };
-  }> = [];
-  for (const locale of nonDefaultLocales) {
-    const localePaths = await getPostStaticPaths(locale);
-    localePaths.forEach((path) => {
-      paths.push({
-        params: { locale, ...path.params },
-        props: { locale, ...path.props },
-      });
-    });
-  }
-  return paths;
+  return createLocalizedStaticPaths((locale) => getPostStaticPaths(locale));
 }
 
 const { locale, post, prevPost, nextPost } = Astro.props as {
