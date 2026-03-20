@@ -14,19 +14,16 @@ Panduan ini membawa Anda dari nol sampai blog multibahasa yang sudah ter-deploy.
 - [Node.js](https://nodejs.org/) 22 LTS atau lebih baru
 - [pnpm](https://pnpm.io/) 10 atau lebih baru
 - Akun GitHub
-- Akun [Cloudflare](https://cloudflare.com/) untuk deployment
+- Akun [Cloudflare](https://cloudflare.com/) untuk deploy
 
 ## Instalasi
 
 ```bash
-# Clone repositori
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-
-# Install dependensi
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+corepack enable
 pnpm install
-
-# Jalankan server development
+pnpm validate
 pnpm dev
 ```
 
@@ -77,8 +74,12 @@ Biarkan nilai kosong jika ingin menonaktifkan layanan tertentu.
 Atur URL produksi di `astro.config.mjs`:
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.pages.dev',
+  integrations: [aither()],
 });
 ```
 
@@ -91,7 +92,7 @@ Buat file `.mdx` baru di `src/content/posts/en/`:
 title: Post pertama saya
 date: "2026-03-14T16:00:00+08:00"
 category: General
-description: Ringkasan singkat untuk SEO dan preview sosial.
+description: Ringkasan singkat untuk SEO dan pratinjau sosial.
 tags: [Topic, Another]
 pinned: false
 ---
@@ -166,25 +167,28 @@ Setiap halaman sudah menyediakan output berikut:
 - `/posts/slug.md`
 - JSON-LD dan Open Graph
 
-## Deployment
+## Deploy
 
 ### Cloudflare Pages
+
+Praktik terbaik: buat proyek Pages terlebih dahulu. Alur ini memakai nama repositori secara default, atau `CLOUDFLARE_PAGES_PROJECT_NAME` jika Anda perlu menimpanya.
 
 Tambahkan secret GitHub berikut:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-Workflow yang sudah tersedia akan build dan deploy otomatis ke `main`.
+Lalu jalankan `pnpm validate` dan push ke `main`.
 
 ## Perintah yang berguna
 
 | Perintah | Deskripsi |
 |---------|-----------|
-| `pnpm dev` | Menjalankan server development |
+| `pnpm dev` | Menjalankan server pengembangan |
+| `pnpm validate` | Menjalankan validasi penuh sebelum push |
 | `pnpm build` | Membuat build produksi |
 | `pnpm preview` | Meninjau build produksi secara lokal |
 
 ## Skema versi
 
-Proyek ini menggunakan [CalVer](https://calver.org/) dengan format `YYYY.0M.0D`.
+Tag release publik memakai nama bergaya CalVer, misalnya `v2026.03.20`.

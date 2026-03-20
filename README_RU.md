@@ -9,44 +9,44 @@
 [![GitHub Stars](https://img.shields.io/github/stars/justinhuangcode/astro-theme-aither?style=flat-square&logo=github)](https://github.com/justinhuangcode/astro-theme-aither/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/justinhuangcode/astro-theme-aither?style=flat-square)](https://github.com/justinhuangcode/astro-theme-aither/commits/main)
 
-**[Live Preview](https://astro-theme-aither.pages.dev)**
+**[Онлайн-просмотр](https://astro-theme-aither.pages.dev)**
 
-AI-native тема Astro, построенная вокруг красивого текста. ✍️
+Тема Astro, рассчитанная на ИИ и построенная вокруг красивого текста. ✍️
 
-Типографика для людей, машиночитаемые endpoints для AI-агентов.
+Типографика для людей, машиночитаемые эндпоинты для ИИ-агентов.
 
-Aither — это мультиязычная publishing-тема, в которой и человекочитаемая часть, и agent-facing протоколы являются частью продукта.
+Aither — это мультиязычная тема публикации, в которой и человекочитаемая часть, и протоколы для агентов являются частью продукта.
 
 ## Модель Читателя / Агента
 
-- `Reader` означает человека, который читает HTML-сайт: главная страница, страницы статей, About, комментарии и переключатели темы.
-- `Agent` означает софт, который потребляет публичную machine-readable поверхность: `protocol.json`, `skill.md`, locale-specific `agent/home.json`, `llms.txt`, `api/posts.json` и Markdown для каждой статьи.
-- `Read-only` означает, что сейчас поддерживаются discovery, чтение, индексирование и мониторинг; публикация, комментарии и аутентифицированная запись не поддерживаются.
+- `Читатель` означает человека, который читает HTML-сайт: главная страница, страницы статей, страница «О сайте», комментарии и переключатели темы.
+- `Агент` означает софт, который потребляет публичную машиночитаемую поверхность: `protocol.json`, `skill.md`, `agent/home.json` для каждой языковой версии, `llms.txt`, `api/posts.json` и Markdown для каждой статьи.
+- `Только чтение` означает, что сейчас поддерживаются обнаружение, чтение, индексирование и мониторинг; публикация, комментарии и аутентифицированная запись не поддерживаются.
 
 ```mermaid
 flowchart LR
-  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
-  A --> C["Agent Surface<br/>JSON / Markdown"]
-  B --> D["Canonical article URLs"]
+  A["Aither"] --> B["Поверхность для читателя<br/>HTML-страницы"]
+  A --> C["Поверхность для агента<br/>JSON / Markdown"]
+  B --> D["Канонические URL статей"]
   C --> E["protocol.json -> skill.md -> agent/home.json"]
   C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
 ```
 
 ## Почему Aither?
 
-Большинство блоговых тем оптимизируют hero-блоки, анимации и декоративный UI. Aither оптимизирует ритм чтения, типографическую сдержанность и плотность информации.
+Большинство блоговых тем оптимизируют стартовые блоки, анимацию и визуальный декор. Aither оптимизирует ритм чтения, типографическую сдержанность и плотность информации.
 
-Одновременно проект исходит из того, что сайт будет читаться не только людьми, но и софтом. Поэтому в репозитории есть полноценная protocol surface: `protocol.json`, `skill.md`, локализованные machine docs, `llms.txt`, Markdown-версии статей, JSON Schema и multi-locale posts API.
+Одновременно проект исходит из того, что сайт будет читаться не только людьми, но и софтом. Поэтому в репозитории есть полноценная поверхность протокола: `protocol.json`, `skill.md`, локализованные машиночитаемые документы, `llms.txt`, Markdown-версии статей, JSON Schema и API постов для всех языковых версий.
 
 ## Что уже входит
 
 - типографика как основной интерфейс
 - две домашние поверхности: для читателя и для агента
 - 41 тема
-- полный AI-native протокол
-- read-only режим по умолчанию
+- полный протокол для ИИ
+- режим только чтения по умолчанию
 - 11 языков
-- 66 локализованных sample posts
+- 66 локализованных примерных постов
 - RSS / sitemap / OG / JSON-LD / TOC / pagination
 - расширяемость через Content Collections
 - современный стек Astro
@@ -56,7 +56,7 @@ flowchart LR
 - **Node.js** -- `22 LTS` рекомендуется
 - **pnpm** -- `pnpm@10.32.1`
 - **Corepack** -- выполните `corepack enable`
-- **Cloudflare Pages** -- только если используете встроенный workflow деплоя
+- **Cloudflare Pages** -- только если используете встроенный процесс деплоя
 
 ## Быстрый старт
 
@@ -79,23 +79,40 @@ pnpm dev
 
 | Команда | Описание |
 |---|---|
-| `pnpm dev` | Локальный dev server |
+| `pnpm dev` | Локальный сервер разработки |
 | `pnpm check` | Проверка Astro и контента |
 | `pnpm check:post-coverage` | Проверка паритета slug между locale |
 | `pnpm build` | Сборка в `dist/` |
-| `pnpm smoke` | Smoke tests протокола |
-| `pnpm preview` | Локальный preview production build |
-| `pnpm validate` | Полный рекомендуемый прогон |
+| `pnpm smoke:package` | Проверка поверхности пакета `@aither/astro` и карты exports |
+| `pnpm smoke` | Дымовые тесты пакета и протокола |
+| `pnpm preview` | Локальный предпросмотр производственной сборки |
+| `pnpm validate` | Полный рекомендуемый прогон: check + coverage + build + две проверки smoke |
+
+## Обновление существующих сайтов
+
+Сейчас Aither распространяется как тема формата `starter-first`, а не как устанавливаемый пакет Astro integration. Для уже созданных сайтов правильный путь обновления идёт через release и Git, а не через `pnpm up`. Если у вас есть чистый upstream-клон, можно сначала запустить `pnpm upgrade:diff -- --from <старый-tag> --to <новый-tag>` и посмотреть сгруппированный diff. Полный процесс описан в [UPGRADING.md](./UPGRADING.md).
 
 ## AI-нативный протокол
 
-Рекомендуемый порядок чтения: `/protocol.json` -> `/skill.md` -> locale-specific `agent/home.json`.
+Рекомендуемый порядок чтения: `/protocol.json` -> `/skill.md` -> `agent/home.json` для нужной locale.
 
-Для discovery по всем языкам используйте `/api/posts.json`, а для конечного текста статьи — `/{locale}/posts/{slug}.md`.
+Для обнаружения по всем языкам используйте `/api/posts.json`, а для конечного текста статьи — `/{locale}/posts/{slug}.md`.
 
 ## Конфигурация
 
 Ключевые файлы: `astro.config.mjs`, `src/config/site.ts`, `src/config/themes.ts`, `src/content.config.ts`, `src/i18n/index.ts`, `src/i18n/messages/*.ts`, `.env`.
+
+### Конфигурация Astro (`astro.config.mjs`)
+
+```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
+export default defineConfig({
+  site: 'https://your-domain.com',
+  integrations: [aither()],
+});
+```
 
 ## Структура проекта
 
@@ -115,7 +132,7 @@ scripts/
 
 ## Развёртывание
 
-По умолчанию workflow Cloudflare Pages требует secrets `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID` и использует имя репозитория как имя проекта. Если нужен другой проект, задайте переменную репозитория `CLOUDFLARE_PAGES_PROJECT_NAME`.
+По умолчанию процесс Cloudflare Pages требует secrets `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ACCOUNT_ID` и использует имя репозитория как имя проекта. Если нужен другой проект, задайте переменную репозитория `CLOUDFLARE_PAGES_PROJECT_NAME`.
 
 ## Принципы
 

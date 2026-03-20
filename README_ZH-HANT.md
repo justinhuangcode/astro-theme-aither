@@ -13,21 +13,21 @@
 
 一個圍繞優美文字構建的 AI 原生 Astro 主題。✍️
 
-面向人類讀者強調排版，面向 AI Agent 提供機器可讀端點。
+面向人類讀者強調排版，面向 AI 智能體提供機器可讀端點。
 
-Aither 是一個多語言發佈主題，把兩種表面都當作一等產品能力來設計：對人類，是安靜、克制、可讀的頁面；對 Agent，則是公開、明確、可抓取的協議文件與 Markdown 端點。它不是一個後來才補上 AI 標籤的通用部落格模板。
+Aither 是一個多語言發佈主題，把兩種表面都當作一等產品能力來設計：對人類，是安靜、克制、可讀的頁面；對智能體，則是公開、明確、可抓取的協議文件與 Markdown 端點。它不是一個後來才補上 AI 標籤的通用部落格模板。
 
-## 讀者 / Agent 模型
+## 讀者 / 智能體模型
 
 - `讀者` 指閱讀 HTML 站點的人類使用者：首頁卡片、文章頁、About 頁、留言與主題切換都屬於這一側。
-- `Agent` 指使用公開機器可讀端點的軟體客戶端：`protocol.json`、`skill.md`、按 locale 的 `agent/home.json`、`llms.txt`、`api/posts.json` 以及單篇文章 Markdown。
+- `智能體` 指使用公開機器可讀端點的軟體客戶端：`protocol.json`、`skill.md`、按 locale 的 `agent/home.json`、`llms.txt`、`api/posts.json` 以及單篇文章 Markdown。
 - `唯讀` 表示目前支援發現、抓取、索引與監控；不提供發佈、留言或認證寫入能力。
 
 ```mermaid
 flowchart LR
-  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
-  A --> C["Agent Surface<br/>JSON / Markdown"]
-  B --> D["Canonical article URLs"]
+  A["Aither"] --> B["讀者介面<br/>HTML 頁面"]
+  A --> C["智能體介面<br/>JSON / Markdown"]
+  B --> D["規範文章 URL"]
   C --> E["protocol.json -> skill.md -> agent/home.json"]
   C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
 ```
@@ -41,13 +41,13 @@ flowchart LR
 ## 目前內建的能力
 
 - **以排版為中心的閱讀體驗** -- Bricolage Grotesque 標題、系統字體正文、CJK 友善回退，以及本地打包的字體資源，不依賴遠端字體 CDN 也能維持質感
-- **首頁雙入口** -- 首頁同時提供讀者視圖與 Agent 視圖；人類看到文章卡片，Agent 直接看到 Markdown 入口，`/for-agents/` 也會用自然語言解釋協議
+- **首頁雙入口** -- 首頁同時提供讀者視圖與智能體視圖；人類看到文章卡片，智能體直接看到 Markdown 入口，`/for-agents/` 也會用自然語言解釋協議
 - **41 套主題** -- 除 Light / Dark / System 外，還內建 41 個命名主題，定義在 `src/config/themes.ts`；若你想保留模式切換但隱藏完整主題選單，也可直接設定
 - **AI 原生協議** -- `/protocol.json`、`/skill.md`、本地化 `/agent/home.json`、`/policy.md`、`/reading.md`、`/subscribe.md`、`/auth.md`、`/llms.txt`、`/llms-full.txt`、`/api/posts.json`、每篇文章的 `.md`、About Markdown、JSON Schema，以及 `/.well-known/ai-plugin.json`
-- **預設唯讀** -- Agent 可以發現、抓取、索引、總結、輪詢與引用內容，但目前沒有第一方寫入 API、留言 API，也沒有 Agent 身分驗證寫操作
+- **預設唯讀** -- 智能體可以發現、抓取、索引、總結、輪詢與引用內容，但目前沒有第一方寫入 API、留言 API，也沒有智能體身分驗證寫操作
 - **11 語言發佈** -- English、简体中文、繁體中文、한국어、Français、Deutsch、Italiano、Español、Русский、Bahasa Indonesia、Português (BR)，包含本地化 UI、hreflang、路由與 RSS
 - **66 篇本地化 sample** -- 6 個示例 slug 在 11 個 locale 中全部鏡像，`11 x 6 = 66`，並由 `pnpm check:post-coverage` 強制校驗
-- **完整發佈能力** -- 動態 OG 圖、RSS、sitemap、JSON-LD、canonical URL、標籤、置頂、分頁、目錄，以及可選的 Giscus / Crisp / Google Analytics
+- **完整發佈能力** -- 動態 OG 圖、RSS、網站地圖、JSON-LD、規範 URL、標籤、置頂、分頁、目錄，以及可選的 Giscus / Crisp / Google Analytics
 - **不只限於 posts** -- 路由系統已支援透過 Astro Content Collections 和 `siteConfig.sections` 擴充更多內容集合，不只是預設的 `posts`
 - **現代 Astro 技術棧** -- Astro 6、MDX、按需使用的 React 19、Tailwind CSS v4 tokens，以及在部署前同時校驗內容覆蓋、建置產物和協議產物的驗證流程
 
@@ -121,22 +121,26 @@ pnpm dev
 
 最佳實務：新站點優先使用 GitHub Template。若你是手動複製上游倉庫，先確認本地運行正常，再建立自己的倉庫或匯入到新倉庫，不要在尚未驗證成功前就刪除 `.git`。
 
+## 升級既有站點
+
+Aither 目前是 `starter-first` 主題，不是可直接安裝並透過 `pnpm up` 升級的 Astro integration 套件。已經基於它建站的專案，應該按 release 用 Git 升級；如果你有一份乾淨的上游 clone，也可以先執行 `pnpm upgrade:diff -- --from <舊 tag> --to <新 tag>` 查看分類後的差異。完整流程見 [UPGRADING.md](./UPGRADING.md)。
+
 ## 內容模型
 
 在 `src/content/posts/{locale}/` 中建立 MDX 檔案：
 
 ```markdown
 ---
-title: Your Post Title
+title: 範例文章標題
 date: "2026-01-01T16:00:00+08:00"
-description: Optional description for SEO
+description: 可選的 SEO 描述
 category: Technology
-tags: [optional, tags]
+tags: [可選, 標籤]
 pinned: false
 image: ./optional-cover.jpg
 ---
 
-Your content here.
+在這裡寫正文內容。
 ```
 
 | 欄位 | 型別 | 必填 | 預設值 | 說明 |
@@ -163,9 +167,10 @@ Your content here.
 | `pnpm check` | 執行 Astro 型別與內容校驗 |
 | `pnpm check:post-coverage` | 校驗所有 locale 是否擁有相同 slug |
 | `pnpm build` | 建置靜態站點到 `dist/` |
-| `pnpm smoke` | 執行 AI 協議建置產物的 smoke test |
+| `pnpm smoke:package` | 校驗 `@aither/astro` 套件介面和匯出映射 |
+| `pnpm smoke` | 執行套件層與 AI 協議建置產物的冒煙測試 |
 | `pnpm preview` | 本地預覽正式建置 |
-| `pnpm validate` | 推送前建議執行：串行跑 `check`、`check:post-coverage`、`build` 與協議 smoke test |
+| `pnpm validate` | 推送前建議執行：串行跑 `check`、`check:post-coverage`、`build` 與兩套冒煙測試 |
 
 ## AI 原生協議
 
@@ -173,8 +178,8 @@ Your content here.
 
 | 端點 | 範圍 | 用途 |
 |---|---|---|
-| `/protocol.json` | 全域 | 輕量 manifest 與 schema 連結 |
-| `/skill.md` | 全域 | Agent 的 canonical 敘事入口 |
+| `/protocol.json` | 全域 | 輕量清單與 schema 連結 |
+| `/skill.md` | 全域 | 智能體的規範敘事入口 |
 | `/{locale}/agent/home.json` | 每個 locale | 目前站點狀態與最新文章 |
 | `/{locale}/policy.md` | 每個 locale | 規則、發現順序與安全邊界 |
 | `/{locale}/reading.md` | 每個 locale | 推薦讀取流程 |
@@ -183,7 +188,7 @@ Your content here.
 | `/{locale}/llms.txt` | 每個 locale | 提供給 LLM 的輕量索引 |
 | `/{locale}/llms-full.txt` | 每個 locale | 提供給批次 LLM 工作流的完整內嵌內容 |
 | `/api/posts.json` | 全部 locale | 跨語言結構化文章中介資料 |
-| `/{locale}/posts/{slug}.md` | 每個 locale | 單篇文章的 canonical Markdown 正文 |
+| `/{locale}/posts/{slug}.md` | 每個 locale | 單篇文章的規範 Markdown 正文 |
 | `/{locale}/about.md` | 每個 locale | About 頁面 Markdown |
 | `/.well-known/ai-plugin.json` | 全域 | 輕量機器發現中介資料 |
 | `/schemas/agent-protocol.schema.json` | 全域 | `protocol.json` 的 JSON Schema |
@@ -195,15 +200,15 @@ Your content here.
 
 1. 先讀 `/protocol.json`，再讀 `/skill.md`，再取得對應 locale 的 `agent/home.json`
 2. 跨語言發現用 `/api/posts.json`，最終抓正文用單篇 `.md` 端點
-3. 回鏈給人類時引用 canonical HTML 頁面，不要引用 Markdown 端點
+3. 回鏈給人類時引用規範 HTML 頁面，不要引用 Markdown 端點
 4. 如果資訊新鮮度重要，就重新抓取，不要假設快取永遠正確
-5. 只要改動了 `protocol.json`、`skill.md`、`agent/home.json` 或任一 agent-facing Markdown 文件，最低也應跑一次 `pnpm smoke`
+5. 只要改動了 `protocol.json`、`skill.md`、`agent/home.json` 或任一面向智能體的 Markdown 文件，最低也應跑一次 `pnpm smoke`
 
 ## 設定
 
 主要設定入口如下：
 
-- `astro.config.mjs` -- 正式站點 URL、Astro 整合與 locale 路由
+- `astro.config.mjs` -- 正式站點 URL，以及共享的 `@aither/astro` 整合、Vite 與 locale 路由預設值
 - `src/config/site.ts` -- 站點中介資料、導覽、頁尾、分頁、時區、主題控制、社群連結，以及可選內容 sections
 - `src/config/themes.ts` -- 41 套主題目錄與本地化主題標籤
 - `src/content.config.ts` -- Zod 內容 schema 與 collection 註冊
@@ -272,15 +277,12 @@ export const collections = { posts, translations };
 ### Astro 設定（`astro.config.mjs`）
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.com',
-  integrations: [react(), mdx(), sitemap()],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
-    routing: { prefixDefaultLocale: false },
-  },
-  vite: { plugins: [tailwindcss()] },
+  integrations: [aither()],
 });
 ```
 
@@ -320,7 +322,7 @@ PUBLIC_GISCUS_CATEGORY_ID=
 
 預設 locale `en` 沒有 URL 前綴，其餘語言使用各自代碼前綴，例如 `/zh-hans/`、`/ko/`。
 
-最佳實務：把英文 slug 集合作為 canonical 基線，並在部署前用 `pnpm check:post-coverage` 找出缺失的本地化文章。
+最佳實務：把英文 slug 集合作為規範基線，並在部署前用 `pnpm check:post-coverage` 找出缺失的本地化文章。
 
 ## 專案結構
 
@@ -336,21 +338,21 @@ src/
 │   ├── index.ts                    # locale 定義與路由 helper
 │   └── messages/*.ts               # 各語言 UI 文案
 ├── components/
-│   ├── pages/                      # 頁面級 UI：home、post、about、for-agents
-│   ├── AIAccessList.astro          # Agent 視圖下的 Markdown 文章列表
+│   ├── pages/                      # 頁面級介面：首頁、文章、About、for-agents
+│   ├── AIAccessList.astro          # 智能體視圖下的 Markdown 文章列表
 │   ├── Navbar.astro                # 導覽、語言切換、主題控制
-│   ├── ModeSwitcher.astro          # Light/Dark/System + 自訂主題切換
+│   ├── ModeSwitcher.astro          # Light/Dark/System + 自訂主題選擇器
 │   ├── TableOfContents.astro       # 依標題生成目錄
 │   └── Giscus.astro                # 可選留言元件
 ├── lib/
-│   ├── agent-protocol.ts           # 協議 manifest 與 agent 文件生成
-│   ├── markdown-endpoint.ts        # Markdown 回應 helper
+│   ├── agent-protocol.ts           # 協議清單與智能體文件生成
+│   ├── markdown-endpoint.ts        # Markdown 回應輔助工具
 │   ├── og-image.ts                 # 動態 OG 圖生成
 │   ├── posts.ts                    # 依 locale 取得與排序內容
-│   ├── site-content.ts             # 路徑、分頁、RSS、llms.txt 等 helper
+│   ├── site-content.ts             # 路徑、分頁、RSS、llms.txt 等輔助工具
 │   └── theme.ts                    # 主題偏好狀態管理
 ├── layouts/
-│   └── Layout.astro                # SEO、hreflang、JSON-LD、alternates、全域外殼
+│   └── Layout.astro                # SEO、hreflang、JSON-LD、替代連結與全域外殼
 ├── pages/
 │   ├── index.astro                 # 預設 locale 首頁
 │   ├── about.astro                 # About 頁面
@@ -360,9 +362,9 @@ src/
 │   │   ├── [slug].astro            # 文章詳情頁
 │   │   └── [slug].md.ts            # 單篇 Markdown 端點
 │   ├── agent/home.json.ts          # 聚合機器可讀站點狀態
-│   ├── protocol.json.ts            # 結構化 manifest
-│   ├── skill.md.ts                 # canonical 協議說明
-│   ├── policy.md.ts                # Agent 規則與安全邊界
+│   ├── protocol.json.ts            # 結構化清單
+│   ├── skill.md.ts                 # 規範敘事式協議文件
+│   ├── policy.md.ts                # 智能體規則與安全邊界
 │   ├── reading.md.ts               # 推薦抓取流程
 │   ├── subscribe.md.ts             # 監控與訂閱建議
 │   ├── auth.md.ts                  # 預留認證契約
@@ -374,7 +376,7 @@ src/
 │   └── [locale]/...                # 各主要頁面的本地化路由
 ├── styles/
 │   ├── fonts.css                   # 本地 Bricolage Grotesque 字體宣告
-│   └── global.css                  # Tailwind v4 tokens、排版與主題變數
+│   └── global.css                  # Tailwind v4 設計權杖、排版與主題變數
 public/
 ├── .well-known/ai-plugin.json      # 公開機器發現中介資料
 ├── favicon.svg
@@ -411,7 +413,7 @@ pnpm build
 ## 原則
 
 1. **排版就是介面** -- 好的文字不應該和主題互相搶戲。
-2. **人類與 Agent 同樣重要** -- 公共協議是產品的一部分，不是事後補充。
+2. **人類與智能體同樣重要** -- 公共協議是產品的一部分，不是事後補充。
 3. **多語言一致性需要被校驗** -- locale 覆蓋不是假設，而是顯式檢查。
 4. **擴充點應貼近內容層** -- 用 Content Collections 和設定擴充 sections，而不是額外套一層應用系統。
 5. **保持克制** -- 靜態輸出、明確文件與清晰契約，比隱藏魔法更可靠。

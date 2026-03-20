@@ -19,14 +19,11 @@ Este guia leva você do zero até um blog multilíngue publicado. Leia tudo com 
 ## Instalação
 
 ```bash
-# Clone o repositório
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-
-# Instale as dependências
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+corepack enable
 pnpm install
-
-# Inicie o servidor de desenvolvimento
+pnpm validate
 pnpm dev
 ```
 
@@ -77,8 +74,12 @@ Se alguma variável ficar vazia, a integração correspondente será desativada 
 Defina a URL de produção em `astro.config.mjs`:
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.pages.dev',
+  integrations: [aither()],
 });
 ```
 
@@ -170,21 +171,24 @@ Cada página já expõe estas saídas:
 
 ### Cloudflare Pages
 
+Boa prática: crie primeiro o projeto do Pages. O fluxo usa o nome do repositório por padrão, ou `CLOUDFLARE_PAGES_PROJECT_NAME` se você precisar sobrescrever.
+
 Configure estes secrets no GitHub:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-O workflow incluído faz build e deploy automaticamente nos pushes para `main`.
+Depois rode `pnpm validate` e faça push para `main`.
 
 ## Comandos úteis
 
 | Comando | Descrição |
 |--------|-----------|
 | `pnpm dev` | Inicia o servidor de desenvolvimento |
+| `pnpm validate` | Executa a validação completa antes do push |
 | `pnpm build` | Gera a build de produção |
-| `pnpm preview` | Faz preview local da build |
+| `pnpm preview` | Faz prévia local da build |
 
 ## Esquema de versão
 
-Este projeto usa [CalVer](https://calver.org/) no formato `YYYY.0M.0D`.
+As tags públicas de release seguem nomes no estilo CalVer, como `v2026.03.20`.

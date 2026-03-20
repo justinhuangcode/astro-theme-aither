@@ -19,15 +19,15 @@ Aither는 다국어 퍼블리싱 테마로, 사람을 위한 차분하고 읽기
 
 ## 독자 / 에이전트 모델
 
-- `Reader`는 HTML 사이트를 읽는 사람을 뜻합니다. 홈 카드, 글 페이지, About 페이지, 댓글, 테마 컨트롤이 여기에 속합니다.
-- `Agent`는 공개된 머신 리더블 표면을 소비하는 소프트웨어를 뜻합니다. `protocol.json`, `skill.md`, locale별 `agent/home.json`, `llms.txt`, `api/posts.json`, 글별 Markdown 엔드포인트가 포함됩니다.
-- `Read-only`는 현재 발견, 가져오기, 인덱싱, 모니터링만 지원한다는 뜻이며, 글쓰기, 댓글 작성, 인증 기반 쓰기 기능은 아직 없습니다.
+- `독자`는 HTML 사이트를 읽는 사람을 뜻합니다. 홈 카드, 글 페이지, About 페이지, 댓글, 테마 컨트롤이 여기에 속합니다.
+- `에이전트`는 공개된 머신 리더블 표면을 소비하는 소프트웨어를 뜻합니다. `protocol.json`, `skill.md`, locale별 `agent/home.json`, `llms.txt`, `api/posts.json`, 글별 Markdown 엔드포인트가 포함됩니다.
+- `읽기 전용`은 현재 발견, 가져오기, 인덱싱, 모니터링만 지원한다는 뜻이며, 글쓰기, 댓글 작성, 인증 기반 쓰기 기능은 아직 없습니다.
 
 ```mermaid
 flowchart LR
-  A["Aither"] --> B["Reader Surface<br/>HTML pages"]
-  A --> C["Agent Surface<br/>JSON / Markdown"]
-  B --> D["Canonical article URLs"]
+  A["Aither"] --> B["독자 표면<br/>HTML 페이지"]
+  A --> C["에이전트 표면<br/>JSON / Markdown"]
+  B --> D["표준 글 URL"]
   C --> E["protocol.json -> skill.md -> agent/home.json"]
   C --> F["llms.txt / api/posts.json / posts/{slug}.md"]
 ```
@@ -44,10 +44,10 @@ flowchart LR
 - **홈 이중 뷰** -- 독자 뷰와 에이전트 뷰를 모두 제공하며 `/for-agents/`가 프로토콜을 설명합니다
 - **41개 큐레이션 테마** -- Light / Dark / System + `src/config/themes.ts`의 41개 테마
 - **AI-native 프로토콜 표면** -- `/protocol.json`, `/skill.md`, 로컬라이즈된 `/agent/home.json`, `/policy.md`, `/reading.md`, `/subscribe.md`, `/auth.md`, `/llms.txt`, `/llms-full.txt`, `/api/posts.json`, 글별 `.md`, About Markdown, JSON Schema, `/.well-known/ai-plugin.json`
-- **기본 read-only** -- 에이전트는 발견, 읽기, 인덱싱, 요약, 모니터링, 인용만 가능하며 쓰기 API는 없습니다
+- **기본 읽기 전용** -- 에이전트는 발견, 읽기, 인덱싱, 요약, 모니터링, 인용만 가능하며 쓰기 API는 없습니다
 - **11개 언어** -- UI, hreflang, 라우트, 피드까지 11개 locale 지원
 - **66개 로컬라이즈드 sample 글** -- 6개 슬러그가 11개 locale에 복제되어 `pnpm check:post-coverage`로 검증됩니다
-- **완성된 퍼블리싱 기능** -- 동적 OG, RSS, sitemap, JSON-LD, canonical, tags, pinned posts, pagination, TOC, optional Giscus / Crisp / GA
+- **완성된 퍼블리싱 기능** -- 동적 OG, RSS, 사이트맵, JSON-LD, 표준 URL, 태그, 고정 글, 페이지네이션, 목차, 선택형 Giscus / Crisp / GA
 - **posts 외 확장 가능** -- Astro Content Collections와 `siteConfig.sections`로 다른 섹션도 확장 가능합니다
 - **현대적인 Astro 스택** -- Astro 6, MDX, React 19, Tailwind CSS v4, 그리고 content / build / protocol validation 파이프라인
 
@@ -80,18 +80,18 @@ pnpm install
 4. 사이트 설정:
 
 ```bash
-# astro.config.mjs -- set your site URL (only place you need to set it)
+# astro.config.mjs -- 사이트 URL 설정 (여기 한 곳만 수정)
 site: 'https://your-domain.com'
 
-# src/config/site.ts -- set name, description, social links, nav, footer
-# (url is automatically read from astro.config.mjs)
+# src/config/site.ts -- 이름, 설명, 소셜 링크, 내비게이션, 푸터 설정
+# URL은 astro.config.mjs에서 자동으로 읽습니다
 ```
 
 5. 환경 변수 설정(선택):
 
 ```bash
 cp .env.example .env
-# Edit .env with your values (GA, Giscus, Crisp)
+# .env에 값 입력 (GA, Giscus, Crisp)
 ```
 
 6. 큰 변경 전에 스타터 검증:
@@ -106,7 +106,7 @@ pnpm validate
 pnpm dev
 ```
 
-8. Cloudflare workflow를 사용할 경우 먼저 [배포](#배포) 섹션을 완료한 뒤 `main`에 push하세요
+8. Cloudflare 워크플로를 사용할 경우 먼저 [배포](#배포) 섹션을 완료한 뒤 `main`에 푸시하세요
 
 ### 수동 설정
 
@@ -121,17 +121,21 @@ pnpm dev
 
 권장 방식은 GitHub Template입니다. 수동으로 upstream을 clone했다면 먼저 로컬에서 정상 동작을 확인하세요.
 
+## 기존 사이트 업그레이드
+
+Aither는 현재 설치형 Astro integration 패키지가 아니라 `starter-first` 테마로 배포됩니다. 이미 만든 사이트는 `pnpm up`이 아니라 release 기준의 Git 업그레이드로 가져가는 것이 맞습니다. 깨끗한 upstream clone이 있다면 `pnpm upgrade:diff -- --from <이전 tag> --to <새 tag>`로 분류된 diff를 먼저 확인할 수도 있습니다. 전체 절차는 [UPGRADING.md](./UPGRADING.md)에 정리했습니다.
+
 ## 콘텐츠 모델
 
 `src/content/posts/{locale}/` 아래에 MDX 파일을 만듭니다.
 
 ```markdown
 ---
-title: Your Post Title
+title: 글 제목
 date: "2026-01-01T16:00:00+08:00"
-description: Optional description for SEO
+description: SEO용 선택 설명
 category: Technology
-tags: [optional, tags]
+tags: [example, tags]
 pinned: false
 image: ./optional-cover.jpg
 ---
@@ -161,11 +165,12 @@ Your content here.
 |---|---|
 | `pnpm dev` | 로컬 개발 서버 시작 |
 | `pnpm check` | Astro 타입 및 콘텐츠 검사 |
-| `pnpm check:post-coverage` | locale 간 slug parity 검사 |
+| `pnpm check:post-coverage` | locale 간 slug 일치 여부 검사 |
 | `pnpm build` | `dist/`로 정적 빌드 |
-| `pnpm smoke` | AI protocol smoke test |
+| `pnpm smoke:package` | `@aither/astro` 패키지 표면과 내보내기 맵 검증 |
+| `pnpm smoke` | 패키지와 AI 프로토콜 스모크 테스트 실행 |
 | `pnpm preview` | 프로덕션 빌드 미리보기 |
-| `pnpm validate` | push 전 권장 검사 세트 |
+| `pnpm validate` | push 전 권장 검사 세트: `check`, `check:post-coverage`, `build`, 두 smoke 세트 |
 
 ## AI 네이티브 프로토콜
 
@@ -173,19 +178,19 @@ Your content here.
 
 | 엔드포인트 | 범위 | 용도 |
 |---|---|---|
-| `/protocol.json` | 전역 | 가벼운 manifest와 schema 링크 |
-| `/skill.md` | 전역 | canonical narrative entry |
+| `/protocol.json` | 전역 | 가벼운 매니페스트와 schema 링크 |
+| `/skill.md` | 전역 | 표준 서사형 진입 문서 |
 | `/{locale}/agent/home.json` | locale별 | 현재 사이트 상태와 최신 글 |
 | `/{locale}/policy.md` | locale별 | 규칙과 안전 경계 |
-| `/{locale}/reading.md` | locale별 | 권장 retrieval workflow |
-| `/{locale}/subscribe.md` | locale별 | polling / monitoring 가이드 |
-| `/{locale}/auth.md` | locale별 | 예약된 auth 계약, 현재는 read-only |
-| `/{locale}/llms.txt` | locale별 | compact LLM index |
-| `/{locale}/llms-full.txt` | locale별 | bulk LLM용 전체 inline content |
-| `/api/posts.json` | 전체 locale | 구조화된 cross-locale metadata |
-| `/{locale}/posts/{slug}.md` | locale별 | canonical Markdown body |
-| `/{locale}/about.md` | locale별 | About Markdown |
-| `/.well-known/ai-plugin.json` | 전역 | discovery metadata |
+| `/{locale}/reading.md` | locale별 | 권장 읽기 흐름 |
+| `/{locale}/subscribe.md` | locale별 | 폴링 및 모니터링 가이드 |
+| `/{locale}/auth.md` | locale별 | 예약된 인증 계약, 현재는 읽기 전용 |
+| `/{locale}/llms.txt` | locale별 | 압축형 LLM 인덱스 |
+| `/{locale}/llms-full.txt` | locale별 | 대량 LLM 처리용 전체 인라인 콘텐츠 |
+| `/api/posts.json` | 전체 locale | 다국어 구조화 메타데이터 |
+| `/{locale}/posts/{slug}.md` | locale별 | 표준 Markdown 본문 |
+| `/{locale}/about.md` | locale별 | About Markdown 문서 |
+| `/.well-known/ai-plugin.json` | 전역 | 머신 발견 메타데이터 |
 | `/schemas/agent-protocol.schema.json` | 전역 | `protocol.json` schema |
 | `/schemas/agent-home.schema.json` | 전역 | `agent/home.json` schema |
 
@@ -195,7 +200,7 @@ Your content here.
 
 1. `/protocol.json` -> `/skill.md` -> locale별 `agent/home.json` 순서로 읽기
 2. 다국어 검색은 `/api/posts.json`, 최종 본문은 `.md` 엔드포인트 사용
-3. 사람에게 링크할 때는 canonical HTML URL 인용
+3. 사람에게 링크할 때는 표준 HTML URL 인용
 4. 최신성이 중요하면 다시 fetch
 5. protocol 문서를 바꾸면 최소 `pnpm smoke` 실행
 
@@ -203,12 +208,12 @@ Your content here.
 
 주요 파일:
 
-- `astro.config.mjs` -- production URL, integrations, locale routing
-- `src/config/site.ts` -- site metadata, nav/footer, pagination, timezone, theme controls, optional sections
-- `src/config/themes.ts` -- 41-theme catalog and localized labels
-- `src/content.config.ts` -- Zod schema and collections
-- `src/i18n/index.ts` / `src/i18n/messages/*.ts` -- locales and translated UI
-- `.env` -- optional Google Analytics / Crisp / Giscus
+- `astro.config.mjs` -- 프로덕션 URL과 `@aither/astro` 공용 기본 integration, Vite, locale 라우팅 설정
+- `src/config/site.ts` -- 사이트 메타데이터, nav/footer, pagination, timezone, 테마 제어, 선택형 섹션
+- `src/config/themes.ts` -- 41개 테마 카탈로그와 로컬라이즈된 라벨
+- `src/content.config.ts` -- Zod 스키마와 컬렉션 등록
+- `src/i18n/index.ts` / `src/i18n/messages/*.ts` -- locale 정의와 번역된 UI 문구
+- `.env` -- 선택형 Google Analytics / Crisp / Giscus 설정
 
 ### 사이트 설정 (`src/config/site.ts`)
 
@@ -219,9 +224,9 @@ export const siteConfig = {
   description: '...',
   author: {
     name: 'Aither',
-    avatar: '', // Import from src/assets/ for optimization, or use URL string
+    avatar: '', // 최적화를 위해 src/assets/에서 import 하거나 직접 URL 사용
   },
-  // url is automatically read from astro.config.mjs — no need to set it here
+  // URL은 astro.config.mjs에서 자동으로 읽습니다 — 여기서 다시 설정할 필요 없음
   social: [
     { title: 'GitHub', href: 'https://github.com/...', icon: 'github' },
     { title: 'Twitter', href: '', icon: 'x' },
@@ -272,15 +277,12 @@ export const collections = { posts, translations };
 ### Astro 설정 (`astro.config.mjs`)
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.com',
-  integrations: [react(), mdx(), sitemap()],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
-    routing: { prefixDefaultLocale: false },
-  },
-  vite: { plugins: [tailwindcss()] },
+  integrations: [aither()],
 });
 ```
 
@@ -318,78 +320,78 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | `id` | Bahasa Indonesia |
 | `pt-br` | Português (BR) |
 
-권장 사항: 영어 slug 집합을 canonical baseline으로 보고 `pnpm check:post-coverage`를 배포 전에 실행하세요.
+권장 사항: 영어 slug 집합을 기준 슬러그 집합으로 보고 `pnpm check:post-coverage`를 배포 전에 실행하세요.
 
 ## 프로젝트 구조
 
 ```text
 src/
 ├── config/
-│   ├── site.ts                     # Site metadata, nav/footer, theme controls, optional sections
-│   └── themes.ts                   # 41 curated themes + localized labels
-├── content.config.ts               # Content Collections schema (Zod)
+│   ├── site.ts                     # 사이트 메타데이터, nav/footer, 테마 제어, 선택형 섹션
+│   └── themes.ts                   # 41개 큐레이션 테마 + 현지화된 라벨
+├── content.config.ts               # Content Collections 스키마 (Zod)
 ├── content/
-│   └── posts/{locale}/*.mdx        # Multilingual post content
+│   └── posts/{locale}/*.mdx        # 다국어 포스트 콘텐츠
 ├── i18n/
-│   ├── index.ts                    # Locale definitions and routing helpers
-│   └── messages/*.ts               # UI translations for all locales
+│   ├── index.ts                    # 언어 정의와 라우팅 도우미
+│   └── messages/*.ts               # 모든 언어용 UI 번역
 ├── components/
-│   ├── pages/                      # Page-level UI: home, post, about, for-agents
-│   ├── AIAccessList.astro          # Agent-facing Markdown post list
-│   ├── Navbar.astro                # Nav, locale switcher, theme controls
-│   ├── ModeSwitcher.astro          # Light/Dark/System + custom theme picker
-│   ├── TableOfContents.astro       # Heading-driven TOC
-│   └── Giscus.astro                # Optional comments
+│   ├── pages/                      # 페이지 단위 UI: 홈, 글, about, for-agents
+│   ├── AIAccessList.astro          # 에이전트용 Markdown 글 목록
+│   ├── Navbar.astro                # 내비게이션, 언어 전환기, 테마 제어
+│   ├── ModeSwitcher.astro          # Light/Dark/System + 사용자 정의 테마 선택기
+│   ├── TableOfContents.astro       # 제목 기반 목차
+│   └── Giscus.astro                # 선택형 댓글
 ├── lib/
-│   ├── agent-protocol.ts           # Protocol manifest + agent docs generation
-│   ├── markdown-endpoint.ts        # Markdown response helpers
-│   ├── og-image.ts                 # Dynamic OG image generation
-│   ├── posts.ts                    # Locale-aware content fetching + sorting
-│   ├── site-content.ts             # Paths, pagination, RSS, llms.txt helpers
-│   └── theme.ts                    # Theme preference state helpers
+│   ├── agent-protocol.ts           # 프로토콜 매니페스트와 에이전트 문서 생성
+│   ├── markdown-endpoint.ts        # Markdown 응답 도우미
+│   ├── og-image.ts                 # 동적 OG 이미지 생성
+│   ├── posts.ts                    # locale 인지형 콘텐츠 로딩 및 정렬
+│   ├── site-content.ts             # 경로, 페이지네이션, RSS, llms.txt 도우미
+│   └── theme.ts                    # 테마 선호 상태 도우미
 ├── layouts/
-│   └── Layout.astro                # SEO, hreflang, JSON-LD, alternates, global shell
+│   └── Layout.astro                # SEO, hreflang, JSON-LD, 대체 링크, 전역 셸
 ├── pages/
-│   ├── index.astro                 # Home (default locale)
-│   ├── about.astro                 # About page
-│   ├── for-agents.astro            # Human-facing protocol landing page
-│   ├── page/[num].astro            # Paginated home listing
+│   ├── index.astro                 # 홈 (기본 locale)
+│   ├── about.astro                 # About 페이지
+│   ├── for-agents.astro            # 사람용 프로토콜 안내 페이지
+│   ├── page/[num].astro            # 홈 페이지네이션 목록
 │   ├── posts/
-│   │   ├── [slug].astro            # Post detail
-│   │   └── [slug].md.ts            # Per-post Markdown endpoint
-│   ├── agent/home.json.ts          # Aggregated machine-readable site state
-│   ├── protocol.json.ts            # Structured manifest
-│   ├── skill.md.ts                 # Canonical narrative protocol document
-│   ├── policy.md.ts                # Agent rules and safety guidance
-│   ├── reading.md.ts               # Retrieval workflow guidance
-│   ├── subscribe.md.ts             # Monitoring guidance
-│   ├── auth.md.ts                  # Reserved auth contract
-│   ├── llms.txt.ts                 # Compact LLM index
-│   ├── llms-full.txt.ts            # Full inlined content for LLMs
-│   ├── api/posts.json.ts           # Cross-locale posts metadata
-│   ├── schemas/*.json.ts           # JSON Schemas for protocol endpoints
-│   ├── [section]/...               # Auto-generated extra collection routes
-│   └── [locale]/...                # Localized counterparts for all major routes
+│   │   ├── [slug].astro            # 글 상세
+│   │   └── [slug].md.ts            # 글별 Markdown 엔드포인트
+│   ├── agent/home.json.ts          # 기계가 읽을 수 있는 집계형 사이트 상태
+│   ├── protocol.json.ts            # 구조화된 매니페스트
+│   ├── skill.md.ts                 # 표준 서사형 프로토콜 문서
+│   ├── policy.md.ts                # 에이전트 규칙과 안전 가이드
+│   ├── reading.md.ts               # 권장 읽기 흐름
+│   ├── subscribe.md.ts             # 모니터링 가이드
+│   ├── auth.md.ts                  # 예약된 인증 계약
+│   ├── llms.txt.ts                 # 압축형 LLM 인덱스
+│   ├── llms-full.txt.ts            # LLM용 전체 인라인 콘텐츠
+│   ├── api/posts.json.ts           # 다국어 글 메타데이터
+│   ├── schemas/*.json.ts           # 프로토콜 엔드포인트용 JSON 스키마
+│   ├── [section]/...               # 자동 생성되는 추가 컬렉션 라우트
+│   └── [locale]/...                # 주요 라우트의 로컬라이즈드 대응본
 ├── styles/
-│   ├── fonts.css                   # Local Bricolage Grotesque font faces
-│   └── global.css                  # Tailwind v4 tokens, typography, theme variables
+│   ├── fonts.css                   # 로컬 Bricolage Grotesque 폰트 선언
+│   └── global.css                  # Tailwind v4 토큰, 타이포그래피, 테마 변수
 public/
-├── .well-known/ai-plugin.json      # Public machine discovery metadata
+├── .well-known/ai-plugin.json      # 공개 머신 발견 메타데이터
 ├── favicon.svg
 ├── logo.svg / logo-dark.svg
 └── og.png
 scripts/
-├── check-post-coverage.mjs         # Enforce slug parity across locales
-└── smoke-agent-protocol.mjs        # Validate generated protocol artifacts
+├── check-post-coverage.mjs         # locale 간 slug 일치 강제
+└── smoke-agent-protocol.mjs        # 생성된 프로토콜 산출물 검증
 ```
 
 ## 배포
 
 ### Cloudflare Pages (기본)
 
-`.github/workflows/deploy-cloudflare-pages.yml` workflow는 Cloudflare Pages 기준이며 배포 전에 validation을 수행합니다.
+`.github/workflows/deploy-cloudflare-pages.yml` 워크플로는 Cloudflare Pages 기준이며 배포 전에 검증을 수행합니다.
 
-1. Cloudflare Pages 프로젝트를 만드세요. workflow는 기본적으로 저장소 이름을 사용하고, 필요하면 `CLOUDFLARE_PAGES_PROJECT_NAME`로 덮어쓸 수 있습니다
+1. Cloudflare Pages 프로젝트를 만드세요. 워크플로는 기본적으로 저장소 이름을 사용하고, 필요하면 `CLOUDFLARE_PAGES_PROJECT_NAME`로 덮어쓸 수 있습니다
 2. GitHub Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` 추가
 3. `astro.config.mjs`의 `site` 업데이트
 4. `pnpm validate` 실행
@@ -403,14 +405,14 @@ scripts/
 
 ```bash
 pnpm build
-# Upload dist/ to Netlify, Vercel, GitHub Pages, or any static host
+# dist/를 Netlify, Vercel, GitHub Pages 또는 다른 정적 호스트에 업로드하세요
 ```
 
 ## 원칙
 
 1. **타이포그래피가 인터페이스다**
 2. **사람과 에이전트 모두 중요하다**
-3. **다국어 parity는 검증되어야 한다**
+3. **다국어 일관성은 검증되어야 한다**
 4. **확장 포인트는 콘텐츠 가까이에 있어야 한다**
 5. **숨은 마법보다 명시적 계약이 낫다**
 

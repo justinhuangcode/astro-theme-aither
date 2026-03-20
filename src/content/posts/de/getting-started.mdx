@@ -14,19 +14,16 @@ Diese Anleitung bringt Sie von null bis zu einem bereitgestellten, mehrsprachige
 - [Node.js](https://nodejs.org/) 22 LTS oder neuer
 - [pnpm](https://pnpm.io/) 10 oder neuer
 - Ein GitHub-Konto
-- Ein [Cloudflare](https://cloudflare.com/) Konto (für das Deployment)
+- Ein [Cloudflare](https://cloudflare.com/) Konto (für die Bereitstellung)
 
 ## Installation
 
 ```bash
-# Repository klonen
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-
-# Abhängigkeiten installieren
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+corepack enable
 pnpm install
-
-# Entwicklungsserver starten
+pnpm validate
 pnpm dev
 ```
 
@@ -100,8 +97,12 @@ Leere Variablen deaktivieren die jeweilige Integration automatisch.
 Die Produktions-URL wird in `astro.config.mjs` gesetzt:
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.pages.dev',
+  integrations: [aither()],
 });
 ```
 
@@ -193,25 +194,28 @@ Jede Seite liefert bereits die wichtigsten Maschinen- und SEO-Schnittstellen:
 - `/posts/slug.md`
 - JSON-LD und Open-Graph-Metadaten
 
-## Deployment
+## Bereitstellung
 
 ### Cloudflare Pages
+
+Empfehlung: Legen Sie das Pages-Projekt zuerst an. Der Ablauf verwendet standardmäßig den Repository-Namen oder `CLOUDFLARE_PAGES_PROJECT_NAME`, wenn Sie ihn überschreiben möchten.
 
 Richten Sie diese GitHub-Secrets ein:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-Danach baut und deployt der vorhandene Workflow automatisch bei Pushes auf `main`.
+Führen Sie danach `pnpm validate` aus und pushen Sie nach `main`.
 
 ## Nützliche Befehle
 
 | Befehl | Beschreibung |
 |-------|--------------|
 | `pnpm dev` | Lokalen Entwicklungsserver starten |
+| `pnpm validate` | Vollständige Validierung vor dem Push ausführen |
 | `pnpm build` | Produktions-Build erstellen |
 | `pnpm preview` | Produktions-Build lokal testen |
 
 ## Versionsschema
 
-Dieses Projekt verwendet [CalVer](https://calver.org/) im Format `YYYY.0M.0D`.
+Öffentliche Release-Tags folgen CalVer-Namen wie `v2026.03.20`.

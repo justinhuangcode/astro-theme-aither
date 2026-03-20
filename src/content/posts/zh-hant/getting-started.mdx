@@ -19,14 +19,11 @@ pinned: true
 ## 安裝
 
 ```bash
-# 複製倉庫
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
-cd my-blog
-
-# 安裝相依套件
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+corepack enable
 pnpm install
-
-# 啟動開發伺服器
+pnpm validate
 pnpm dev
 ```
 
@@ -77,8 +74,12 @@ cp .env.example .env
 在 `astro.config.mjs` 中設定正式網址：
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.pages.dev',
+  integrations: [aither()],
 });
 ```
 
@@ -170,21 +171,24 @@ ui: {
 
 ### Cloudflare Pages
 
+最佳實踐：先建立 Pages 專案。工作流程預設使用倉庫名稱；如果需要覆蓋，請設定 `CLOUDFLARE_PAGES_PROJECT_NAME`。
+
 請在 GitHub Secrets 中設定：
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-內建 workflow 會在 push 到 `main` 時自動建置並部署。
+然後執行 `pnpm validate`，再推送到 `main`。
 
 ## 常用指令
 
 | 指令 | 說明 |
 |------|------|
 | `pnpm dev` | 啟動本地開發伺服器 |
+| `pnpm validate` | 執行完整的推送前驗證 |
 | `pnpm build` | 建立正式環境 build |
 | `pnpm preview` | 在本機預覽 production build |
 
 ## 版本方案
 
-本專案使用 [CalVer](https://calver.org/) 格式：`YYYY.0M.0D`。
+公開 release tag 使用 CalVer 風格命名，例如 `v2026.03.20`。
