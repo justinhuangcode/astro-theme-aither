@@ -3,6 +3,7 @@ import '@/styles/fonts.css';
 import '@/styles/global.css';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { createHash } from 'node:crypto';
 import Navbar from '@/components/Navbar.astro';
 import Footer from '@/components/Footer.astro';
 import ThemeEffects from '@/components/ThemeEffects.astro';
@@ -12,6 +13,7 @@ import LocaleBanner from '@/components/LocaleBanner.astro';
 import { siteConfig } from '@/config/site';
 import { CUSTOM_THEME_KEYS } from '@/lib/theme';
 import {
+  defaultLocale,
   getLocaleFromUrl,
   getMessages,
   htmlLangs,
@@ -33,6 +35,14 @@ interface Props {
   alternateFormats?: { type: string; href: string; title: string }[];
 }
 
+interface ShareImage {
+  url: string;
+  width?: number;
+  height?: number;
+  type?: string;
+  alt: string;
+}
+
 const locale = getLocaleFromUrl(Astro.url);
 const allBannerMessages = Object.fromEntries(
   locales.map((l) => [l, getMessages(l).localeBanner])
@@ -47,34 +57,149 @@ const {
   alternateFormats,
 } = Astro.props;
 
-// Resolve OG image: optimize ImageMetadata, pass through strings
-const imageSource = imageProp ?? siteConfig.ogImage;
-let ogImageUrl: string;
-if (typeof imageSource === 'string') {
-  ogImageUrl = imageSource.startsWith('http')
-    ? imageSource
-    : new URL(imageSource, siteConfig.url).href;
-} else {
-  const optimized = await getImage({ src: imageSource, width: 1200, format: 'webp' });
-  ogImageUrl = new URL(optimized.src, siteConfig.url).href;
+function createOgImageAlt(pageTitle: string): string {
+  const suffixPatterns = [` | ${siteConfig.name}`, ` - ${siteConfig.name}`];
+  const normalizedTitle = suffixPatterns.reduce(
+    (current, suffix) => (current.endsWith(suffix) ? current.slice(0, -suffix.length) : current),
+    pageTitle,
+  );
+  return normalizedTitle === siteConfig.name
+    ? siteConfig.name
+    : `${normalizedTitle} - ${siteConfig.name}`;
 }
+
+const ogImageAlt = createOgImageAlt(title);
+
+function inferOgImageType(pathname: string): string | undefined {
+  const normalizedPath = pathname.toLowerCase();
+  if (normalizedPath.endsWith('.png')) return 'image/png';
+  if (normalizedPath.endsWith('.jpg') || normalizedPath.endsWith('.jpeg')) return 'image/jpeg';
+  if (normalizedPath.endsWith('.gif')) return 'image/gif';
+  if (normalizedPath.endsWith('.webp')) return 'image/webp';
+  return undefined;
+}
+
+function createOgVersionToken(parts: Array<string | undefined>) {
+  return createHash('sha1')
+    .update(parts.filter(Boolean).join('|'))
+    .digest('hex')
+    .slice(0, 10);
+}
+
+function getNumericDimension(value: unknown): number | undefined {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string' && value) return Number(value);
+  return undefined;
+}
+
+function createVersionedUrl(sourceUrl: URL, versionParts: Array<string | undefined>) {
+  const url = new URL(sourceUrl);
+  url.searchParams.set('v', createOgVersionToken(versionParts));
+  return url;
+}
+
+function createSquareOgPath(pathname: string): string | undefined {
+  if (!pathname.startsWith('/og/') || !pathname.endsWith('.png')) return undefined;
+  return pathname.replace('/og/', '/og-square/');
+}
+
+// Resolve share images: keep 1.91:1 primary, add square secondary when available
+const imageSource = imageProp ?? siteConfig.ogImage;
+const shareImages: ShareImage[] = [];
+
+if (typeof imageSource === 'string') {
+  const primarySourceUrl = imageSource.startsWith('http')
+    ? new URL(imageSource)
+    : new URL(imageSource, siteConfig.url);
+
+  const primaryUrl = createVersionedUrl(primarySourceUrl, [
+    title,
+    description,
+    article?.publishedTime,
+    primarySourceUrl.pathname,
+  ]);
+  const primaryImage: ShareImage = {
+    url: primaryUrl.href,
+    type: inferOgImageType(primarySourceUrl.pathname),
+    alt: ogImageAlt,
+  };
+  if (primarySourceUrl.pathname.startsWith('/og/') && primaryImage.type === 'image/png') {
+    primaryImage.width = 1200;
+    primaryImage.height = 630;
+  }
+  shareImages.push(primaryImage);
+
+  const squarePath = createSquareOgPath(primarySourceUrl.pathname);
+  if (squarePath) {
+    const squareSourceUrl = new URL(squarePath, siteConfig.url);
+    const squareUrl = createVersionedUrl(squareSourceUrl, [
+      title,
+      description,
+      article?.publishedTime,
+      squareSourceUrl.pathname,
+    ]);
+    shareImages.push({
+      url: squareUrl.href,
+      width: 1200,
+      height: 1200,
+      type: 'image/png',
+      alt: ogImageAlt,
+    });
+  }
+} else {
+  const optimizedLandscape = await getImage({ src: imageSource, width: 1200, format: 'png' });
+  const landscapeSourceUrl = new URL(optimizedLandscape.src, siteConfig.url);
+  const landscapeUrl = createVersionedUrl(landscapeSourceUrl, [
+    title,
+    description,
+    article?.publishedTime,
+    landscapeSourceUrl.pathname,
+  ]);
+  const landscapeWidth = getNumericDimension(optimizedLandscape.attributes.width);
+  const landscapeHeight = getNumericDimension(optimizedLandscape.attributes.height);
+
+  shareImages.push({
+    url: landscapeUrl.href,
+    width: landscapeWidth,
+    height: landscapeHeight,
+    type: inferOgImageType(landscapeSourceUrl.pathname) ?? 'image/png',
+    alt: ogImageAlt,
+  });
+
+  if (!(landscapeWidth === 1200 && landscapeHeight === 1200)) {
+    const optimizedSquare = await getImage({
+      src: imageSource,
+      width: 1200,
+      height: 1200,
+      fit: 'cover',
+      format: 'png',
+    });
+    const squareSourceUrl = new URL(optimizedSquare.src, siteConfig.url);
+    const squareUrl = createVersionedUrl(squareSourceUrl, [
+      title,
+      description,
+      article?.publishedTime,
+      squareSourceUrl.pathname,
+    ]);
+    shareImages.push({
+      url: squareUrl.href,
+      width: getNumericDimension(optimizedSquare.attributes.width),
+      height: getNumericDimension(optimizedSquare.attributes.height),
+      type: inferOgImageType(squareSourceUrl.pathname) ?? 'image/png',
+      alt: ogImageAlt,
+    });
+  }
+}
+const primaryShareImage = shareImages[0];
 
 // Canonical URL
 const pathname = Astro.url.pathname;
 const canonicalUrl = new URL(pathname, siteConfig.url).href;
 
-// Hreflang: map locale codes to BCP 47 tags
-const hreflangMap: Record<string, string> = {
-  en: 'en', 'zh-hans': 'zh-Hans', 'zh-hant': 'zh-Hant',
-  ko: 'ko', fr: 'fr', de: 'de', it: 'it',
-  es: 'es', ru: 'ru', id: 'id', 'pt-br': 'pt-BR',
-};
-
-// Build the locale-independent path for hreflang alternates
 const cleanPath = stripLocalePrefix(pathname);
 const alternateUrls = locales.map((l) => ({
-  hreflang: hreflangMap[l],
-  href: new URL(l === 'en' ? cleanPath : `/${l}${cleanPath}`, siteConfig.url).href,
+  hreflang: htmlLangs[l],
+  href: new URL(l === defaultLocale ? cleanPath : `/${l}${cleanPath}`, siteConfig.url).href,
 }));
 
 ---
@@ -103,7 +228,16 @@ const alternateUrls = locales.map((l) => ({
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={ogImageUrl} />
+    {shareImages.map((image) => (
+      <Fragment>
+        <meta property="og:image" content={image.url} />
+        <meta property="og:image:secure_url" content={image.url} />
+        {image.type && <meta property="og:image:type" content={image.type} />}
+        {image.width && <meta property="og:image:width" content={String(image.width)} />}
+        {image.height && <meta property="og:image:height" content={String(image.height)} />}
+        <meta property="og:image:alt" content={image.alt} />
+      </Fragment>
+    ))}
     <meta property="og:site_name" content={siteConfig.name} />
     <meta property="og:type" content={article ? 'article' : 'website'} />
     {article && (
@@ -118,7 +252,8 @@ const alternateUrls = locales.map((l) => ({
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image" content={primaryShareImage.url} />
+    <meta name="twitter:image:alt" content={primaryShareImage.alt} />
     {jsonLd && Array.isArray(jsonLd) ? (
       jsonLd.map((item) => (
         <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />
@@ -223,7 +358,10 @@ const alternateUrls = locales.map((l) => ({
         );
       };
 
-      mediaQuery.addEventListener('change', syncSystemTheme);
+      if (!window.__aitherSystemThemeListenerBound) {
+        window.__aitherSystemThemeListenerBound = true;
+        mediaQuery.addEventListener('change', syncSystemTheme);
+      }
     </script>
   </head>
   <body
