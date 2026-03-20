@@ -1,5 +1,5 @@
 ---
-import { IconChevronRight, IconMonitor, IconMoon, IconPalette, IconSun } from '@/components/icons';
+import { IconMonitor, IconMoon, IconPalette, IconSun } from '@/components/icons';
 import {
   defaultThemeLabels,
   themeGroups,
@@ -20,6 +20,9 @@ interface ModeSwitcherLabels {
   scifi: string;
   toggle: string;
   mainModes?: string;
+  colorModeHint?: string;
+  themeStyleHint?: string;
+  defaultStyle?: string;
 }
 
 interface Props {
@@ -41,8 +44,11 @@ const {
     modern: 'Modern',
     extra: 'Extra',
     scifi: 'Sci-Fi',
-    toggle: 'Toggle theme',
-    mainModes: 'Main Modes',
+    toggle: 'Appearance settings',
+    mainModes: 'Color Mode',
+    colorModeHint: 'Choose light, dark, or follow your system.',
+    themeStyleHint: 'Pick a visual style. It works with the color mode above.',
+    defaultStyle: 'Default Style',
   },
   themeLabels = defaultThemeLabels,
   defaultMode = 'system',
@@ -58,116 +64,144 @@ const baseModes: { key: ColorMode; label: string; icon: typeof IconSun }[] = [
 ---
 
 <div
-  class="relative"
+  class="flex items-center gap-1"
   data-mode-switcher
   data-default-mode={defaultMode}
   data-default-style={defaultStyle}
 >
-  <button
-    type="button"
-    class="nav-utility-button inline-flex size-[34px] items-center justify-center rounded text-[var(--color-nav-text)] transition-colors hover:text-[var(--color-nav-text-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-    data-theme-trigger
-    aria-label={labels.toggle}
-    aria-haspopup="dialog"
-    aria-expanded="false"
-    aria-controls="desktop-theme-menu"
-  >
-    <span class="relative inline-flex size-[18px] items-center justify-center">
-      <span
-        class="transition-transform duration-500 ease-in-out"
-        data-trigger-icon="sun"
-      >
-        <IconSun className="size-[18px]" />
-      </span>
-      <span
-        class="absolute transition-transform duration-500 ease-in-out"
-        data-trigger-icon="moon"
-      >
-        <IconMoon className="size-[18px]" />
-      </span>
-    </span>
-  </button>
-
-	  <div
-	    id="desktop-theme-menu"
-	    class="nav-panel absolute right-0 top-[calc(100%+0.55rem)] z-50 hidden w-[15rem] max-w-[calc(100vw-2rem)] overflow-visible rounded-xl border border-border/70 bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10"
-	    data-theme-panel
-	    role="menu"
-	    aria-label={labels.toggle}
-	  >
-    {
-      baseModes.map(({ key, label, icon: Icon }) => (
-        <button
-          type="button"
-          class="nav-panel-link flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[15px] text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none data-[active=true]:bg-accent data-[active=true]:font-semibold data-[active=true]:text-primary"
-          data-mode-item={key}
-          data-active="false"
-          role="menuitemradio"
+  <div class="relative">
+    <button
+      type="button"
+      class="nav-utility-button inline-flex size-[34px] items-center justify-center rounded text-[var(--color-nav-text)] transition-colors hover:text-[var(--color-nav-text-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      data-color-trigger
+      aria-label={labels.mainModes ?? 'Color Mode'}
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="desktop-color-menu"
+    >
+      <span class="relative inline-flex size-[18px] items-center justify-center">
+        <span
+          class="transition-transform duration-500 ease-in-out"
+          data-trigger-icon="sun"
         >
-          <Icon className="size-4 shrink-0" />
-          <span>{label}</span>
-        </button>
-      ))
-    }
+          <IconSun className="size-[18px]" />
+        </span>
+        <span
+          class="absolute transition-transform duration-500 ease-in-out"
+          data-trigger-icon="moon"
+        >
+          <IconMoon className="size-[18px]" />
+        </span>
+      </span>
+    </button>
 
-    {showMoreThemes && (
-      <Fragment>
-        <div class="my-1 h-px bg-border/70"></div>
-
-        <div class="relative" data-themes-root data-open="false">
-	          <button
-	            type="button"
-	            class="nav-panel-link flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[15px] text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none data-[active=true]:bg-accent data-[active=true]:font-semibold data-[active=true]:text-primary"
-	            data-themes-trigger
-	            data-active="false"
-	            aria-haspopup="menu"
-	            aria-expanded="false"
-	          >
-	            <IconPalette className="size-4 shrink-0" />
-	            <span class="min-w-0 flex-1 truncate whitespace-nowrap">{labels.moreThemes}</span>
-	            <span class="inline-flex shrink-0 items-center rounded-full border border-primary/20 bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-[0.12em] text-primary/85">
-	              {labels.beta ?? 'Beta'}
-	            </span>
-	            <IconChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
-	          </button>
-
-          <div
-            class="nav-panel pointer-events-none invisible absolute left-[calc(100%-0.2rem)] top-0 z-50 w-[19rem] max-w-[calc(100vw-2rem)] max-h-[70vh] overflow-y-auto rounded-xl border border-border/70 bg-popover p-1 text-popover-foreground opacity-0 shadow-lg ring-1 ring-foreground/10 transition-opacity duration-150"
-            data-themes-panel
-            role="menu"
-            aria-label={labels.moreThemes}
+    <div
+      id="desktop-color-menu"
+      class="nav-panel absolute right-0 top-[calc(100%+0.55rem)] z-50 hidden w-[15rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-border/70 bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10"
+      data-color-panel
+      role="menu"
+      aria-label={labels.mainModes ?? 'Color Mode'}
+    >
+      <p class="px-3 pb-1 pt-2 text-[11px] font-medium tracking-[0.02em] text-muted-foreground">
+        {labels.mainModes ?? 'Color Mode'}
+      </p>
+      {
+        baseModes.map(({ key, label, icon: Icon }) => (
+          <button
+            type="button"
+            class="nav-panel-link group flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-[15px] text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none data-[active=true]:bg-accent data-[active=true]:font-semibold data-[active=true]:text-primary"
+            data-mode-item={key}
+            data-active="false"
+            role="menuitemradio"
           >
-            {
-              themeGroups.map((group) => (
-                <section class="py-1">
-                  <p class="px-3 pb-1 pt-1 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                    {labels[group.key as ThemeGroupKey]}
-                  </p>
-                  <div class="space-y-0.5">
-                    {group.themes.map((theme) => (
-                      <button
-                        type="button"
-                        class="nav-panel-link flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[15px] text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none data-[active=true]:bg-accent data-[active=true]:font-semibold data-[active=true]:text-primary"
-                        data-style-item={theme.key}
-                        data-active="false"
-                        role="menuitemradio"
-                      >
-                        <span
-                          class="inline-block size-3 shrink-0 rounded-full ring-1 ring-foreground/20"
-                          style={`background-color:${theme.color}`}
-                        />
-                        <span>{themeLabels[theme.key]}</span>
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              ))
-            }
-          </div>
-        </div>
-      </Fragment>
-    )}
+            <Icon className="size-4 shrink-0" />
+            <span class="group-hover:font-semibold group-focus:font-semibold">{label}</span>
+          </button>
+        ))
+      }
+    </div>
   </div>
+
+  {showMoreThemes && (
+    <div class="relative">
+      <button
+        type="button"
+        class="nav-utility-button inline-flex h-[34px] items-center justify-center rounded px-2 text-[var(--color-nav-text)] transition-colors hover:text-[var(--color-nav-text-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 data-[active=true]:text-primary"
+        data-style-trigger
+        data-active="false"
+        aria-label={labels.moreThemes}
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-controls="desktop-style-menu"
+      >
+        <IconPalette className="size-[18px]" />
+      </button>
+
+      <div
+        id="desktop-style-menu"
+        class="nav-panel absolute right-0 top-[calc(100%+0.55rem)] z-50 hidden w-[19rem] max-w-[calc(100vw-2rem)] max-h-[70vh] overflow-y-auto rounded-xl border border-border/70 bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/10"
+        data-style-panel
+        role="menu"
+        aria-label={labels.moreThemes}
+      >
+        <div class="flex items-center gap-2 px-3 pb-1 pt-2 text-[11px] font-medium tracking-[0.02em] text-muted-foreground">
+          <span>{labels.moreThemes}</span>
+          <span class="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-primary/85">
+            {labels.beta ?? 'Beta'}
+          </span>
+        </div>
+        {
+          labels.themeStyleHint && (
+            <p class="px-3 pb-2 text-sm leading-5 text-muted-foreground">
+              {labels.themeStyleHint}
+            </p>
+          )
+        }
+        <div class="space-y-0.5 pb-1">
+          <button
+            type="button"
+            class="nav-panel-link group flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-[15px] text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none data-[active=true]:bg-accent data-[active=true]:font-semibold data-[active=true]:text-primary"
+            data-style-item="default"
+            data-active="false"
+            role="menuitemradio"
+          >
+            <span class="inline-block size-3 shrink-0 rounded-full border border-border bg-background" />
+            <span class="group-hover:font-semibold group-focus:font-semibold">
+              {labels.defaultStyle ?? 'Default Style'}
+            </span>
+          </button>
+        </div>
+        {
+          themeGroups.map((group) => (
+            <section class="py-1">
+              <p class="px-3 pb-1 pt-1 text-[11px] font-medium tracking-[0.02em] text-muted-foreground">
+                {labels[group.key as ThemeGroupKey]}
+              </p>
+              <div class="space-y-0.5">
+                {group.themes.map((theme) => (
+                  <button
+                    type="button"
+                    class="nav-panel-link group flex w-full items-center gap-2 rounded-lg px-4 py-3 text-left text-[15px] text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-none data-[active=true]:bg-accent data-[active=true]:font-semibold data-[active=true]:text-primary"
+                    data-style-item={theme.key}
+                    data-active="false"
+                    role="menuitemradio"
+                  >
+                    <span
+                      class="inline-block size-3 shrink-0 rounded-full ring-1 ring-foreground/20"
+                      style={`background-color:${theme.color}`}
+                    />
+                    <span class="group-hover:font-semibold group-focus:font-semibold">
+                      {themeLabels[theme.key]}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  )}
 </div>
 
 <style>
@@ -187,26 +221,10 @@ const baseModes: { key: ColorMode; label: string; icon: typeof IconSun }[] = [
     transform: rotate(0deg) scale(1);
   }
 
-  [data-themes-root]:hover > [data-themes-panel],
-  [data-themes-root]:focus-within > [data-themes-panel],
-  [data-themes-root][data-open='true'] > [data-themes-panel] {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
-
-  [data-themes-panel]::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -0.95rem;
-    width: 0.95rem;
-  }
-
 </style>
 
 <script>
+  import { bootstrapRootInit } from '@/lib/dom-init';
   import {
     THEME_CHANGE_EVENT,
     getStoredThemePreferences,
@@ -254,10 +272,7 @@ const baseModes: { key: ColorMode; label: string; icon: typeof IconSun }[] = [
     });
   }
 
-  document.querySelectorAll('[data-mode-switcher]').forEach((root) => {
-    if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') return;
-    root.dataset.bound = 'true';
-
+  bootstrapRootInit('mode-switcher', '[data-mode-switcher]', (root, signal) => {
     const rawDefaultMode = root.dataset.defaultMode ?? '';
     const rawDefaultStyle = root.dataset.defaultStyle ?? '';
     const defaultMode: ColorMode = isColorMode(rawDefaultMode)
@@ -266,112 +281,119 @@ const baseModes: { key: ColorMode; label: string; icon: typeof IconSun }[] = [
     const defaultStyle: ThemeStyle = isThemeStyle(rawDefaultStyle)
       ? rawDefaultStyle
       : 'default';
-    const trigger = root.querySelector('[data-theme-trigger]');
-    const panel = root.querySelector('[data-theme-panel]');
-    const themesRoot = root.querySelector('[data-themes-root]');
-    const themesTrigger = root.querySelector('[data-themes-trigger]');
+    const colorTrigger = root.querySelector('[data-color-trigger]');
+    const colorPanel = root.querySelector('[data-color-panel]');
+    const styleTrigger = root.querySelector('[data-style-trigger]');
+    const stylePanel = root.querySelector('[data-style-panel]');
     const modeItems = Array.from(root.querySelectorAll('[data-mode-item]'));
     const styleItems = Array.from(root.querySelectorAll('[data-style-item]'));
 
-    if (!(trigger instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+    if (!(colorTrigger instanceof HTMLButtonElement) || !(colorPanel instanceof HTMLElement)) return;
 
-    let themesPinnedOpen = false;
-
-    const setThemesExpanded = (expanded: boolean) => {
-      if (!(themesTrigger instanceof HTMLElement) || !(themesRoot instanceof HTMLElement)) return;
-      themesTrigger.setAttribute('aria-expanded', String(expanded));
-      themesRoot.dataset.open = String(expanded);
+    const closeColorMenu = () => {
+      colorPanel.classList.add('hidden');
+      colorTrigger.setAttribute('aria-expanded', 'false');
     };
 
-    const closeMenu = () => {
-      themesPinnedOpen = false;
-      setThemesExpanded(false);
-      panel.classList.add('hidden');
-      trigger.setAttribute('aria-expanded', 'false');
+    const closeStyleMenu = () => {
+      if (!(styleTrigger instanceof HTMLButtonElement) || !(stylePanel instanceof HTMLElement)) return;
+      stylePanel.classList.add('hidden');
+      styleTrigger.setAttribute('aria-expanded', 'false');
     };
 
-    const openMenu = () => {
+    const closeMenus = () => {
+      closeColorMenu();
+      closeStyleMenu();
+    };
+
+    const openColorMenu = () => {
       window.dispatchEvent(
         new CustomEvent(DESKTOP_MENU_EVENT, {
           detail: { owner: 'theme' },
         }),
       );
-      panel.classList.remove('hidden');
-      trigger.setAttribute('aria-expanded', 'true');
+      closeStyleMenu();
+      colorPanel.classList.remove('hidden');
+      colorTrigger.setAttribute('aria-expanded', 'true');
     };
 
-    const toggleMenu = () => {
-      if (panel.classList.contains('hidden')) {
-        openMenu();
+    const openStyleMenu = () => {
+      if (!(styleTrigger instanceof HTMLButtonElement) || !(stylePanel instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent(DESKTOP_MENU_EVENT, {
+          detail: { owner: 'theme' },
+        }),
+      );
+      closeColorMenu();
+      stylePanel.classList.remove('hidden');
+      styleTrigger.setAttribute('aria-expanded', 'true');
+    };
+
+    const toggleColorMenu = () => {
+      if (colorPanel.classList.contains('hidden')) {
+        openColorMenu();
       } else {
-        closeMenu();
+        closeColorMenu();
+      }
+    };
+
+    const toggleStyleMenu = () => {
+      if (!(styleTrigger instanceof HTMLButtonElement) || !(stylePanel instanceof HTMLElement)) return;
+      if (stylePanel.classList.contains('hidden')) {
+        openStyleMenu();
+      } else {
+        closeStyleMenu();
       }
     };
 
     const sync = () => {
       const { mode, style } = getStoredThemePreferences(defaultMode, defaultStyle);
       const resolvedMode = resolveColorMode(mode);
-      const customStyleActive = style !== 'default';
 
       modeItems.forEach((item) => {
         if (!(item instanceof HTMLElement)) return;
-        const isActive = !customStyleActive && item.dataset.modeItem === mode;
+        const isActive = item.dataset.modeItem === mode;
         item.dataset.active = String(isActive);
-        item.setAttribute('aria-pressed', String(isActive));
+        item.setAttribute('aria-checked', String(isActive));
       });
 
       styleItems.forEach((item) => {
         if (!(item instanceof HTMLElement)) return;
         const isActive = item.dataset.styleItem === style;
         item.dataset.active = String(isActive);
-        item.setAttribute('aria-pressed', String(isActive));
+        item.setAttribute('aria-checked', String(isActive));
       });
 
-      if (themesTrigger instanceof HTMLElement) {
-        const isCustomTheme = customStyleActive;
-        themesTrigger.dataset.active = String(isCustomTheme);
+      if (styleTrigger instanceof HTMLElement) {
+        styleTrigger.dataset.active = String(style !== 'default');
       }
 
       root.dataset.resolvedMode = resolvedMode;
     };
 
-    trigger.addEventListener('click', (event) => {
+    colorTrigger.addEventListener('click', (event) => {
       event.stopPropagation();
-      toggleMenu();
-    });
+      toggleColorMenu();
+    }, { signal });
 
     modeItems.forEach((item) => {
       if (!(item instanceof HTMLButtonElement)) return;
       item.addEventListener('click', () => {
         const nextMode = item.dataset.modeItem;
         if (!nextMode || !isColorMode(nextMode)) return;
-        runThemeTransition(trigger, () => {
-          setThemePreferences({ mode: nextMode, style: 'default' });
+        runThemeTransition(colorTrigger, () => {
+          const { style } = getStoredThemePreferences(defaultMode, defaultStyle);
+          setThemePreferences({ mode: nextMode, style });
         });
-        closeMenu();
-      });
+        closeMenus();
+      }, { signal });
     });
 
-    if (themesRoot instanceof HTMLElement && themesTrigger instanceof HTMLButtonElement) {
-      themesTrigger.addEventListener('click', (event) => {
+    if (styleTrigger instanceof HTMLButtonElement) {
+      styleTrigger.addEventListener('click', (event) => {
         event.stopPropagation();
-        themesPinnedOpen = !(themesPinnedOpen && themesRoot.dataset.open === 'true');
-        setThemesExpanded(themesPinnedOpen);
-      });
-
-      themesRoot.addEventListener('mouseenter', () => setThemesExpanded(true));
-      themesRoot.addEventListener('mouseleave', () => {
-        if (!themesPinnedOpen) {
-          setThemesExpanded(false);
-        }
-      });
-      themesRoot.addEventListener('focusin', () => setThemesExpanded(true));
-      themesRoot.addEventListener('focusout', (event) => {
-        if (event.relatedTarget instanceof Node && themesRoot.contains(event.relatedTarget)) return;
-        if (!themesPinnedOpen) {
-          setThemesExpanded(false);
-        }
-      });
+        toggleStyleMenu();
+      }, { signal });
     }
 
     styleItems.forEach((item) => {
@@ -379,34 +401,34 @@ const baseModes: { key: ColorMode; label: string; icon: typeof IconSun }[] = [
       item.addEventListener('click', () => {
         const nextStyle = item.dataset.styleItem;
         if (!nextStyle || !isThemeStyle(nextStyle)) return;
-        runThemeTransition(trigger, () => {
+        runThemeTransition(styleTrigger instanceof HTMLButtonElement ? styleTrigger : colorTrigger, () => {
           const { mode } = getStoredThemePreferences(defaultMode, defaultStyle);
           setThemePreferences({ mode, style: nextStyle });
         });
-        closeMenu();
-      });
+        closeMenus();
+      }, { signal });
     });
 
     document.addEventListener('click', (event) => {
       if (!(event.target instanceof Node) || !root.contains(event.target)) {
-        closeMenu();
+        closeMenus();
       }
-    });
+    }, { signal });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
-        closeMenu();
+        closeMenus();
       }
-    });
+    }, { signal });
 
     window.addEventListener(DESKTOP_MENU_EVENT, (event) => {
       const customEvent = event as CustomEvent<{ owner?: string }>;
       if (customEvent.detail?.owner !== 'theme') {
-        closeMenu();
+        closeMenus();
       }
-    });
+    }, { signal });
 
-    window.addEventListener(THEME_CHANGE_EVENT, sync);
+    window.addEventListener(THEME_CHANGE_EVENT, sync, { signal });
     sync();
   });
 </script>
