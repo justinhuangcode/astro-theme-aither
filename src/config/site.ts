@@ -90,6 +90,14 @@ export const siteConfig = {
   crisp: {
     websiteId: import.meta.env.PUBLIC_CRISP_WEBSITE_ID || '',
   },
+  // Optional WeChat JS-SDK share integration.
+  // Requires an external signature endpoint because this theme is static by default.
+  wechatShare: {
+    enabled: import.meta.env.PUBLIC_WECHAT_SHARE_ENABLED === 'true',
+    appId: import.meta.env.PUBLIC_WECHAT_APP_ID || '',
+    signatureEndpoint: import.meta.env.PUBLIC_WECHAT_SIGNATURE_ENDPOINT || '',
+    jsSdkUrl: 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js',
+  },
   ui: {
     defaultMode: 'system' as const,
     defaultStyle: 'default' as const,
