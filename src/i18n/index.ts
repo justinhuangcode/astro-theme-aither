@@ -1,3 +1,24 @@
+import {
+  AITHER_CRISP_LOCALES,
+  AITHER_DEFAULT_LOCALE,
+  AITHER_GISCUS_LOCALES,
+  AITHER_HTML_LANGS,
+  AITHER_INTL_LOCALES,
+  AITHER_LOCALE_LABELS,
+  AITHER_LOCALES,
+  type AitherLocale,
+} from '@aither/astro/constants';
+import {
+  AITHER_LOCALE_BANNER_DISMISSED_SESSION_KEY,
+  AITHER_PREFERRED_LOCALE_STORAGE_KEY,
+  detectAitherLocaleFromLanguageTag,
+  getAitherLocaleBasePath,
+  getAitherLocaleFromUrl,
+  getAitherLocalizedPath,
+  isAitherLocale,
+  resolveAitherLocale,
+  stripAitherLocalePrefix,
+} from '@aither/astro/locale';
 import { en } from './messages/en';
 import { zhHans } from './messages/zh-hans';
 import { zhHant } from './messages/zh-hant';
@@ -12,7 +33,7 @@ import { ptBr } from './messages/pt-br';
 
 export type Messages = typeof en;
 
-const messages: Record<string, Messages> = {
+const messages: Record<Locale, Messages> = {
   en,
   'zh-hans': zhHans,
   'zh-hant': zhHant,
@@ -26,97 +47,57 @@ const messages: Record<string, Messages> = {
   'pt-br': ptBr,
 };
 
-export const locales = ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'] as const;
-export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = 'en';
+export const locales = AITHER_LOCALES;
+export type Locale = AitherLocale;
+export const defaultLocale: Locale = AITHER_DEFAULT_LOCALE;
 export const nonDefaultLocales = locales.filter(
   (locale): locale is Exclude<Locale, typeof defaultLocale> => locale !== defaultLocale,
 );
 
-function escapeForRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export const localeLabels: Record<Locale, string> = AITHER_LOCALE_LABELS;
+export const preferredLocaleStorageKey = AITHER_PREFERRED_LOCALE_STORAGE_KEY;
+export const localeBannerDismissedSessionKey = AITHER_LOCALE_BANNER_DISMISSED_SESSION_KEY;
+export const crispLocales: Record<Locale, string> = AITHER_CRISP_LOCALES;
+export const giscusLocales: Record<Locale, string> = AITHER_GISCUS_LOCALES;
+
+export const isLocale = isAitherLocale;
+export const resolveLocale = resolveAitherLocale;
+
+function hasMessageKey<T extends object>(
+  messages: T,
+  key: string,
+): key is Extract<keyof T, string> {
+  return Object.prototype.hasOwnProperty.call(messages, key);
 }
 
-const localePrefixPattern = new RegExp(
-  `^\\/(${nonDefaultLocales.map(escapeForRegex).join('|')})(?=\\/|$)`,
-);
-
-export const localeLabels: Record<Locale, string> = {
-  en: 'English',
-  'zh-hans': '简体中文',
-  'zh-hant': '繁體中文',
-  ko: '한국어',
-  fr: 'Français',
-  de: 'Deutsch',
-  it: 'Italiano',
-  es: 'Español',
-  ru: 'Русский',
-  id: 'Bahasa Indonesia',
-  'pt-br': 'Português (BR)',
-};
-
-export function getMessages(locale: string = 'en'): Messages {
-  return messages[locale] ?? en;
+export function getMessages(locale: string = defaultLocale): Messages {
+  return messages[resolveLocale(locale)];
 }
 
-export function getLocaleFromUrl(url: URL): Locale {
-  const [, segment] = url.pathname.split('/');
-  if (segment && locales.includes(segment as Locale)) {
-    return segment as Locale;
-  }
-  return defaultLocale;
+export const getLocaleFromUrl = getAitherLocaleFromUrl;
+
+export function translateTag(key: string, locale: string = defaultLocale): string {
+  const { tags } = getMessages(locale);
+  return hasMessageKey(tags, key) ? tags[key] : key;
 }
 
-export function translateTag(key: string, locale: string = 'en'): string {
-  const m = getMessages(locale);
-  return m.tags[key] ?? key;
+export function translateCategory(key: string, locale: string = defaultLocale): string {
+  const { categories } = getMessages(locale);
+  return hasMessageKey(categories, key) ? categories[key] : key;
 }
 
-export function translateCategory(key: string, locale: string = 'en'): string {
-  const m = getMessages(locale);
-  return m.categories[key] ?? key;
+export function translateNav(key: string, locale: string = defaultLocale): string {
+  const { nav } = getMessages(locale);
+  return hasMessageKey(nav, key) ? nav[key] : key;
 }
 
 /** Map internal locale to Intl/BCP-47 locale for date formatting etc. */
-export const intlLocales: Record<Locale, string> = {
-  en: 'en-US',
-  'zh-hans': 'zh-Hans',
-  'zh-hant': 'zh-Hant',
-  ko: 'ko-KR',
-  fr: 'fr-FR',
-  de: 'de-DE',
-  it: 'it-IT',
-  es: 'es-ES',
-  ru: 'ru-RU',
-  id: 'id-ID',
-  'pt-br': 'pt-BR',
-};
+export const intlLocales: Record<Locale, string> = AITHER_INTL_LOCALES;
 
 /** Map internal locale to HTML lang attribute / inLanguage value */
-export const htmlLangs: Record<Locale, string> = {
-  en: 'en',
-  'zh-hans': 'zh-Hans',
-  'zh-hant': 'zh-Hant',
-  ko: 'ko',
-  fr: 'fr',
-  de: 'de',
-  it: 'it',
-  es: 'es',
-  ru: 'ru',
-  id: 'id',
-  'pt-br': 'pt-BR',
-};
+export const htmlLangs: Record<Locale, string> = AITHER_HTML_LANGS;
 
-export function getLocalizedPath(path: string, locale: Locale): string {
-  const cleanPath = stripLocalePrefix(path);
-  return locale === defaultLocale ? cleanPath : `${getLocaleBasePath(locale)}${cleanPath}`;
-}
-
-export function getLocaleBasePath(locale: Locale): string {
-  return locale === defaultLocale ? '' : `/${locale}`;
-}
-
-export function stripLocalePrefix(path: string): string {
-  const cleanPath = path.replace(localePrefixPattern, '');
-  return cleanPath || '/';
-}
+export const getLocalizedPath = getAitherLocalizedPath;
+export const getLocaleBasePath = getAitherLocaleBasePath;
+export const stripLocalePrefix = stripAitherLocalePrefix;
+export const detectLocaleFromLanguageTag = detectAitherLocaleFromLanguageTag;
