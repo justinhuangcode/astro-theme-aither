@@ -121,6 +121,17 @@ pnpm dev
 
 Best practice: use the GitHub template flow for a new site. If you clone the upstream repo manually, verify everything works first, then create your own repository or import the project into a fresh repo. Avoid deleting `.git` before you have a working local copy.
 
+## Upgrading Existing Sites
+
+Aither currently ships as a `starter-first` theme, not as an installable Astro integration package.
+
+- If your site still shares upstream git history, upgrade release-to-release with git branches or cherry-picks.
+- If your site was created from GitHub Template, compare upstream release tags side by side and port the changes you want.
+- In both cases, treat `src/content/`, `src/config/site.ts`, and your local environment configuration as site-owned files.
+- Use `pnpm upgrade:diff -- --from <old-tag> --to <new-tag>` in a clean upstream clone when you want a categorized file diff before porting changes.
+
+The full workflow lives in [UPGRADING.md](./UPGRADING.md).
+
 ## Content Model
 
 Create MDX files in `src/content/posts/{locale}/`:
@@ -163,9 +174,10 @@ Best practices:
 | `pnpm check` | Run Astro type and content checks |
 | `pnpm check:post-coverage` | Verify that every locale ships the same post slug coverage |
 | `pnpm build` | Build static site to `dist/` |
-| `pnpm smoke` | Run smoke tests for AI-native protocol artifacts in `dist/` |
+| `pnpm smoke:package` | Verify the `@aither/astro` package surface and export map |
+| `pnpm smoke` | Run package + AI-native protocol smoke tests |
 | `pnpm preview` | Preview production build locally |
-| `pnpm validate` | Recommended pre-push check: run `check`, `check:post-coverage`, `build`, and protocol smoke tests together |
+| `pnpm validate` | Recommended pre-push check: run `check`, `check:post-coverage`, `build`, and both smoke suites together |
 
 ## AI-Native Protocol
 
@@ -203,7 +215,7 @@ Best practices:
 
 The main files to know are:
 
-- `astro.config.mjs` -- canonical production URL, Astro integrations, and locale routing
+- `astro.config.mjs` -- canonical production URL plus shared `@aither/astro` defaults for integrations, Vite, and locale routing
 - `src/config/site.ts` -- site metadata, nav/footer, pagination, timezone, theme controls, social links, and optional extra content sections
 - `src/config/themes.ts` -- the 41-theme catalog and localized theme labels
 - `src/content.config.ts` -- Zod content schema and collection registration
@@ -272,15 +284,12 @@ Then create content under `src/content/translations/{locale}/`. List and detail 
 ### Astro config (`astro.config.mjs`)
 
 ```javascript
+import { defineConfig } from 'astro/config';
+import aither from '@aither/astro';
+
 export default defineConfig({
   site: 'https://your-domain.com',
-  integrations: [react(), mdx(), sitemap()],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'],
-    routing: { prefixDefaultLocale: false },
-  },
-  vite: { plugins: [tailwindcss()] },
+  integrations: [aither()],
 });
 ```
 
@@ -325,6 +334,8 @@ Best practice: keep the English slug set as the canonical baseline and use `pnpm
 ## Project Structure
 
 ```
+packages/
+└── aither-astro/                # Emerging shared package layer for config + integration defaults
 src/
 ├── config/
 │   ├── site.ts                     # Site metadata, nav/footer, theme controls, optional sections

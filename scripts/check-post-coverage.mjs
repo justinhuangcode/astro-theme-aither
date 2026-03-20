@@ -1,22 +1,11 @@
 import assert from 'node:assert/strict';
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
+import { AITHER_DEFAULT_LOCALE, AITHER_LOCALES } from '@aither/astro/constants';
 
 const postsDir = path.join(process.cwd(), 'src', 'content', 'posts');
-const expectedLocales = [
-  'en',
-  'zh-hans',
-  'zh-hant',
-  'ko',
-  'fr',
-  'de',
-  'it',
-  'es',
-  'ru',
-  'id',
-  'pt-br',
-];
-const referenceLocale = 'en';
+const expectedLocales = [...AITHER_LOCALES];
+const referenceLocale = AITHER_DEFAULT_LOCALE;
 const validExtensions = new Set(['.md', '.mdx']);
 
 async function readLocaleSlugs(locale) {

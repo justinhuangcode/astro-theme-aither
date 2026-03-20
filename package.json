@@ -1,19 +1,39 @@
 {
   "name": "astro-theme-aither",
+  "private": true,
   "type": "module",
   "version": "2026.03.20",
+  "description": "An AI-native Astro starter built around beautiful text.",
+  "license": "MIT",
+  "homepage": "https://github.com/justinhuangcode/astro-theme-aither",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/justinhuangcode/astro-theme-aither.git"
+  },
+  "bugs": {
+    "url": "https://github.com/justinhuangcode/astro-theme-aither/issues"
+  },
+  "engines": {
+    "node": "^20.19.1 || >=22.12.0",
+    "pnpm": "10.32.1"
+  },
   "packageManager": "pnpm@10.32.1",
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
     "check:post-coverage": "node ./scripts/check-post-coverage.mjs",
     "build": "astro build",
-    "smoke": "node ./scripts/smoke-agent-protocol.mjs",
+    "smoke:package": "node ./scripts/smoke-aither-package.mjs",
+    "pack:astro-package": "pnpm --dir packages/aither-astro pack --dry-run",
+    "smoke:agent-protocol": "node ./scripts/smoke-agent-protocol.mjs",
+    "smoke": "pnpm smoke:package && pnpm pack:astro-package && pnpm smoke:agent-protocol",
+    "upgrade:diff": "node ./scripts/release-diff.mjs",
     "preview": "astro preview",
     "validate": "pnpm check && pnpm check:post-coverage && pnpm build && pnpm smoke",
     "astro": "astro"
   },
   "dependencies": {
+    "@aither/astro": "workspace:^2026.3.20",
     "@astrojs/cloudflare": "^13.1.1",
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/react": "^5.0.0",

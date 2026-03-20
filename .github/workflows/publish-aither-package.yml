@@ -1,0 +1,68 @@
+name: Publish @aither/astro
+
+on:
+  workflow_dispatch:
+    inputs:
+      npm_tag:
+        description: npm dist-tag to publish under
+        required: true
+        default: latest
+      dry_run:
+        description: Run publish flow without uploading to npm
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-aither-package
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate package release surface
+        run: pnpm smoke
+
+      - name: Read package metadata
+        id: package
+        run: |
+          echo "name=$(node -p "require('./packages/aither-astro/package.json').name")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./packages/aither-astro/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Check npm for existing version
+        run: |
+          if npm view "${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}" version >/dev/null 2>&1; then
+            echo "Version ${{ steps.package.outputs.version }} is already published for ${{ steps.package.outputs.name }}."
+            exit 1
+          fi
+
+      - name: Publish to npm
+        working-directory: packages/aither-astro
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            npm publish --provenance --access public --tag "${{ inputs.npm_tag }}" --dry-run
+          else
+            npm publish --provenance --access public --tag "${{ inputs.npm_tag }}"
+          fi
