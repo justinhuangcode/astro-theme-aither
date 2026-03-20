@@ -7,7 +7,7 @@ import BlogPagination from '@/components/BlogPagination.astro';
 import Container from '@/components/Container.astro';
 import { siteConfig } from '@/config/site';
 import Layout from '@/layouts/Layout.astro';
-import { getLocaleBasePath, getMessages, intlLocales, type Locale } from '@/i18n';
+import { getLocaleBasePath, getMessages, type Locale } from '@/i18n';
 import { getSlug, type PostEntry } from '@/lib/posts';
 import { buildWebsiteJsonLd } from '@/lib/site-content';
 
@@ -132,7 +132,6 @@ const audienceCopy = {
                 slug={getSlug(post.id)}
                 title={post.data.title}
                 date={post.data.date}
-                locale={intlLocales[locale]}
                 basePath={basePath}
                 pinned={post.data.pinned}
               />
@@ -172,8 +171,9 @@ const audienceCopy = {
   .blog-index-shell :global(.blog-grid),
   .blog-index-shell :global(.ai-access-frame),
   .blog-index-shell :global(.audience-panel-frame) {
-    max-width: 60rem;
-    margin-inline: auto;
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
   }
 
   .blog-index-shell :global(.blog-grid) {
@@ -181,13 +181,13 @@ const audienceCopy = {
   }
 
   .blog-index-shell :global(.audience-panel-frame) {
-    max-width: 60rem;
     margin-bottom: 1.45rem;
   }
 
   .content-section-heading {
-    max-width: 60rem;
-    margin: 0 auto 1.35rem;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 1.35rem;
     font-size: clamp(1.3rem, 2.1vw, 1.55rem);
     font-weight: 700;
     line-height: 1.12;
@@ -221,6 +221,8 @@ const audienceCopy = {
 </style>
 
 <script>
+  import { bootstrapRootInit } from '@/lib/dom-init';
+
   const HOME_VIEW_PARAM = 'tab';
   const AGENT_VIEW_VALUE = 'agent';
   type HomeView = 'blog' | 'ai';
@@ -231,13 +233,11 @@ const audienceCopy = {
     return 'blog';
   }
 
-  document.querySelectorAll('[data-home-tabs]').forEach((root) => {
-    if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') return;
-    root.dataset.bound = 'true';
-
+  bootstrapRootInit('home-tabs', '[data-home-tabs]', (root, signal) => {
     const tabs = Array.from(root.querySelectorAll('[data-home-tab]'));
     const panels = Array.from(root.querySelectorAll('[data-home-panel]'));
-    const paginationLinks = Array.from(document.querySelectorAll('.blog-pagination a'));
+    const paginationScope = root.parentElement ?? document;
+    const paginationLinks = Array.from(paginationScope.querySelectorAll('.blog-pagination a'));
 
     const syncPaginationLinks = (view: HomeView) => {
       paginationLinks.forEach((link) => {
@@ -286,7 +286,7 @@ const audienceCopy = {
       tab.addEventListener('click', () => {
         const nextView = tab.dataset.homeTab === 'ai' ? 'ai' : 'blog';
         setView(nextView);
-      });
+      }, { signal });
 
       tab.addEventListener('keydown', (event) => {
         if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') {
@@ -307,12 +307,12 @@ const audienceCopy = {
           const nextView = nextTab.dataset.homeTab === 'ai' ? 'ai' : 'blog';
           setView(nextView);
         }
-      });
+      }, { signal });
     });
 
     window.addEventListener('popstate', () => {
       setView(getRequestedHomeView(), false);
-    });
+    }, { signal });
 
     setView(getRequestedHomeView(), false);
   });
