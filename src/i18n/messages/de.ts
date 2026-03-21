@@ -1,6 +1,9 @@
 export const de = {
   nav: {
     blog: 'Blog',
+    gallery: 'Galerie',
+    navigation: 'Navigation',
+    profile: 'Profil',
     about: 'Über',
   },
   blog: {

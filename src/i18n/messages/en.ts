@@ -1,6 +1,9 @@
 export const en = {
   nav: {
     blog: 'Blog',
+    gallery: 'Gallery',
+    navigation: 'Navigation',
+    profile: 'Profile',
     about: 'About',
   },
   blog: {

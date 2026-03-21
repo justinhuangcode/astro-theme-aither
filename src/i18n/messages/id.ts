@@ -1,6 +1,9 @@
 export const id = {
   nav: {
     blog: 'Blog',
+    gallery: 'Galeri',
+    navigation: 'Navigasi',
+    profile: 'Profil',
     about: 'Tentang',
   },
   blog: {

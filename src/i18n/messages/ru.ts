@@ -1,6 +1,9 @@
 export const ru = {
   nav: {
     blog: 'Блог',
+    gallery: 'Галерея',
+    navigation: 'Навигация',
+    profile: 'Профиль',
     about: 'О нас',
   },
   blog: {

@@ -100,6 +100,9 @@ export const siteConfig = defineAitherSiteConfig({
   sections: [] as ContentSection[],
   nav: [
     { labelKey: 'blog' as const, href: '/' },
+    { labelKey: 'gallery' as const, href: '/gallery' },
+    { labelKey: 'navigation' as const, href: '/navigation' },
+    { labelKey: 'profile' as const, href: '/profile' },
     // Section nav items are auto-appended from sections config above
     { labelKey: 'about' as const, href: '/about' },
   ],

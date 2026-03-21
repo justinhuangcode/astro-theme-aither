@@ -1,6 +1,9 @@
 export const fr = {
   nav: {
     blog: 'Blog',
+    gallery: 'Galerie',
+    navigation: 'Navigation',
+    profile: 'Profil',
     about: 'À propos',
   },
   blog: {

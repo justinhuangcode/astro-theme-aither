@@ -1,6 +1,9 @@
 export const zhHant = {
   nav: {
     blog: '部落格',
+    gallery: '相簿',
+    navigation: '導航',
+    profile: '個人',
     about: '關於',
   },
   blog: {
