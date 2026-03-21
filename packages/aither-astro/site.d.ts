@@ -77,6 +77,8 @@ export interface SiteGiscusConfig {
   reactionsEnabled: boolean;
   emitMetadata: boolean;
   inputPosition: 'top' | 'bottom';
+  themeLight?: string;
+  themeDark?: string;
 }
 
 export interface SiteFooterConfig {

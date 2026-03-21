@@ -81,6 +81,8 @@ export const siteConfig = defineAitherSiteConfig({
     enableModeSwitch: true,
     showMoreThemesMenu: true,
   },
+  // Giscus follows the resolved light/dark color mode.
+  // Use themeLight/themeDark if you want to override the default pair.
   giscus: {
     repo: import.meta.env.PUBLIC_GISCUS_REPO || '',
     repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || '',
@@ -90,6 +92,8 @@ export const siteConfig = defineAitherSiteConfig({
     reactionsEnabled: true,
     emitMetadata: false,
     inputPosition: 'top' as const,
+    themeLight: 'light',
+    themeDark: 'dark',
   },
   // Custom content sections — each one auto-generates list + detail pages
   // Example: { id: 'translations', labelKey: 'translations' }

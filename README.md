@@ -255,7 +255,14 @@ export const siteConfig = {
     // Optional extra collections beyond posts
     // { id: 'translations', labelKey: 'translations' },
   ],
-  giscus: { repo: '...', repoId: '...', category: '...', categoryId: '...' },
+  giscus: {
+    repo: '...',
+    repoId: '...',
+    category: '...',
+    categoryId: '...',
+    themeLight: 'light',
+    themeDark: 'dark',
+  },
   nav: [
     { labelKey: 'blog', href: '/' },
     { labelKey: 'about', href: '/about' },
@@ -265,6 +272,8 @@ export const siteConfig = {
 ```
 
 Set `ui.showMoreThemesMenu` to `false` if you want to keep Light / Dark / System switching but hide the custom theme picker.
+
+`giscus.themeLight` and `giscus.themeDark` follow the resolved color mode, so custom Aither theme styles can still keep comments in the correct light or dark surface.
 
 ### Extra content sections
 
