@@ -31,7 +31,12 @@ const m = getMessages(locale);
       <div class="about-content text-lg leading-relaxed text-foreground">
         <p set:html={m.about.description} />
       </div>
-      <div class="mt-10 pt-10 border-t border-border">
+      <div class="mt-10 flex items-center gap-4">
+        <span class="flex-1 border-t border-border"></span>
+        <span class="text-sm text-muted-foreground">{m.blog.endOfPost}{m.blog.thanksForReading}</span>
+        <span class="flex-1 border-t border-border"></span>
+      </div>
+      <div class="mt-8">
         <Giscus locale={locale} />
       </div>
     </article>
