@@ -1,7 +1,7 @@
 export const ru = {
   nav: {
     blog: 'Блог',
-    gallery: 'Галерея',
+    gallery: 'Фото',
     gallery2: 'Галерея 2',
     navigation: 'Навигация',
     profile: 'Профиль',
@@ -57,6 +57,26 @@ export const ru = {
   about: {
     title: 'О нас',
     description: 'Минималистичный блог на базе <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>.',
+  },
+  galleryPage: {
+    name: 'Фото',
+    subtitle: 'Спокойная галерея с акцентом на изображениях',
+    embeddedToolbarName: 'Сохранять десять тысяч прекрасных мгновений жизни',
+    description: 'Спокойная галерея внутри Aither, построенная вокруг изображений и рассчитанная на тихий, погружающий просмотр.',
+    aboutHtml: 'Спокойная галерея внутри Aither, построенная вокруг изображений и рассчитанная на тихий, погружающий просмотр.',
+    bottomToolbarLabel: 'Нижняя панель',
+    categoriesLabel: 'Категории',
+    allLabel: 'Все',
+    fullscreen: 'Открыть на весь экран',
+    exitFullscreen: 'Выйти из полноэкранного режима',
+    aboutLinkLabel: 'О нас',
+    aboutTitle: 'О {name}',
+    contactTitle: 'Контакты',
+    previousLabel: 'Назад',
+    nextLabel: 'Далее',
+    emptyTitle: 'Фотографий пока нет',
+    emptyDescription: 'В этой галерее пока нет фотографий.',
+    themeLabel: 'Проект',
   },
   forAgents: {
     title: 'Доступ для ИИ',

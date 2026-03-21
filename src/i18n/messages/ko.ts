@@ -1,7 +1,7 @@
 export const ko = {
   nav: {
     blog: '블로그',
-    gallery: '갤러리',
+    gallery: '사진',
     gallery2: '갤러리 2',
     navigation: '내비게이션',
     profile: '개인',
@@ -57,6 +57,26 @@ export const ko = {
   about: {
     title: '소개',
     description: '<a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>로 만든 미니멀 블로그입니다.',
+  },
+  galleryPage: {
+    name: '사진',
+    subtitle: '차분한 이미지 중심 갤러리',
+    embeddedToolbarName: '삶의 아름다운 순간 만 가지를 담다',
+    description: 'Aither 안에서 조용하게 감상할 수 있도록 설계된 차분한 이미지 중심 갤러리입니다.',
+    aboutHtml: 'Aither 안에서 조용하게 감상할 수 있도록 설계된 차분한 이미지 중심 갤러리입니다.',
+    bottomToolbarLabel: '하단 도구 막대',
+    categoriesLabel: '분류',
+    allLabel: '전체',
+    fullscreen: '전체 화면으로 보기',
+    exitFullscreen: '전체 화면 종료',
+    aboutLinkLabel: '소개',
+    aboutTitle: '{name} 소개',
+    contactTitle: '연락처',
+    previousLabel: '이전',
+    nextLabel: '다음',
+    emptyTitle: '사진이 없습니다',
+    emptyDescription: '이 갤러리에는 아직 사진이 없습니다.',
+    themeLabel: '프로젝트',
   },
   forAgents: {
     title: 'AI 접근',

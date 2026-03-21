@@ -86,7 +86,7 @@ export interface SiteFooterConfig {
   sections: FooterSection[];
 }
 
-export interface SiteTimePlusGalleryConfig {
+export interface SitePhotosGalleryConfig {
   paginationSize?: number;
   indexName?: string;
   indexSuffix?: string;
@@ -100,7 +100,6 @@ export interface SiteTimePlusGalleryConfig {
   subtitle?: string;
   aboutHtml?: string;
   homeHref?: string;
-  weiboHref?: string;
   githubHref?: string;
   themeDisplayName?: string;
   statsHtml?: string;
@@ -128,7 +127,7 @@ export interface AitherSiteConfig {
   sections: ContentSection[];
   nav: SiteNavItem[];
   footer: SiteFooterConfig;
-  timeplusGallery?: SiteTimePlusGalleryConfig;
+  photosGallery?: SitePhotosGalleryConfig;
 }
 
 export declare function defineAitherSiteConfig<T extends AitherSiteConfig>(config: T): T;

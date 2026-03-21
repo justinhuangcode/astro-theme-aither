@@ -1,0 +1,325 @@
+---
+import { siteConfig } from '@/config/site';
+import {
+  getLocalizedPath,
+  getMessages,
+  type Locale,
+} from '@/i18n';
+import type { GalleryEntry } from '@/lib/gallery';
+
+interface Props {
+  locale: Locale;
+  entries: GalleryEntry[];
+  categories: string[];
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+  showHeader?: boolean;
+  bottomToolbarLabel?: string;
+  showBottomAboutLink?: boolean;
+  bottomToolbarLogo?: string;
+  bottomToolbarName?: string;
+  bottomToolbarSubtitle?: string;
+}
+
+const {
+  locale,
+  entries,
+  categories,
+  currentPage,
+  totalPages,
+  basePath,
+  showHeader = true,
+  bottomToolbarLabel,
+  showBottomAboutLink = true,
+  bottomToolbarLogo,
+  bottomToolbarName,
+  bottomToolbarSubtitle,
+} = Astro.props;
+
+const m = getMessages(locale);
+const galleryCopy = m.galleryPage;
+const galleryHref = getLocalizedPath(basePath, locale);
+const galleryPageHref = (page: number) =>
+  page === 1
+    ? galleryHref
+    : getLocalizedPath(`${basePath}/page/${page}/`, locale);
+const photosConfig = siteConfig.photosGallery ?? {};
+const githubLink = photosConfig.githubHref || 'https://github.com/justinhuangcode/astro-theme-aither';
+const authorHomeLink = photosConfig.homeHref || '/';
+const indexName = galleryCopy.name;
+const indexSuffix = galleryCopy.subtitle;
+const headerName = indexName;
+const headerSubtitle = indexSuffix;
+const headerLogo = bottomToolbarLogo ?? photosConfig.logo ?? '/author-avatar.svg';
+const toolbarName = bottomToolbarName ?? headerName;
+const toolbarSubtitle = bottomToolbarSubtitle ?? headerSubtitle;
+const aboutHtml = galleryCopy.aboutHtml;
+const aboutText = galleryCopy.description;
+const resolvedBottomToolbarLabel = bottomToolbarLabel ?? galleryCopy.bottomToolbarLabel;
+
+const photosUi = {
+  indexName,
+  pageTitle: `${indexName} - ${indexSuffix}`,
+  name: toolbarName,
+  title: toolbarSubtitle,
+  description: aboutText,
+  aboutHtml,
+  categoriesLabel: galleryCopy.categoriesLabel,
+  allLabel: galleryCopy.allLabel,
+  fullscreen: galleryCopy.fullscreen,
+  exitFullscreen: galleryCopy.exitFullscreen,
+  aboutLinkLabel: galleryCopy.aboutLinkLabel,
+  aboutTitle: galleryCopy.aboutTitle.replace('{name}', indexName),
+  contactTitle: galleryCopy.contactTitle,
+  previousLabel: galleryCopy.previousLabel,
+  nextLabel: galleryCopy.nextLabel,
+  emptyTitle: galleryCopy.emptyTitle,
+  emptyDescription: galleryCopy.emptyDescription,
+  copyright: `© ${siteConfig.author.name}`,
+  themeLabel: galleryCopy.themeLabel,
+  themeName: indexName,
+  police: photosConfig.police || '',
+  icp: photosConfig.icp || '',
+  statsHtml: photosConfig.statsHtml || '',
+  logo: headerLogo,
+  ogImage: photosConfig.ogImage || '/author-avatar.svg',
+  thumbSuffix: photosConfig.thumbnailSuffix || '',
+  displaySuffix: photosConfig.displaySuffix || '',
+};
+
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getEntryCover(entry: GalleryEntry) {
+  return entry.data.cover ?? entry.data.images[0];
+}
+
+function getThumbUrl(entry: GalleryEntry) {
+  return `${getEntryCover(entry)}${photosUi.thumbSuffix}`;
+}
+
+function getDisplayUrl(entry: GalleryEntry) {
+  return `${getEntryCover(entry)}${photosUi.displaySuffix}`;
+}
+
+function getPageRange() {
+  const maxPages = 6;
+  const start = Math.max(1, Math.min(currentPage - Math.floor(maxPages / 2), totalPages - maxPages + 1));
+  const end = Math.min(start + maxPages - 1, totalPages);
+  return { start, end };
+}
+
+const { start: pageStart, end: pageEnd } = getPageRange();
+---
+
+{
+  showHeader && (
+    <header id="header" aria-label={resolvedBottomToolbarLabel}>
+      <a href={galleryHref}><img class="site-logo" src={photosUi.logo} alt={photosUi.name} /></a>
+      <h1><a href={galleryHref}><strong>{photosUi.name}</strong></a></h1>
+      <span class="discription">{photosUi.title}</span>
+      <nav aria-label={resolvedBottomToolbarLabel}>
+        <ul class="nav_links">
+          <li class="nav-item">
+            <a class="icon solid fa-info-circle nav-item-name">{photosUi.categoriesLabel}</a>
+            <ul class="nav-item-child">
+              <li class="category-level-0 category-parent">
+                <a href={galleryHref} style="cursor: pointer;">{photosUi.allLabel}</a>
+              </li>
+              {
+                categories.map((category) => (
+                  <li class="category-level-0 category-parent">
+                    <a style="cursor: pointer;">{category}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </li>
+          <li>
+            <a
+              type="button"
+              id="fullscreen"
+              class="btn btn-default visible-lg visible-md"
+              data-enter-fullscreen-label={photosUi.fullscreen}
+              data-exit-fullscreen-label={photosUi.exitFullscreen}
+              aria-label={photosUi.fullscreen}
+              title={photosUi.fullscreen}
+            >
+              <svg
+                class="toolbar-icon fullscreen-icon"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </a>
+          </li>
+          {
+            showBottomAboutLink && <li><a href="#footer">{photosUi.aboutLinkLabel}</a></li>
+          }
+        </ul>
+      </nav>
+    </header>
+  )
+}
+
+<div id="wrapper" data-photos-gallery data-gallery-root class:list={[!showHeader && 'no-local-header']}>
+  <div id="main">
+    {
+      entries.length > 0 ? (
+        entries.map((entry) => (
+          <article class="thumb img-area" data-gallery-item>
+            <a class="image my-photo" href={getDisplayUrl(entry)}>
+              <img
+                class="gallery-photo my-photo"
+                src="/photos-ui/assets/img/loading.gif"
+                data-src={getThumbUrl(entry)}
+                alt={entry.data.title}
+                onerror="this.src='/photos-ui/assets/img/loading.gif';this.onerror=null"
+              />
+            </a>
+            <h2>{entry.data.title}</h2>
+            {entry.data.description && (
+              <div class="content-wrapper">
+                <p>{entry.data.description}</p>
+              </div>
+            )}
+            <li class="tag-info tag-info-bottom">
+              {entry.data.device && (
+                <span class="tag-device"><i class="iconfont icon-camera-lens-line"></i>{entry.data.device}</span>
+              )}
+              {entry.data.location && (
+                <span class="tag-location"><i class="iconfont icon-map-pin-2-line"></i>{entry.data.location}</span>
+              )}
+              <span class="tag-time"><i class="iconfont icon-time-line"></i>{formatDate(entry.data.date)}</span>
+            </li>
+            <li class="tag-info">
+              <span class="tag-categorys">{entry.data.category}</span>
+              {entry.data.tags?.length ? (
+                <span class="tag-list">{entry.data.tags.join(' · ')}</span>
+              ) : null}
+            </li>
+            {entry.data.images.length > 1 && (
+              <div class="breadcrumb-nav" data-images={JSON.stringify(entry.data.images)}>
+                {
+                  entry.data.images.map((_, index) => (
+                    <span class:list={['nav-dot', index === 0 && 'active']} data-index={String(index)}></span>
+                  ))
+                }
+              </div>
+            )}
+          </article>
+        ))
+      ) : (
+        <section class="gallery-empty-state">
+          <h2>{photosUi.emptyTitle}</h2>
+          <p>{photosUi.emptyDescription}</p>
+        </section>
+      )
+    }
+    {
+      totalPages > 1 && (
+        <div class="pagination-container">
+          {
+            currentPage > 1 && (
+              <a href={galleryPageHref(currentPage - 1)} class="page-btn prev-btn">
+                {photosUi.previousLabel}
+              </a>
+            )
+          }
+          {
+            Array.from({ length: pageEnd - pageStart + 1 }, (_, index) => {
+              const page = pageStart + index;
+              return page === currentPage ? (
+                <span class="page-btn current">{page}</span>
+              ) : (
+                <a href={galleryPageHref(page)} class="page-btn">{page}</a>
+              );
+            })
+          }
+          {
+            currentPage < totalPages && (
+              <a href={galleryPageHref(currentPage + 1)} class="page-btn next-btn">
+                {photosUi.nextLabel}
+              </a>
+            )
+          }
+        </div>
+      )
+    }
+    <div id="load-more" data-page={String(currentPage)} data-total-pages={String(totalPages)}></div>
+  </div>
+</div>
+
+<footer id="footer" class="panel">
+  <div id="about">
+    <section>
+      <h2>{photosUi.aboutTitle}</h2>
+      <p set:html={photosUi.aboutHtml} />
+    </section>
+    <section>
+      <h2>{photosUi.contactTitle}</h2>
+      <ul class="icons">
+        <li><a class="contact_link" href={authorHomeLink} target="_blank" rel="noopener nofollow"><i class="iconfont icon-shouye"></i></a></li>
+        <li>
+          <a
+            class="contact_link"
+            href={githubLink}
+            target="_blank"
+            rel="noopener nofollow"
+          ><i class="iconfont icon-github"></i></a>
+        </li>
+      </ul>
+    </section>
+    <span style="color: #b5b5b5; font-size: 0.8em;">
+      {photosUi.statsHtml ? <Fragment set:html={photosUi.statsHtml} /> : null}
+      <div class="copyright-info">
+        <span class="copyright">{photosUi.copyright}</span>
+        <span class="theme">
+          {photosUi.themeLabel}：
+          <a href={githubLink} target="_blank" rel="noopener nofollow">{photosUi.themeName}</a>
+        </span>
+        {
+          photosUi.police && (
+            <span class="police">
+              <img src="/photos-ui/assets/img/police.png" alt="公安备案" style="vertical-align: middle; width: 14px;" />
+              <a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank" rel="noopener nofollow">
+                {photosUi.police}
+              </a>
+            </span>
+          )
+        }
+        {
+          photosUi.icp && (
+            <span class="icp">
+              <a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener nofollow">{photosUi.icp}</a>
+            </span>
+          )
+        }
+      </div>
+    </span>
+  </div>
+</footer>
+
+<script is:inline src="/photos-ui/assets/js/jquery.min.js"></script>
+<script is:inline src="/photos-ui/assets/js/jquery.poptrox.min.js"></script>
+<script is:inline src="/photos-ui/assets/js/browser.min.js"></script>
+<script is:inline src="/photos-ui/assets/js/breakpoints.min.js"></script>
+<script is:inline src="/photos-ui/assets/js/util.js"></script>
+<script is:inline src="/photos-ui/assets/js/main.js"></script>
+<script is:inline src="/photos-ui/gallery.js"></script>

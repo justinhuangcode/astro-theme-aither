@@ -1,7 +1,7 @@
 export const zhHant = {
   nav: {
     blog: '部落格',
-    gallery: '相簿',
+    gallery: '照片',
     gallery2: '相簿 2',
     navigation: '導航',
     profile: '個人',
@@ -57,6 +57,26 @@ export const zhHant = {
   about: {
     title: '關於',
     description: '這是一個基於 <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a> 的極簡部落格。',
+  },
+  galleryPage: {
+    name: '照片',
+    subtitle: '一個安靜的圖像優先頁面',
+    embeddedToolbarName: '定格一萬種生活的美好',
+    description: '這是 Aither 裡一個安靜、圖像優先的頁面，適合沉浸式瀏覽與安靜展示。',
+    aboutHtml: '這是 Aither 裡一個安靜、圖像優先的頁面，適合沉浸式瀏覽與安靜展示。',
+    bottomToolbarLabel: '底部操作欄',
+    categoriesLabel: '分類',
+    allLabel: '全部',
+    fullscreen: '進入全螢幕',
+    exitFullscreen: '退出全螢幕',
+    aboutLinkLabel: '關於',
+    aboutTitle: '關於{name}',
+    contactTitle: '聯絡我',
+    previousLabel: '上一頁',
+    nextLabel: '下一頁',
+    emptyTitle: '暫無照片',
+    emptyDescription: '這個頁面裡還沒有照片內容。',
+    themeLabel: '項目',
   },
   forAgents: {
     title: 'AI 接入',

@@ -22,7 +22,7 @@ export const siteConfig = defineAitherSiteConfig({
     'An AI-native Astro theme built around beautiful text.',
   author: {
     name: 'Aither',
-    avatar: '', // Import from src/assets/ for optimization, or use URL string
+    avatar: '/author-avatar.svg', // Import from src/assets/ for optimization, or use URL string
   },
   url: import.meta.env.SITE || 'https://astro-theme-aither.pages.dev',
   ogImage: '/og/index.png',
@@ -100,7 +100,7 @@ export const siteConfig = defineAitherSiteConfig({
   sections: [] as ContentSection[],
   nav: [
     { labelKey: 'blog' as const, href: '/' },
-    { labelKey: 'gallery' as const, href: '/gallery' },
+    { labelKey: 'gallery' as const, href: '/photos' },
     { labelKey: 'navigation' as const, href: '/navigation' },
     { labelKey: 'profile' as const, href: '/profile' },
     // Section nav items are auto-appended from sections config above
@@ -133,24 +133,23 @@ export const siteConfig = defineAitherSiteConfig({
       },
     ] satisfies FooterSection[],
   },
-  timeplusGallery: {
+  photosGallery: {
     paginationSize: 20,
-    indexName: 'TimePlus',
-    indexSuffix: '一款简约的相册主题',
-    headerName: 'TimePlus',
-    headerSubtitle: '一款简约的相册主题',
-    logo: '/timeplus/info/timeplus.webp',
-    icon: '/timeplus/info/timeplus.webp',
-    appleIcon: '/timeplus/info/timeplus.webp',
-    ogImage: '/timeplus/info/timeplus.webp',
-    brandName: 'TimePlus',
-    subtitle: '一款简约的相册主题',
+    indexName: 'Photos',
+    indexSuffix: 'A calm image-first gallery',
+    headerName: 'Photos',
+    headerSubtitle: 'A calm image-first gallery',
+    logo: '/author-avatar.svg',
+    icon: '/author-avatar.svg',
+    appleIcon: '/author-avatar.svg',
+    ogImage: '/photos/library/2026/03/2026-03-21-001.webp',
+    brandName: 'Photos',
+    subtitle: 'A calm image-first gallery',
     aboutHtml:
-      'A minimalist photo album theme by ZHHEO & ZMKI, rebuilt on Astro while preserving the original visual and interaction model.',
-    homeHref: 'https://zhheo.com/',
-    weiboHref: 'https://weibo.com/u/6277622585',
-    githubHref: 'https://github.com/zhheo/TimePlus',
-    themeDisplayName: '洪墨时光',
+      'A calm, image-first gallery inside Aither, designed for immersive browsing and quiet presentation.',
+    homeHref: '/',
+    githubHref: 'https://github.com/justinhuangcode/astro-theme-aither',
+    themeDisplayName: 'Photos',
     statsHtml: '',
     police: '',
     icp: '',

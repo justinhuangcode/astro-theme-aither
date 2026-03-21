@@ -1,12 +1,12 @@
 ---
-import TimePlusGalleryPage from '@/components/pages/TimePlusGalleryPage.astro';
+import PhotosGalleryPage from '@/components/pages/PhotosGalleryPage.astro';
 import { getPaginatedGallery } from '@/lib/gallery';
 import { rootLocale } from '@/lib/route-helpers';
 
 const { entries, categories, totalPages } = await getPaginatedGallery(rootLocale, 1);
 ---
 
-<TimePlusGalleryPage
+<PhotosGalleryPage
   locale={rootLocale}
   entries={entries}
   categories={categories}

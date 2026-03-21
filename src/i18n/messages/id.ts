@@ -1,7 +1,7 @@
 export const id = {
   nav: {
     blog: 'Blog',
-    gallery: 'Galeri',
+    gallery: 'Foto',
     gallery2: 'Galeri 2',
     navigation: 'Navigasi',
     profile: 'Profil',
@@ -57,6 +57,26 @@ export const id = {
   about: {
     title: 'Tentang',
     description: 'Blog minimalis yang dibuat dengan <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>.',
+  },
+  galleryPage: {
+    name: 'Foto',
+    subtitle: 'Galeri tenang yang berfokus pada gambar',
+    embeddedToolbarName: 'Membingkai sepuluh ribu momen indah kehidupan',
+    description: 'Galeri tenang di dalam Aither yang dirancang untuk pengalaman menjelajah gambar yang imersif dan hening.',
+    aboutHtml: 'Galeri tenang di dalam Aither yang dirancang untuk pengalaman menjelajah gambar yang imersif dan hening.',
+    bottomToolbarLabel: 'Bilah alat bawah',
+    categoriesLabel: 'Kategori',
+    allLabel: 'Semua',
+    fullscreen: 'Masuk layar penuh',
+    exitFullscreen: 'Keluar dari layar penuh',
+    aboutLinkLabel: 'Tentang',
+    aboutTitle: 'Tentang {name}',
+    contactTitle: 'Kontak',
+    previousLabel: 'Sebelumnya',
+    nextLabel: 'Berikutnya',
+    emptyTitle: 'Belum ada foto',
+    emptyDescription: 'Galeri ini belum memiliki foto.',
+    themeLabel: 'Proyek',
   },
   forAgents: {
     title: 'Akses AI',

@@ -1,15 +1,5 @@
 ---
-import EmbeddedGalleryPage from '@/components/pages/EmbeddedGalleryPage.astro';
-import { getPaginatedGallery } from '@/lib/gallery';
-import { rootLocale } from '@/lib/route-helpers';
-
-const { entries, categories, totalPages } = await getPaginatedGallery(rootLocale, 1);
+import RedirectPage from '@/components/pages/RedirectPage.astro';
 ---
 
-<EmbeddedGalleryPage
-  locale={rootLocale}
-  entries={entries}
-  categories={categories}
-  currentPage={1}
-  totalPages={totalPages}
-/>
+<RedirectPage to="/photos" />

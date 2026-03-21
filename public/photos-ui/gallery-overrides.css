@@ -1,0 +1,72 @@
+.photos-gallery-page {
+  --heo-background: #181818;
+  background: #181818;
+}
+
+.photos-gallery-page main {
+  min-height: 100vh;
+}
+
+.photos-gallery-page a {
+  text-decoration: none;
+}
+
+.photos-gallery-page #header h1 a {
+  color: inherit;
+}
+
+.photos-gallery-page .nav-item .category-parent.is-active a {
+  color: var(--heo-white);
+  background: var(--heo-theme-op);
+  border-radius: 999px;
+}
+
+.photos-gallery-page .gallery-empty-state {
+  display: flex;
+  min-height: calc(100vh - 180px);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 3rem 1.5rem;
+  color: var(--heo-fontcolor);
+  text-align: center;
+}
+
+.photos-gallery-page .gallery-empty-state h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.photos-gallery-page .gallery-empty-state p {
+  margin: 0;
+  color: var(--heo-secondtext);
+  max-width: 32rem;
+}
+
+.photos-gallery-page #photos-lightbox-root {
+  position: relative;
+  z-index: 20000;
+}
+
+.photos-gallery-page a#fullscreen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photos-gallery-page a#fullscreen .fullscreen-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+
+.photos-gallery-page [data-photos-fullscreen-root]:fullscreen,
+.photos-gallery-page [data-photos-fullscreen-root]:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  background: #181818;
+  overflow: auto;
+}

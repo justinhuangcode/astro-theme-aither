@@ -1,7 +1,7 @@
 export const es = {
   nav: {
     blog: 'Blog',
-    gallery: 'Galería',
+    gallery: 'Fotos',
     gallery2: 'Galería 2',
     navigation: 'Navegación',
     profile: 'Perfil',
@@ -57,6 +57,26 @@ export const es = {
   about: {
     title: 'Acerca de',
     description: 'Un blog minimalista creado con <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>.',
+  },
+  galleryPage: {
+    name: 'Fotos',
+    subtitle: 'Una galería serena centrada en imágenes',
+    embeddedToolbarName: 'Capturar diez mil momentos hermosos de la vida',
+    description: 'Una galería serena y centrada en imágenes dentro de Aither, pensada para una navegación inmersiva y tranquila.',
+    aboutHtml: 'Una galería serena y centrada en imágenes dentro de Aither, pensada para una navegación inmersiva y tranquila.',
+    bottomToolbarLabel: 'Barra inferior',
+    categoriesLabel: 'Categorías',
+    allLabel: 'Todas',
+    fullscreen: 'Entrar en pantalla completa',
+    exitFullscreen: 'Salir de pantalla completa',
+    aboutLinkLabel: 'Acerca de',
+    aboutTitle: 'Acerca de {name}',
+    contactTitle: 'Contacto',
+    previousLabel: 'Anterior',
+    nextLabel: 'Siguiente',
+    emptyTitle: 'Sin fotos',
+    emptyDescription: 'Esta galería todavía no tiene fotos.',
+    themeLabel: 'Proyecto',
   },
   forAgents: {
     title: 'Acceso de IA',

@@ -3,7 +3,7 @@ import NavOnlyLayout from '@/layouts/NavOnlyLayout.astro';
 import { siteConfig } from '@/config/site';
 import { getMessages, type Locale } from '@/i18n';
 import type { GalleryEntry } from '@/lib/gallery';
-import TimePlusGalleryScene from './TimePlusGalleryScene.astro';
+import PhotosGalleryScene from './PhotosGalleryScene.astro';
 
 interface Props {
   locale: Locale;
@@ -15,6 +15,7 @@ interface Props {
 
 const { locale, entries, categories, currentPage, totalPages } = Astro.props;
 const m = getMessages(locale);
+const authorAvatar = siteConfig.author.avatar;
 ---
 
 <NavOnlyLayout
@@ -22,32 +23,27 @@ const m = getMessages(locale);
   title={`${m.nav.gallery} | ${siteConfig.name}`}
   description={siteConfig.description}
   mainClass="bg-[#181818]"
-  bodyClass="timeplus-gallery-page"
+  bodyClass="photos-gallery-page"
 >
   <Fragment slot="head">
-    <link rel="stylesheet" href="/timeplus/iconfont.css" />
-    <link rel="stylesheet" href="/timeplus/assets/css/main.css" />
-    <link rel="stylesheet" href="/timeplus/gallery-overrides.css" />
+    <link rel="stylesheet" href="/photos-ui/iconfont.css" />
+    <link rel="stylesheet" href="/photos-ui/assets/css/main.css" />
+    <link rel="stylesheet" href="/photos-ui/gallery-overrides.css" />
     <style is:global>
-      body.timeplus-gallery-page {
+      body.photos-gallery-page {
         padding-bottom: 0;
         line-height: 1.5;
       }
 
-      body.timeplus-gallery-page main {
+      body.photos-gallery-page main {
         overflow: visible;
       }
 
-      body.timeplus-gallery-page #wrapper.no-local-header {
+      body.photos-gallery-page #wrapper.no-local-header {
         margin-top: 0;
       }
 
-      body.timeplus-gallery-page .site-nav,
-      body.timeplus-gallery-page .site-nav * {
-        box-sizing: border-box;
-      }
-
-      body.timeplus-gallery-page .site-nav {
+      body.photos-gallery-page .site-nav {
         position: fixed;
         inset-inline: 0;
         top: 0;
@@ -56,54 +52,50 @@ const m = getMessages(locale);
         min-height: 58px;
         background: var(--color-nav-bg) !important;
         border-bottom: 1px solid var(--color-nav-border) !important;
-        font-family: inherit !important;
+        box-sizing: border-box;
+        font-family: var(--font-body) !important;
         font-size: 16px !important;
         font-weight: 400 !important;
         letter-spacing: normal !important;
         line-height: 1.25 !important;
       }
 
-      body.timeplus-gallery-page .site-nav > div {
+      body.photos-gallery-page .site-nav * {
+        box-sizing: border-box;
+        font-family: inherit !important;
+        letter-spacing: inherit !important;
+      }
+
+      body.photos-gallery-page .site-nav > div {
         margin-inline: auto !important;
         padding-inline: 15px !important;
       }
 
-      body.timeplus-gallery-page .site-nav a,
-      body.timeplus-gallery-page .site-nav button {
-        font-family: inherit !important;
-        letter-spacing: normal !important;
+      body.photos-gallery-page .site-nav a,
+      body.photos-gallery-page .site-nav button {
         text-transform: none !important;
         line-height: inherit !important;
       }
 
-      body.timeplus-gallery-page .site-nav a {
-        color: inherit !important;
+      body.photos-gallery-page .site-nav a {
         text-decoration: none !important;
         border-bottom: 0 !important;
       }
 
-      body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] {
+      body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] {
         display: none !important;
       }
 
-      body.timeplus-gallery-page [data-mobile-nav] {
+      body.photos-gallery-page [data-mobile-nav] {
         display: block !important;
       }
 
-      body.timeplus-gallery-page .site-nav img {
+      body.photos-gallery-page .site-nav img {
         width: auto !important;
         max-width: none !important;
       }
 
-      body.timeplus-gallery-page .site-nav ul,
-      body.timeplus-gallery-page .site-nav ol,
-      body.timeplus-gallery-page .site-nav li {
-        margin: 0 !important;
-        padding: 0 !important;
-        list-style: none !important;
-      }
-
-      body.timeplus-gallery-page .site-nav .site-brand {
+      body.photos-gallery-page .site-nav .site-brand {
         display: block !important;
         padding: 19px 18px 19px 0 !important;
         color: var(--color-nav-text-active) !important;
@@ -112,11 +104,11 @@ const m = getMessages(locale);
         line-height: 20px !important;
       }
 
-      body.timeplus-gallery-page .site-nav .site-brand:hover {
+      body.photos-gallery-page .site-nav .site-brand:hover {
         color: var(--color-nav-text-hover) !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-item {
+      body.photos-gallery-page .site-nav .nav-item {
         display: inline-grid !important;
         align-items: center !important;
         justify-items: center !important;
@@ -126,17 +118,11 @@ const m = getMessages(locale);
         line-height: 20px !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-item:hover {
-        color: var(--color-text) !important;
+      body.photos-gallery-page .site-nav .nav-item:hover {
+        color: var(--color-nav-text-hover) !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-link-active {
-        color: var(--color-nav-text-active) !important;
-        font-weight: 600 !important;
-        box-shadow: inset 0 -2px 0 var(--color-link) !important;
-      }
-
-      body.timeplus-gallery-page .site-nav .nav-utility-button {
+      body.photos-gallery-page .site-nav .nav-utility-button {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -152,89 +138,78 @@ const m = getMessages(locale);
         color: var(--color-nav-text) !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-utility-button:hover {
-        color: var(--color-nav-text-hover) !important;
-        background: transparent !important;
+      body.photos-gallery-page .site-nav .nav-link-active {
+        color: var(--color-nav-text-active) !important;
+        font-weight: 600 !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-panel {
-        background: hsl(var(--popover)) !important;
-        border: 1px solid hsl(var(--border) / 0.7) !important;
-        border-radius: 0.75rem !important;
-        padding: 0.25rem !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+      body.photos-gallery-page .site-nav .nav-panel {
+        background: var(--popover) !important;
+        border: 1px solid color-mix(in srgb, var(--border) 70%, transparent) !important;
+        color: var(--popover-foreground) !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-panel-link {
-        display: flex !important;
-        align-items: center !important;
-        width: 100% !important;
-        padding: 0.75rem 1rem !important;
-        border: 0 !important;
-        border-radius: 0.5rem !important;
-        background: transparent !important;
-        color: hsl(var(--foreground)) !important;
-        font-size: 15px !important;
-        line-height: 1.25rem !important;
-        text-align: left !important;
-        text-decoration: none !important;
-        box-shadow: none !important;
+      body.photos-gallery-page .site-nav .nav-panel-link {
+        color: var(--foreground) !important;
       }
 
-      body.timeplus-gallery-page .site-nav .nav-panel-link:hover,
-      body.timeplus-gallery-page .site-nav .nav-panel-link:focus-visible {
-        background: hsl(var(--accent)) !important;
-        color: hsl(var(--accent-foreground)) !important;
+      body.photos-gallery-page .site-nav .nav-panel-link:hover,
+      body.photos-gallery-page .site-nav .nav-panel-link:focus-visible {
+        background: var(--accent) !important;
+        color: var(--accent-foreground) !important;
       }
 
       @media (min-width: 1024px) {
-        body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] {
+        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] {
           display: flex !important;
           align-items: center !important;
           justify-content: space-between !important;
         }
 
-        body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] > div,
-        body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] > div > ul,
-        body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] .flex.items-center {
+        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div,
+        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div > ul,
+        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] .flex.items-center {
           display: flex !important;
           align-items: center !important;
         }
 
-        body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] > div {
+        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div {
           justify-content: flex-end !important;
         }
 
-        body.timeplus-gallery-page .site-nav nav[aria-label='Main navigation'] > div > ul {
+        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div > ul {
           flex-wrap: nowrap !important;
         }
 
-        body.timeplus-gallery-page [data-mobile-nav] {
+        body.photos-gallery-page [data-mobile-nav] {
           display: none !important;
         }
       }
 
-      body.timeplus-gallery-page [data-navbar-spacer] {
+      body.photos-gallery-page [data-navbar-spacer] {
         display: block;
         height: 58px;
       }
     </style>
     <noscript>
-      <link rel="stylesheet" href="/timeplus/assets/css/noscript.css" />
+      <link rel="stylesheet" href="/photos-ui/assets/css/noscript.css" />
     </noscript>
   </Fragment>
 
-  <TimePlusGalleryScene
-    locale={locale}
-    entries={entries}
-    categories={categories}
-    currentPage={currentPage}
-    totalPages={totalPages}
-    basePath="/gallery"
-    showHeader={true}
-    bottomToolbarLabel="底部操作栏"
-    showBottomAboutLink={false}
-    bottomToolbarName="定格一万种生活的美好"
-    bottomToolbarSubtitle=""
-  />
+  <div data-photos-fullscreen-root>
+    <PhotosGalleryScene
+      locale={locale}
+      entries={entries}
+      categories={categories}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      basePath="/photos"
+      showHeader={true}
+      bottomToolbarLabel={m.galleryPage.bottomToolbarLabel}
+      showBottomAboutLink={false}
+      bottomToolbarLogo={authorAvatar}
+      bottomToolbarName={m.galleryPage.embeddedToolbarName}
+      bottomToolbarSubtitle=""
+    />
+  </div>
 </NavOnlyLayout>

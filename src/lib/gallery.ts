@@ -4,7 +4,7 @@ import type { Locale } from '@/i18n';
 
 export type GalleryEntry = LocalizedEntry<'gallery'>;
 
-const galleryPageSize = siteConfig.timeplusGallery?.paginationSize ?? siteConfig.blog.paginationSize;
+const galleryPageSize = siteConfig.photosGallery?.paginationSize ?? siteConfig.blog.paginationSize;
 
 export async function getGalleryByLocale(locale: Locale): Promise<GalleryEntry[]> {
   return getContentByLocale('gallery', locale);

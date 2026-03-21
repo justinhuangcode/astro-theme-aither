@@ -1,19 +1,11 @@
 ---
-import EmbeddedGalleryPage from '@/components/pages/EmbeddedGalleryPage.astro';
-import { type Locale } from '@/i18n';
-import { getPaginatedGallery } from '@/lib/gallery';
+import RedirectPage from '@/components/pages/RedirectPage.astro';
+import { type Locale, getLocalizedPath } from '@/i18n';
 import { createLocaleOnlyStaticPaths } from '@/lib/route-helpers';
 
 export const getStaticPaths = createLocaleOnlyStaticPaths;
 
 const { locale } = Astro.props as { locale: Locale };
-const { entries, categories, totalPages } = await getPaginatedGallery(locale, 1);
 ---
 
-<EmbeddedGalleryPage
-  locale={locale}
-  entries={entries}
-  categories={categories}
-  currentPage={1}
-  totalPages={totalPages}
-/>
+<RedirectPage to={getLocalizedPath('/photos', locale)} />

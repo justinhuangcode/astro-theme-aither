@@ -1,7 +1,7 @@
 export const zhHans = {
   nav: {
     blog: '博客',
-    gallery: '相册',
+    gallery: '照片',
     gallery2: '相册 2',
     navigation: '导航',
     profile: '个人',
@@ -57,6 +57,26 @@ export const zhHans = {
   about: {
     title: '关于',
     description: '这是一个基于 <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a> 的极简博客。',
+  },
+  galleryPage: {
+    name: '照片',
+    subtitle: '一个安静的图像优先页面',
+    embeddedToolbarName: '定格一万种生活的美好',
+    description: '这是 Aither 里的一个安静、图像优先的页面，适合沉浸式浏览与安静展示。',
+    aboutHtml: '这是 Aither 里的一个安静、图像优先的页面，适合沉浸式浏览与安静展示。',
+    bottomToolbarLabel: '底部操作栏',
+    categoriesLabel: '分类',
+    allLabel: '全部',
+    fullscreen: '进入全屏',
+    exitFullscreen: '退出全屏',
+    aboutLinkLabel: '关于',
+    aboutTitle: '关于{name}',
+    contactTitle: '联系我',
+    previousLabel: '上一页',
+    nextLabel: '下一页',
+    emptyTitle: '暂无照片',
+    emptyDescription: '这个页面里还没有照片内容。',
+    themeLabel: '项目',
   },
   forAgents: {
     title: 'AI 接入',
