@@ -27,189 +27,29 @@ const authorAvatar = siteConfig.author.avatar;
 >
   <Fragment slot="head">
     <link rel="stylesheet" href="/photos-ui/iconfont.css" />
-    <link rel="stylesheet" href="/photos-ui/assets/css/main.css" />
-    <link rel="stylesheet" href="/photos-ui/gallery-overrides.css" />
-    <style is:global>
-      body.photos-gallery-page {
-        padding-bottom: 0;
-        line-height: 1.5;
-      }
-
-      body.photos-gallery-page main {
-        overflow: visible;
-      }
-
-      body.photos-gallery-page #wrapper.no-local-header {
-        margin-top: 0;
-      }
-
-      body.photos-gallery-page .site-nav {
-        position: fixed;
-        inset-inline: 0;
-        top: 0;
-        z-index: 40;
-        display: block !important;
-        min-height: 58px;
-        background: var(--color-nav-bg) !important;
-        border-bottom: 1px solid var(--color-nav-border) !important;
-        box-sizing: border-box;
-        font-family: var(--font-body) !important;
-        font-size: 16px !important;
-        font-weight: 400 !important;
-        letter-spacing: normal !important;
-        line-height: 1.25 !important;
-      }
-
-      body.photos-gallery-page .site-nav * {
-        box-sizing: border-box;
-        font-family: inherit !important;
-        letter-spacing: inherit !important;
-      }
-
-      body.photos-gallery-page .site-nav > div {
-        margin-inline: auto !important;
-        padding-inline: 15px !important;
-      }
-
-      body.photos-gallery-page .site-nav a,
-      body.photos-gallery-page .site-nav button {
-        text-transform: none !important;
-        line-height: inherit !important;
-      }
-
-      body.photos-gallery-page .site-nav a {
-        text-decoration: none !important;
-        border-bottom: 0 !important;
-      }
-
-      body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] {
-        display: none !important;
-      }
-
-      body.photos-gallery-page [data-mobile-nav] {
-        display: block !important;
-      }
-
-      body.photos-gallery-page .site-nav img {
-        width: auto !important;
-        max-width: none !important;
-      }
-
-      body.photos-gallery-page .site-nav .site-brand {
-        display: block !important;
-        padding: 19px 18px 19px 0 !important;
-        color: var(--color-nav-text-active) !important;
-        font-size: 18px !important;
-        font-weight: 600 !important;
-        line-height: 20px !important;
-      }
-
-      body.photos-gallery-page .site-nav .site-brand:hover {
-        color: var(--color-nav-text-hover) !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-item {
-        display: inline-grid !important;
-        align-items: center !important;
-        justify-items: center !important;
-        padding: 19px 14px !important;
-        color: var(--color-nav-text) !important;
-        font-size: 15px !important;
-        line-height: 20px !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-item:hover {
-        color: var(--color-nav-text-hover) !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-utility-button {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        min-width: 34px !important;
-        width: auto !important;
-        height: 34px !important;
-        padding: 0 8px !important;
-        margin: 0 !important;
-        border: 0 !important;
-        border-radius: 0.25rem !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        color: var(--color-nav-text) !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-link-active {
-        color: var(--color-nav-text-active) !important;
-        font-weight: 600 !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-panel {
-        background: var(--popover) !important;
-        border: 1px solid color-mix(in srgb, var(--border) 70%, transparent) !important;
-        color: var(--popover-foreground) !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-panel-link {
-        color: var(--foreground) !important;
-      }
-
-      body.photos-gallery-page .site-nav .nav-panel-link:hover,
-      body.photos-gallery-page .site-nav .nav-panel-link:focus-visible {
-        background: var(--accent) !important;
-        color: var(--accent-foreground) !important;
-      }
-
-      @media (min-width: 1024px) {
-        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: space-between !important;
-        }
-
-        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div,
-        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div > ul,
-        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] .flex.items-center {
-          display: flex !important;
-          align-items: center !important;
-        }
-
-        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div {
-          justify-content: flex-end !important;
-        }
-
-        body.photos-gallery-page .site-nav nav[aria-label='Main navigation'] > div > ul {
-          flex-wrap: nowrap !important;
-        }
-
-        body.photos-gallery-page [data-mobile-nav] {
-          display: none !important;
-        }
-      }
-
-      body.photos-gallery-page [data-navbar-spacer] {
-        display: block;
-        height: 58px;
-      }
-    </style>
+    <link rel="stylesheet" href="/photos-ui/assets/css/embedded-main.css" />
+    <link rel="stylesheet" href="/photos-ui/embedded-overrides.css" />
     <noscript>
-      <link rel="stylesheet" href="/photos-ui/assets/css/noscript.css" />
+      <link rel="stylesheet" href="/photos-ui/assets/css/embedded-noscript.css" />
     </noscript>
   </Fragment>
 
   <div data-photos-fullscreen-root>
-    <PhotosGalleryScene
-      locale={locale}
-      entries={entries}
-      categories={categories}
-      currentPage={currentPage}
-      totalPages={totalPages}
-      basePath="/photos"
-      showHeader={true}
-      bottomToolbarLabel={m.galleryPage.bottomToolbarLabel}
-      showBottomAboutLink={false}
-      bottomToolbarLogo={authorAvatar}
-      bottomToolbarName={m.galleryPage.embeddedToolbarName}
-      bottomToolbarSubtitle=""
-    />
+    <div class="photos-gallery-scope">
+      <PhotosGalleryScene
+        locale={locale}
+        entries={entries}
+        categories={categories}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        basePath="/photos"
+        showHeader={true}
+        bottomToolbarLabel={m.galleryPage.bottomToolbarLabel}
+        showBottomAboutLink={false}
+        bottomToolbarLogo={authorAvatar}
+        bottomToolbarName={m.galleryPage.embeddedToolbarName}
+        bottomToolbarSubtitle=""
+      />
+    </div>
   </div>
 </NavOnlyLayout>

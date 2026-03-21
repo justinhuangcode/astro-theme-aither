@@ -19,9 +19,12 @@
   },
   "packageManager": "pnpm@10.32.1",
   "scripts": {
+    "photos:embed-css": "node ./scripts/build-photos-embedded-css.mjs",
+    "predev": "pnpm photos:embed-css",
     "dev": "astro dev",
     "check": "astro check",
     "check:post-coverage": "node ./scripts/check-post-coverage.mjs",
+    "prebuild": "pnpm photos:embed-css",
     "build": "astro build",
     "smoke:markdown": "node ./scripts/smoke-markdown-rendering.mjs",
     "smoke:package": "node ./scripts/smoke-aither-package.mjs",
@@ -29,6 +32,7 @@
     "smoke:agent-protocol": "node ./scripts/smoke-agent-protocol.mjs",
     "smoke": "pnpm build && pnpm smoke:package && pnpm smoke:markdown && pnpm pack:astro-package && pnpm smoke:agent-protocol",
     "upgrade:diff": "node ./scripts/release-diff.mjs",
+    "prepreview": "pnpm photos:embed-css",
     "preview": "astro preview",
     "validate": "pnpm check && pnpm check:post-coverage && pnpm smoke",
     "astro": "astro"
