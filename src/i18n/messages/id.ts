@@ -2,6 +2,7 @@ export const id = {
   nav: {
     blog: 'Blog',
     gallery: 'Galeri',
+    gallery2: 'Galeri 2',
     navigation: 'Navigasi',
     profile: 'Profil',
     about: 'Tentang',

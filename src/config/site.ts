@@ -142,7 +142,7 @@ export const siteConfig = defineAitherSiteConfig({
     logo: '/timeplus/info/timeplus.webp',
     icon: '/timeplus/info/timeplus.webp',
     appleIcon: '/timeplus/info/timeplus.webp',
-    ogImage: '/timeplus/screenshot.png',
+    ogImage: '/timeplus/info/timeplus.webp',
     brandName: 'TimePlus',
     subtitle: '一款简约的相册主题',
     aboutHtml:

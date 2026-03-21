@@ -1,5 +1,5 @@
 ---
-import EmbeddedGalleryPage from '@/components/pages/EmbeddedGalleryPage.astro';
+import TimePlusGalleryPage from '@/components/pages/TimePlusGalleryPage.astro';
 import { type Locale } from '@/i18n';
 import { getPaginatedGallery, getGalleryPaginationStaticPaths } from '@/lib/gallery';
 import { createLocalizedStaticPaths } from '@/lib/route-helpers';
@@ -13,7 +13,7 @@ const currentPage = Number(Astro.params.num);
 const { entries, categories, totalPages } = await getPaginatedGallery(locale, currentPage);
 ---
 
-<EmbeddedGalleryPage
+<TimePlusGalleryPage
   locale={locale}
   entries={entries}
   categories={categories}

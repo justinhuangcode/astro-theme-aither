@@ -1,5 +1,6 @@
 .timeplus-gallery-page {
-  background: #18171d;
+  --heo-background: #181818;
+  background: #181818;
 }
 
 .timeplus-gallery-page main {

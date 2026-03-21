@@ -2,6 +2,7 @@ export const ptBr = {
   nav: {
     blog: 'Blog',
     gallery: 'Galeria',
+    gallery2: 'Galeria 2',
     navigation: 'Navegação',
     profile: 'Perfil',
     about: 'Sobre',

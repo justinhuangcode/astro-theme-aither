@@ -49,121 +49,128 @@ const audienceCopy = {
 ---
 
 <Layout jsonLd={websiteJsonLd}>
-  <Container class="px-4">
-    <div class="blog-index-shell mt-8" data-home-tabs>
-      <div class="mx-auto mb-5 grid w-full max-w-[28rem] grid-cols-2 gap-3.5" role="tablist" aria-label="Audience views">
-        <button
-          id={`${tabBaseId}-blog-tab`}
-          type="button"
-          role="tab"
-          aria-selected="true"
-          aria-controls={`${tabBaseId}-blog-panel`}
-          data-home-tab="blog"
-          class="home-tab inline-flex min-h-[48px] w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold transition-colors"
-        >
-          <svg
-            aria-hidden="true"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="mr-2 shrink-0"
+  <section class="home-content-zone">
+    <Container class="px-4">
+      <div class="blog-index-shell mt-8" data-home-tabs>
+        <div class="mx-auto mb-5 grid w-full max-w-[28rem] grid-cols-2 gap-3.5" role="tablist" aria-label="Audience views">
+          <button
+            id={`${tabBaseId}-blog-tab`}
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls={`${tabBaseId}-blog-panel`}
+            data-home-tab="blog"
+            class="home-tab inline-flex min-h-[48px] w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold transition-colors"
           >
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M5 20a7 7 0 0 1 14 0"></path>
-          </svg>
-          <span>{readerTabLabel}</span>
-        </button>
-        <button
-          id={`${tabBaseId}-ai-tab`}
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls={`${tabBaseId}-ai-panel`}
-          tabindex="-1"
-          data-home-tab="ai"
-          class="home-tab inline-flex min-h-[48px] w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold transition-colors"
-        >
-          <svg
-            aria-hidden="true"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="mr-2 shrink-0"
+            <svg
+              aria-hidden="true"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-2 shrink-0"
+            >
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M5 20a7 7 0 0 1 14 0"></path>
+            </svg>
+            <span>{readerTabLabel}</span>
+          </button>
+          <button
+            id={`${tabBaseId}-ai-tab`}
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls={`${tabBaseId}-ai-panel`}
+            tabindex="-1"
+            data-home-tab="ai"
+            class="home-tab inline-flex min-h-[48px] w-full items-center justify-center rounded-xl border px-4 py-3 text-sm font-semibold transition-colors"
           >
-            <path d="M12 3v3"></path>
-            <rect x="4" y="7" width="16" height="11" rx="4"></rect>
-            <circle cx="9" cy="12" r="1"></circle>
-            <circle cx="15" cy="12" r="1"></circle>
-            <path d="M9 15h6"></path>
-          </svg>
-          <span>{agentTabLabel}</span>
-        </button>
-      </div>
+            <svg
+              aria-hidden="true"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-2 shrink-0"
+            >
+              <path d="M12 3v3"></path>
+              <rect x="4" y="7" width="16" height="11" rx="4"></rect>
+              <circle cx="9" cy="12" r="1"></circle>
+              <circle cx="15" cy="12" r="1"></circle>
+              <path d="M9 15h6"></path>
+            </svg>
+            <span>{agentTabLabel}</span>
+          </button>
+        </div>
 
-      <div
-        id={`${tabBaseId}-blog-panel`}
-        role="tabpanel"
-        aria-labelledby={`${tabBaseId}-blog-tab`}
-        data-home-panel="blog"
-      >
-        <AudiencePanel
-          variant="human"
-          lead={audienceCopy.human.lead}
-          highlight={audienceCopy.human.highlight}
-          steps={audienceCopy.human.steps}
-          copyLabel={copyLabels.copy}
-          copiedLabel={copyLabels.copied}
-        />
-        <h2 class="content-section-heading">{postsSectionLabel}</h2>
-        <BlogGrid>
-          {
-            posts.map((post) => (
-              <BlogCard
-                slug={getSlug(post.id)}
-                title={post.data.title}
-                date={post.data.date}
-                basePath={basePath}
-                pinned={post.data.pinned}
-              />
-            ))
-          }
-        </BlogGrid>
-      </div>
+        <div
+          id={`${tabBaseId}-blog-panel`}
+          role="tabpanel"
+          aria-labelledby={`${tabBaseId}-blog-tab`}
+          data-home-panel="blog"
+        >
+          <AudiencePanel
+            variant="human"
+            lead={audienceCopy.human.lead}
+            highlight={audienceCopy.human.highlight}
+            steps={audienceCopy.human.steps}
+            copyLabel={copyLabels.copy}
+            copiedLabel={copyLabels.copied}
+          />
+          <h2 class="content-section-heading">{postsSectionLabel}</h2>
+          <BlogGrid>
+            {
+              posts.map((post) => (
+                <BlogCard
+                  slug={getSlug(post.id)}
+                  title={post.data.title}
+                  date={post.data.date}
+                  basePath={basePath}
+                  pinned={post.data.pinned}
+                />
+              ))
+            }
+          </BlogGrid>
+        </div>
 
-      <div
-        id={`${tabBaseId}-ai-panel`}
-        role="tabpanel"
-        aria-labelledby={`${tabBaseId}-ai-tab`}
-        data-home-panel="ai"
-        hidden
-      >
-        <AudiencePanel
-          variant="agent"
-          lead={audienceCopy.agent.lead}
-          highlight={audienceCopy.agent.highlight}
-          steps={audienceCopy.agent.steps}
-          copyLabel={copyLabels.copy}
-          copiedLabel={copyLabels.copied}
-        />
-        <h2 class="content-section-heading">{postsSectionLabel}</h2>
-        <AIAccessList locale={locale} posts={posts} />
+        <div
+          id={`${tabBaseId}-ai-panel`}
+          role="tabpanel"
+          aria-labelledby={`${tabBaseId}-ai-tab`}
+          data-home-panel="ai"
+          hidden
+        >
+          <AudiencePanel
+            variant="agent"
+            lead={audienceCopy.agent.lead}
+            highlight={audienceCopy.agent.highlight}
+            steps={audienceCopy.agent.steps}
+            copyLabel={copyLabels.copy}
+            copiedLabel={copyLabels.copied}
+          />
+          <h2 class="content-section-heading">{postsSectionLabel}</h2>
+          <AIAccessList locale={locale} posts={posts} />
+        </div>
       </div>
-    </div>
-    <BlogPagination currentPage={currentPage} totalPages={totalPages} basePath={basePath || '/'} />
-  </Container>
+      <BlogPagination currentPage={currentPage} totalPages={totalPages} basePath={basePath || '/'} />
+    </Container>
+  </section>
 </Layout>
 
 <style>
+  .home-content-zone {
+    background: var(--background);
+    padding-block: 0.01rem 2.5rem;
+  }
+
   .blog-index-shell {
     margin-top: 2.1rem;
   }

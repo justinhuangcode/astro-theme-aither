@@ -2,6 +2,7 @@ export const ko = {
   nav: {
     blog: '블로그',
     gallery: '갤러리',
+    gallery2: '갤러리 2',
     navigation: '내비게이션',
     profile: '개인',
     about: '소개',
