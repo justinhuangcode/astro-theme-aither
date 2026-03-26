@@ -3,8 +3,6 @@ export const zhHans = {
     blog: '博客',
     gallery: '照片',
     gallery2: '相册 2',
-    navigation: '导航',
-    profile: '个人',
     about: '关于',
   },
   blog: {

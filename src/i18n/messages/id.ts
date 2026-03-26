@@ -3,8 +3,6 @@ export const id = {
     blog: 'Blog',
     gallery: 'Foto',
     gallery2: 'Galeri 2',
-    navigation: 'Navigasi',
-    profile: 'Profil',
     about: 'Tentang',
   },
   blog: {

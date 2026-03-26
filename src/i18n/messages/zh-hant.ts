@@ -3,8 +3,6 @@ export const zhHant = {
     blog: '部落格',
     gallery: '照片',
     gallery2: '相簿 2',
-    navigation: '導航',
-    profile: '個人',
     about: '關於',
   },
   blog: {

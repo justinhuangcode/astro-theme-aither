@@ -3,8 +3,6 @@ export const ptBr = {
     blog: 'Blog',
     gallery: 'Fotos',
     gallery2: 'Galeria 2',
-    navigation: 'Navegação',
-    profile: 'Perfil',
     about: 'Sobre',
   },
   blog: {

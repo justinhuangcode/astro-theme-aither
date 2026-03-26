@@ -3,8 +3,6 @@ export const ru = {
     blog: 'Блог',
     gallery: 'Фото',
     gallery2: 'Галерея 2',
-    navigation: 'Навигация',
-    profile: 'Профиль',
     about: 'О нас',
   },
   blog: {

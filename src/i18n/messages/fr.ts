@@ -3,8 +3,6 @@ export const fr = {
     blog: 'Blog',
     gallery: 'Photos',
     gallery2: 'Galerie 2',
-    navigation: 'Navigation',
-    profile: 'Profil',
     about: 'À propos',
   },
   blog: {
