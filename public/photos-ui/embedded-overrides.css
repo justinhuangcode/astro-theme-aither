@@ -26,6 +26,37 @@ body.photos-gallery-page .photos-gallery-scope .nav-item .category-parent.is-act
   border-radius: 999px;
 }
 
+body.photos-gallery-page .photos-gallery-scope #main .thumb {
+  aspect-ratio: 3 / 2;
+  height: auto;
+  min-height: 0;
+  width: 25%;
+}
+
+@media screen and (max-width: 1680px) {
+  body.photos-gallery-page .photos-gallery-scope #main .thumb {
+    width: 33.33333%;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  body.photos-gallery-page .photos-gallery-scope #main .thumb {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  body.photos-gallery-page .photos-gallery-scope #main .thumb {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body.photos-gallery-page .photos-gallery-scope #main .thumb {
+    width: 100%;
+  }
+}
+
 body.photos-gallery-page .photos-gallery-scope .gallery-empty-state {
   display: flex;
   min-height: calc(100vh - 180px);
