@@ -2,7 +2,6 @@ export const id = {
   nav: {
     blog: 'Blog',
     gallery: 'Foto',
-    gallery2: 'Galeri 2',
     about: 'Tentang',
   },
   blog: {

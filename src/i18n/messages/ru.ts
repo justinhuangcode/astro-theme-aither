@@ -2,7 +2,6 @@ export const ru = {
   nav: {
     blog: 'Блог',
     gallery: 'Фото',
-    gallery2: 'Галерея 2',
     about: 'О нас',
   },
   blog: {

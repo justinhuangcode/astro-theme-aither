@@ -1,5 +1,5 @@
 ---
-import EmbeddedGalleryPage from '@/components/pages/EmbeddedGalleryPage.astro';
+import PhotosIndexPage from '@/components/pages/PhotosIndexPage.astro';
 import { getPaginatedGallery, getGalleryPaginationStaticPaths } from '@/lib/gallery';
 import { createRootStaticPaths, rootLocale } from '@/lib/route-helpers';
 
@@ -9,7 +9,7 @@ const currentPage = Number(Astro.params.num);
 const { entries, categories, totalPages } = await getPaginatedGallery(rootLocale, currentPage);
 ---
 
-<EmbeddedGalleryPage
+<PhotosIndexPage
   locale={rootLocale}
   entries={entries}
   categories={categories}
