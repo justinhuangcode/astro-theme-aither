@@ -8,5 +8,3 @@ dist
 .playwright-cli
 output
 .references
-public/photos-ui/assets/css/embedded-main.css
-public/photos-ui/assets/css/embedded-noscript.css

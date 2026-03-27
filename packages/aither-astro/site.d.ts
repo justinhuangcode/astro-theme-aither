@@ -88,25 +88,7 @@ export interface SiteFooterConfig {
 
 export interface SitePhotosGalleryConfig {
   paginationSize?: number;
-  indexName?: string;
-  indexSuffix?: string;
-  headerName?: string;
-  headerSubtitle?: string;
-  logo?: string;
-  icon?: string;
-  appleIcon?: string;
   ogImage?: string;
-  brandName?: string;
-  subtitle?: string;
-  aboutHtml?: string;
-  homeHref?: string;
-  githubHref?: string;
-  themeDisplayName?: string;
-  statsHtml?: string;
-  police?: string;
-  icp?: string;
-  thumbnailSuffix?: string;
-  displaySuffix?: string;
 }
 
 export interface AitherSiteConfig {

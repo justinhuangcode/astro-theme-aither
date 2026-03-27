@@ -2,7 +2,6 @@ export const de = {
   nav: {
     blog: 'Blog',
     gallery: 'Fotos',
-    gallery2: 'Galerie 2',
     about: 'Über',
   },
   blog: {

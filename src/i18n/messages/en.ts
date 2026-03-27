@@ -2,7 +2,6 @@ export const en = {
   nav: {
     blog: 'Blog',
     gallery: 'Photos',
-    gallery2: 'Gallery 2',
     about: 'About',
   },
   blog: {
