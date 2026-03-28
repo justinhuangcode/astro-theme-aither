@@ -28,6 +28,12 @@ interface Props {
   image?: string | ImageMetadata;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   enableCrisp?: boolean;
+  hideNavbar?: boolean;
+  hideFooter?: boolean;
+  hideLocaleBanner?: boolean;
+  hideThemeEffects?: boolean;
+  bodyClass?: string;
+  mainClass?: string;
   article?: {
     publishedTime: string;
     author: string;
@@ -54,6 +60,12 @@ const {
   image: imageProp,
   jsonLd,
   enableCrisp = true,
+  hideNavbar = false,
+  hideFooter = false,
+  hideLocaleBanner = false,
+  hideThemeEffects = false,
+  bodyClass = '',
+  mainClass = '',
   article,
   alternateFormats,
 } = Astro.props;
@@ -375,21 +387,23 @@ const alternateUrls = locales.map((l) => ({
     </script>
   </head>
   <body
-    class="font-body antialiased bg-background text-foreground"
+    class:list={['font-body antialiased bg-background text-foreground', bodyClass]}
     style="font-weight:400"
   >
-    <LocaleBanner
-      currentLocale={locale}
-      currentPath={Astro.url.pathname}
-      allMessages={allBannerMessages}
-    />
-    <ThemeEffects />
+    {!hideLocaleBanner && (
+      <LocaleBanner
+        currentLocale={locale}
+        currentPath={Astro.url.pathname}
+        allMessages={allBannerMessages}
+      />
+    )}
+    {!hideThemeEffects && <ThemeEffects />}
     <div class="flex min-h-screen flex-col relative z-[1]">
-      <Navbar locale={locale} />
-      <main class="flex-1">
+      {!hideNavbar && <Navbar locale={locale} />}
+      <main class:list={['flex-1', mainClass]}>
         <slot />
       </main>
-      <Footer locale={locale} />
+      {!hideFooter && <Footer locale={locale} />}
     </div>
   </body>
 </html>

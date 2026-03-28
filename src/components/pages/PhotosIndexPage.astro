@@ -1,8 +1,7 @@
 ---
-import BlogPagination from '@/components/BlogPagination.astro';
 import { siteConfig } from '@/config/site';
 import { formatDate } from '@/lib/formatter';
-import { getLocalizedPath, getMessages, type Locale } from '@/i18n';
+import { getLocalizedPath, getMessages, giscusLocales, type Locale } from '@/i18n';
 import type { GalleryEntry } from '@/lib/gallery';
 import Layout from '@/layouts/Layout.astro';
 
@@ -14,17 +13,115 @@ interface Props {
   totalPages: number;
 }
 
-const { locale, entries, categories, currentPage, totalPages } = Astro.props;
+type NoteCard = {
+  id: string;
+  title: string;
+  description: string;
+  body: string;
+  date: string;
+  category: string;
+  tags: string[];
+  cover: string;
+  images: string[];
+  author: string;
+  authorAvatar: string;
+};
+
+const { locale, entries, categories } = Astro.props;
 const m = getMessages(locale);
 const pageTitle = `${m.galleryPage.name} | ${siteConfig.name}`;
 const pageDescription = m.galleryPage.description;
-const pageBasePath = getLocalizedPath('/photos', locale);
 const heroImage =
   entries[0]?.data.cover ??
   entries[0]?.data.images[0] ??
   siteConfig.photosGallery?.ogImage ??
   siteConfig.ogImage;
 const authorAvatar = siteConfig.author.avatar || '/author-avatar.svg';
+const giscus = siteConfig.giscus;
+const giscusEnabled = giscus.repo !== '' && giscus.repoId !== '' && giscus.categoryId !== '';
+const giscusLang = giscusLocales[locale];
+
+const isZhHans = locale === 'zh-hans';
+const isZhHant = locale === 'zh-hant';
+
+const ui = isZhHant
+  ? {
+      brand: 'Aither',
+      searchPlaceholder: '搜尋照片與故事',
+      publish: '創作中心',
+      business: '業務合作',
+        railItems: [
+          { key: 'discover', label: '發現' },
+          { key: 'studio', label: '直播' },
+          { key: 'publish', label: '發布' },
+          { key: 'notice', label: '通知' },
+          { key: 'me', label: '我' },
+        ],
+      more: '更多',
+      recommended: '推薦',
+        follow: '關注',
+        likes: '讚',
+        collects: '收藏',
+        share: '分享',
+        commentPlaceholder: '說點什麼...',
+        noteMetaFallback: '影像筆記',
+        moreLikeThis: '更多內容',
+    }
+  : isZhHans
+    ? {
+        brand: 'Aither',
+        searchPlaceholder: '搜索照片与故事',
+        publish: '创作中心',
+        business: '业务合作',
+        railItems: [
+          { key: 'discover', label: '发现' },
+          { key: 'studio', label: '直播' },
+          { key: 'publish', label: '发布' },
+          { key: 'notice', label: '通知' },
+          { key: 'me', label: '我' },
+        ],
+        more: '更多',
+        recommended: '推荐',
+        follow: '关注',
+        likes: '赞',
+        collects: '收藏',
+        share: '分享',
+        commentPlaceholder: '说点什么...',
+        noteMetaFallback: '影像笔记',
+        moreLikeThis: '更多内容',
+      }
+    : {
+        brand: 'Aither',
+        searchPlaceholder: 'Search photos and stories',
+        publish: 'Create',
+        business: 'Business',
+        railItems: [
+          { key: 'discover', label: 'Explore' },
+          { key: 'studio', label: 'Live' },
+          { key: 'publish', label: 'Publish' },
+          { key: 'notice', label: 'Alerts' },
+          { key: 'me', label: 'Me' },
+        ],
+        more: 'More',
+        recommended: 'Recommended',
+        follow: 'Follow',
+        likes: 'Likes',
+        collects: 'Saves',
+        share: 'Share',
+        commentPlaceholder: 'Write something...',
+        noteMetaFallback: 'Photo note',
+        moreLikeThis: 'More like this',
+      };
+
+function toPlainText(markdown: string | undefined) {
+  if (!markdown) return '';
+  return markdown
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[`*_>#-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 function getEntryCover(entry: GalleryEntry) {
   return entry.data.cover ?? entry.data.images[0];
@@ -34,846 +131,1538 @@ function getEntryImages(entry: GalleryEntry) {
   return entry.data.images.length > 0 ? entry.data.images : [getEntryCover(entry)];
 }
 
-const lightboxEntries = entries.map((entry) => ({
-  title: entry.data.title,
-  description: entry.data.description ?? '',
-  device: entry.data.device ?? '',
-  location: entry.data.location ?? '',
-  date: formatDate(entry.data.date),
-  category: entry.data.category ?? '',
-  tags: entry.data.tags ?? [],
-  images: getEntryImages(entry),
-}));
+const noteCards: NoteCard[] = entries.map((entry) => {
+  const plainBody = toPlainText(entry.body);
+  const body = plainBody || entry.data.description || ui.noteMetaFallback;
+
+  return {
+    id: entry.id,
+    title: entry.data.title,
+    description: entry.data.description ?? '',
+    body,
+    date: formatDate(entry.data.date),
+    category: entry.data.category ?? '',
+    tags: entry.data.tags ?? [],
+    cover: getEntryCover(entry),
+    images: getEntryImages(entry),
+    author: siteConfig.author.name,
+    authorAvatar,
+  };
+});
+
+const discoveredChannels = Array.from(
+  new Set([
+    ui.recommended,
+    ...categories.filter(Boolean),
+    ...noteCards.flatMap((note) => note.tags),
+  ]),
+);
+
+const noteCardsForClient = noteCards;
+const homePath = getLocalizedPath('/', locale);
+const aboutPath = getLocalizedPath('/about', locale);
 ---
 
-<Layout title={pageTitle} description={pageDescription} image={heroImage}>
-  <section class="photos-native-page" data-photos-root>
-    <div class="photos-stage">
-      {
-        entries.length > 0 ? (
-          <div class="photos-grid" role="list">
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image={heroImage}
+  enableCrisp={false}
+  hideNavbar={true}
+  hideFooter={true}
+  hideLocaleBanner={true}
+  hideThemeEffects={true}
+  bodyClass="bg-[#070707] text-white overflow-x-hidden"
+  mainClass="bg-[#070707]"
+>
+  <div class="photos-shell">
+    <section class="photos-explore" data-photos-explore-root>
+      <aside class="photos-rail">
+      <a class="photos-brand" href={homePath} aria-label={ui.brand}>
+        <span class="photos-brand-mark">A</span>
+        <span class="photos-brand-copy">{ui.brand}</span>
+      </a>
+
+      <nav class="photos-rail-nav" aria-label={ui.moreLikeThis}>
+        {
+          ui.railItems.map((item, index) => (
+            <button
+              type="button"
+              class:list={['photos-rail-item', index === 0 && 'is-active']}
+            >
+              <span class="photos-rail-icon" aria-hidden="true">
+                {
+                  item.key === 'discover' ? (
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M5 11.5 12 5l7 6.5v7.25A1.25 1.25 0 0 1 17.75 20h-11.5A1.25 1.25 0 0 1 5 18.75Z"></path>
+                    </svg>
+                  ) : item.key === 'studio' ? (
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="4" y="5" width="16" height="14" rx="4"></rect>
+                      <path d="M8 12h8"></path>
+                      <path d="M12 8v8"></path>
+                    </svg>
+                  ) : item.key === 'publish' ? (
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect>
+                      <path d="M12 7v10"></path>
+                      <path d="M7 12h10"></path>
+                    </svg>
+                  ) : item.key === 'notice' ? (
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 9a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path>
+                      <path d="M10 20a2 2 0 0 0 4 0"></path>
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="8" r="4"></circle>
+                      <path d="M4 20a8 8 0 0 1 16 0"></path>
+                    </svg>
+                  )
+                }
+              </span>
+              <span class="photos-rail-text">{item.label}</span>
+            </button>
+          ))
+        }
+      </nav>
+
+      <button type="button" class="photos-rail-more">
+        <span class="photos-rail-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14"></path>
+            <path d="M5 6h14"></path>
+            <path d="M5 18h14"></path>
+          </svg>
+        </span>
+        <span class="photos-rail-text">{ui.more}</span>
+      </button>
+    </aside>
+
+      <div class="photos-workspace">
+        <header class="photos-topbar">
+          <div class="photos-search-shell">
+            <svg class="photos-search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-3.5-3.5"></path>
+            </svg>
+            <input type="text" value="" placeholder={ui.searchPlaceholder} readonly />
+          </div>
+
+          <div class="photos-top-actions">
+            <a href={aboutPath}>{ui.publish}</a>
+            <a href={aboutPath}>{ui.business}</a>
+          </div>
+        </header>
+
+        <main class="photos-feed-page">
+          <div class="photos-channel-strip" role="tablist" aria-label={ui.moreLikeThis}>
             {
-              entries.map((entry, entryIndex) => (
-                <article class="photo-thumb" role="listitem">
-                  <button
-                    class="photo-thumb-button"
-                    type="button"
-                    data-lightbox-entry={String(entryIndex)}
-                    aria-label={entry.data.title}
-                  >
-                    <img
-                      class="photo-thumb-image"
-                      src={getEntryCover(entry)}
-                      alt={entry.data.title}
-                      loading={entryIndex === 0 ? 'eager' : 'lazy'}
-                      decoding="async"
-                    />
-                    <span class="photo-thumb-overlay" aria-hidden="true"></span>
-                    <span class="photo-thumb-copy">
-                      <span class="photo-thumb-title">{entry.data.title}</span>
-                    </span>
-                  </button>
-                </article>
+              discoveredChannels.map((channel, index) => (
+                <button
+                  type="button"
+                  role="tab"
+                  class:list={['photos-channel', index === 0 && 'is-active']}
+                  data-photos-channel={channel}
+                  aria-selected={index === 0 ? 'true' : 'false'}
+                >
+                  {channel}
+                </button>
               ))
             }
           </div>
-        ) : (
-          <section class="photos-empty">
-            <h1>{m.galleryPage.emptyTitle}</h1>
-            <p>{m.galleryPage.emptyDescription}</p>
+
+          <section class="photos-feed" role="list" data-photos-feed>
+            {
+              noteCards.map((note, index) => {
+                const filterTokens = [ui.recommended, note.category, ...note.tags].filter(Boolean).join('||');
+                return (
+                  <article
+                    class="photos-note-card"
+                    role="listitem"
+                    data-photos-note-card
+                    data-photos-note-index={String(index)}
+                    data-photos-filters={filterTokens}
+                  >
+                    <button type="button" class="photos-note-trigger" data-photos-note-open={String(index)}>
+                      <div class="photos-note-cover">
+                        <img src={note.cover} alt={note.title} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+                      </div>
+                      <div class="photos-note-copy">
+                        <h2>{note.title}</h2>
+                        <div class="photos-note-meta">
+                          <div class="photos-note-author">
+                            <img src={note.authorAvatar} alt={note.author} />
+                            <span>{note.author}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  </article>
+                );
+              })
+            }
           </section>
-        )
-      }
-
-      {totalPages > 1 && <BlogPagination currentPage={currentPage} totalPages={totalPages} basePath={pageBasePath} />}
-    </div>
-
-    <footer class="photos-toolbar" aria-label={m.galleryPage.bottomToolbarLabel}>
-      <div class="photos-toolbar-brand">
-        <img class="photos-toolbar-avatar" src={authorAvatar} alt={siteConfig.author.name} />
-        <div class="photos-toolbar-copy">
-          <strong>{m.galleryPage.embeddedToolbarName}</strong>
-        </div>
+        </main>
       </div>
 
-      <div class="photos-toolbar-actions">
-        <details class="photos-toolbar-menu">
-          <summary>{m.galleryPage.categoriesLabel}</summary>
-          <div class="photos-toolbar-menu-panel">
-            <span class="photos-toolbar-menu-item is-active">{m.galleryPage.allLabel}</span>
-            {
-              categories.map((category) => (
-                <span class="photos-toolbar-menu-item">{category}</span>
-              ))
-            }
-          </div>
-        </details>
-
-        <button
-          type="button"
-          class="photos-toolbar-icon-button"
-          data-photos-fullscreen
-          aria-label={m.galleryPage.fullscreen}
-          title={m.galleryPage.fullscreen}
-        >
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <polyline points="9 21 3 21 3 15"></polyline>
-            <line x1="21" y1="3" x2="14" y2="10"></line>
-            <line x1="3" y1="21" x2="10" y2="14"></line>
+      <div class="photos-floating-actions" aria-hidden="true">
+        <button type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+          </svg>
+        </button>
+        <button type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 19 7-7-7-7"></path>
+            <path d="M5 12h14"></path>
           </svg>
         </button>
       </div>
-    </footer>
-  </section>
+    </section>
 
-  <dialog class="photos-lightbox" data-photos-lightbox>
-    <div class="photos-lightbox-frame">
-      <button type="button" class="photos-lightbox-close" data-photos-lightbox-close aria-label="Close">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
+    <section class="photos-note-modal" data-photos-note-modal hidden>
+      <button type="button" class="photos-note-close-circle" data-photos-note-close aria-label="Close">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
         </svg>
       </button>
-      <button type="button" class="photos-lightbox-nav photos-lightbox-nav-prev" data-photos-lightbox-prev aria-label="Previous">
-        <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
-      <button type="button" class="photos-lightbox-nav photos-lightbox-nav-next" data-photos-lightbox-next aria-label="Next">
-        <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
-      <figure class="photos-lightbox-figure">
-        <img class="photos-lightbox-image" data-photos-lightbox-image alt="" />
-        <figcaption class="photos-lightbox-caption">
-          <h2 class="photos-lightbox-title" data-photos-lightbox-title></h2>
-          <p class="photos-lightbox-description" data-photos-lightbox-description hidden></p>
-          <div class="photos-lightbox-meta" data-photos-lightbox-meta hidden>
-            <span class="photos-lightbox-meta-item" data-photos-lightbox-device hidden></span>
-            <span class="photos-lightbox-meta-item" data-photos-lightbox-location hidden></span>
-            <span class="photos-lightbox-meta-item" data-photos-lightbox-date hidden></span>
+
+      <div class="photos-note-dialog" data-photos-note-dialog>
+        <div class="photos-note-media">
+          <div class="photos-note-media-backdrop" data-photos-note-media-backdrop></div>
+          <img class="photos-note-media-image" data-photos-note-image alt="" />
+          <div class="photos-note-dots" data-photos-note-dots hidden></div>
+        </div>
+
+        <aside class="photos-note-panel">
+          <header class="photos-note-panel-header">
+            <div class="photos-note-panel-author">
+              <img data-photos-note-author-avatar src={authorAvatar} alt={siteConfig.author.name} />
+              <div>
+                <strong data-photos-note-author>{siteConfig.author.name}</strong>
+                <span data-photos-note-author-meta hidden>{ui.noteMetaFallback}</span>
+              </div>
+            </div>
+            <button type="button" class="photos-note-follow">{ui.follow}</button>
+          </header>
+
+          <div class="photos-note-panel-scroll">
+            <section class="photos-note-content">
+              <h2 data-photos-note-title></h2>
+              <p class="photos-note-body" data-photos-note-body></p>
+              <p class="photos-note-hashtags" data-photos-note-hashtags hidden></p>
+              <div class="photos-note-date-row">
+                <p class="photos-note-date" data-photos-note-date></p>
+                <button type="button" class="photos-note-more" aria-label="More">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <circle cx="5" cy="12" r="1.7"></circle>
+                    <circle cx="12" cy="12" r="1.7"></circle>
+                    <circle cx="19" cy="12" r="1.7"></circle>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <div class="photos-note-divider" aria-hidden="true"></div>
+
+            <section class="photos-note-comments">
+              <p class="photos-note-comments-summary">{m.blog.comments}</p>
+              <div
+                class="photos-note-giscus"
+                data-photos-note-giscus
+                data-enabled={giscusEnabled ? 'true' : 'false'}
+                data-repo={giscus.repo}
+                data-repo-id={giscus.repoId}
+                data-category={giscus.category}
+                data-category-id={giscus.categoryId}
+                data-lang={giscusLang}
+                data-theme-light={giscus.themeLight || 'light'}
+                data-theme-dark={giscus.themeDark || 'dark'}
+                data-input-position={giscus.inputPosition}
+                data-reactions-enabled={giscus.reactionsEnabled ? '1' : '0'}
+                data-emit-metadata={giscus.emitMetadata ? '1' : '0'}
+              >
+                {
+                  !giscusEnabled && (
+                    <div class="photos-note-giscus-placeholder">{m.blog.commentsPlaceholder}</div>
+                  )
+                }
+              </div>
+            </section>
           </div>
-          <div class="photos-lightbox-tags" data-photos-lightbox-tags hidden>
-            <span class="photos-lightbox-category" data-photos-lightbox-category hidden></span>
-            <span class="photos-lightbox-taglist" data-photos-lightbox-taglist hidden></span>
-          </div>
-          <div class="photos-lightbox-dots" data-photos-lightbox-dots hidden></div>
-        </figcaption>
-      </figure>
-    </div>
-  </dialog>
+        </aside>
+      </div>
+    </section>
+  </div>
 
-  <script is:inline define:vars={{ lightboxEntries, fullscreenLabel: m.galleryPage.fullscreen, exitFullscreenLabel: m.galleryPage.exitFullscreen }}>
-    const pageRoot = document.querySelector('[data-photos-root]');
-    const fullscreenButton = document.querySelector('[data-photos-fullscreen]');
-    const lightbox = document.querySelector('[data-photos-lightbox]');
-    const lightboxImage = lightbox?.querySelector('[data-photos-lightbox-image]');
-    const lightboxTitle = lightbox?.querySelector('[data-photos-lightbox-title]');
-    const lightboxDescription = lightbox?.querySelector('[data-photos-lightbox-description]');
-    const lightboxMeta = lightbox?.querySelector('[data-photos-lightbox-meta]');
-    const lightboxDevice = lightbox?.querySelector('[data-photos-lightbox-device]');
-    const lightboxLocation = lightbox?.querySelector('[data-photos-lightbox-location]');
-    const lightboxDate = lightbox?.querySelector('[data-photos-lightbox-date]');
-    const lightboxTags = lightbox?.querySelector('[data-photos-lightbox-tags]');
-    const lightboxCategory = lightbox?.querySelector('[data-photos-lightbox-category]');
-    const lightboxTaglist = lightbox?.querySelector('[data-photos-lightbox-taglist]');
-    const lightboxDots = lightbox?.querySelector('[data-photos-lightbox-dots]');
-    const lightboxPrev = lightbox?.querySelector('[data-photos-lightbox-prev]');
-    const lightboxNext = lightbox?.querySelector('[data-photos-lightbox-next]');
-    const lightboxClose = lightbox?.querySelector('[data-photos-lightbox-close]');
-    const entryButtons = Array.from(document.querySelectorAll('[data-lightbox-entry]'));
-
+  <script
+    is:inline
+    define:vars={{
+      notes: noteCardsForClient,
+      recommendedChannel: ui.recommended,
+      giscusEnabled,
+      giscusRepo: giscus.repo,
+      giscusRepoId: giscus.repoId,
+      giscusCategory: giscus.category,
+      giscusCategoryId: giscus.categoryId,
+      giscusLang,
+      giscusThemeDark: giscus.themeDark || 'dark',
+      giscusInputPosition: giscus.inputPosition,
+      giscusReactionsEnabled: giscus.reactionsEnabled ? '1' : '0',
+      giscusEmitMetadata: giscus.emitMetadata ? '1' : '0',
+      giscusPlaceholder: m.blog.commentsPlaceholder,
+    }}
+  >
+    const noteCards = Array.from(document.querySelectorAll('[data-photos-note-card]'));
+    const channelButtons = Array.from(document.querySelectorAll('[data-photos-channel]'));
+    const openButtons = Array.from(document.querySelectorAll('[data-photos-note-open]'));
+    const feed = document.querySelector('[data-photos-feed]');
+    const modal = document.querySelector('[data-photos-note-modal]');
+    const closeButton = document.querySelector('[data-photos-note-close]');
+    const mediaImage = document.querySelector('[data-photos-note-image]');
+    const mediaBackdrop = document.querySelector('[data-photos-note-media-backdrop]');
+    const titleNode = document.querySelector('[data-photos-note-title]');
+    const bodyNode = document.querySelector('[data-photos-note-body]');
+    const hashtagsNode = document.querySelector('[data-photos-note-hashtags]');
+    const dateNode = document.querySelector('[data-photos-note-date]');
+    const giscusRoot = document.querySelector('[data-photos-note-giscus]');
+    const authorNode = document.querySelector('[data-photos-note-author]');
+    const authorMetaNode = document.querySelector('[data-photos-note-author-meta]');
+    const authorAvatarNode = document.querySelector('[data-photos-note-author-avatar]');
+    const dotsNode = document.querySelector('[data-photos-note-dots]');
+    const noteQueryParam = 'note';
+    let activeChannel = recommendedChannel;
     let activeEntryIndex = 0;
     let activeImageIndex = 0;
+    let feedLayoutFrame = 0;
+    let activeGiscusTerm = '';
 
-    const syncFullscreenButton = () => {
-      if (!fullscreenButton || !pageRoot) return;
-      const isFullscreen = document.fullscreenElement === pageRoot;
-      fullscreenButton.setAttribute('aria-label', isFullscreen ? exitFullscreenLabel : fullscreenLabel);
-      fullscreenButton.setAttribute('title', isFullscreen ? exitFullscreenLabel : fullscreenLabel);
+    const getOpenNoteIdFromUrl = () => {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(noteQueryParam);
     };
 
-    const renderLightbox = () => {
-      if (!lightboxImage || !lightboxTitle) return;
-      const entry = lightboxEntries[activeEntryIndex];
-      const src = entry.images[activeImageIndex];
-      lightboxImage.src = src;
-      lightboxImage.alt = entry.title;
-      lightboxTitle.textContent = entry.title;
-
-      if (lightboxDescription instanceof HTMLElement) {
-        lightboxDescription.hidden = !entry.description;
-        lightboxDescription.textContent = entry.description;
+    const syncUrlForNote = (noteId, { replace = false } = {}) => {
+      const url = new URL(window.location.href);
+      if (noteId) {
+        url.searchParams.set(noteQueryParam, noteId);
+      } else {
+        url.searchParams.delete(noteQueryParam);
       }
+      const method = replace ? 'replaceState' : 'pushState';
+      window.history[method]({}, '', `${url.pathname}${url.search}${url.hash}`);
+    };
 
-      const hasDevice = Boolean(entry.device);
-      const hasLocation = Boolean(entry.location);
-      const hasDate = Boolean(entry.date);
+    const setBodyLock = (locked) => {
+      document.body.classList.toggle('photos-modal-open', locked);
+    };
 
-      if (lightboxDevice instanceof HTMLElement) {
-        lightboxDevice.hidden = !hasDevice;
-        lightboxDevice.textContent = entry.device;
-      }
+    const getGiscusTheme = () =>
+      giscusThemeDark === 'dark' ? 'transparent_dark' : giscusThemeDark;
 
-      if (lightboxLocation instanceof HTMLElement) {
-        lightboxLocation.hidden = !hasLocation;
-        lightboxLocation.textContent = entry.location;
-      }
-
-      if (lightboxDate instanceof HTMLElement) {
-        lightboxDate.hidden = !hasDate;
-        lightboxDate.textContent = entry.date;
-      }
-
-      if (lightboxMeta instanceof HTMLElement) {
-        lightboxMeta.hidden = !(hasDevice || hasLocation || hasDate);
-      }
-
-      const hasCategory = Boolean(entry.category);
-      const hasTags = Array.isArray(entry.tags) && entry.tags.length > 0;
-
-      if (lightboxCategory instanceof HTMLElement) {
-        lightboxCategory.hidden = !hasCategory;
-        lightboxCategory.textContent = entry.category;
-      }
-
-      if (lightboxTaglist instanceof HTMLElement) {
-        lightboxTaglist.hidden = !hasTags;
-        lightboxTaglist.textContent = entry.tags.join(' · ');
-      }
-
-      if (lightboxTags instanceof HTMLElement) {
-        lightboxTags.hidden = !(hasCategory || hasTags);
-      }
-
-      const hasMultiple = entry.images.length > 1;
-      if (lightboxPrev instanceof HTMLButtonElement) {
-        lightboxPrev.disabled = false;
-        lightboxPrev.hidden = false;
-      }
-      if (lightboxNext instanceof HTMLButtonElement) {
-        lightboxNext.disabled = false;
-        lightboxNext.hidden = false;
-      }
-      if (lightboxDots instanceof HTMLElement) {
-        lightboxDots.hidden = !hasMultiple;
-        if (hasMultiple) {
-          lightboxDots.innerHTML = entry.images
-            .map(
-              (_, index) =>
-                `<button type="button" class="photos-lightbox-dot${index === activeImageIndex ? ' is-active' : ''}" data-photos-lightbox-dot="${index}" aria-label="Image ${index + 1}"></button>`,
-            )
-            .join('');
-        } else {
-          lightboxDots.innerHTML = '';
-        }
+    const updateGiscusTheme = () => {
+      if (!(giscusRoot instanceof HTMLElement)) return;
+      const iframe = giscusRoot.querySelector('iframe.giscus-frame');
+      if (iframe instanceof HTMLIFrameElement && iframe.src.startsWith('https://giscus.app')) {
+        iframe.contentWindow?.postMessage(
+          { giscus: { setConfig: { theme: getGiscusTheme() } } },
+          'https://giscus.app',
+        );
       }
     };
 
-    const openLightbox = (entryIndex, imageIndex = 0) => {
-      if (!(lightbox instanceof HTMLDialogElement)) return;
+    const mountGiscus = () => {
+      if (!(giscusRoot instanceof HTMLElement)) return;
+
+      if (!giscusEnabled) {
+        giscusRoot.innerHTML = `<div class="photos-note-giscus-placeholder">${giscusPlaceholder}</div>`;
+        return;
+      }
+
+      const note = notes[activeEntryIndex];
+      if (!note) return;
+
+      const term = `photo:${note.id}`;
+      if (activeGiscusTerm === term && giscusRoot.querySelector('iframe.giscus-frame')) {
+        return;
+      }
+
+      activeGiscusTerm = term;
+      giscusRoot.innerHTML = '';
+
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.setAttribute('data-loading', 'lazy');
+      script.setAttribute('data-repo', giscusRepo);
+      script.setAttribute('data-repo-id', giscusRepoId);
+      script.setAttribute('data-category', giscusCategory);
+      script.setAttribute('data-category-id', giscusCategoryId);
+      script.setAttribute('data-mapping', 'specific');
+      script.setAttribute('data-term', term);
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', giscusReactionsEnabled);
+      script.setAttribute('data-emit-metadata', giscusEmitMetadata);
+      script.setAttribute('data-input-position', giscusInputPosition);
+      script.setAttribute('data-lang', giscusLang);
+      script.setAttribute('data-theme', getGiscusTheme());
+      giscusRoot.append(script);
+    };
+
+    const getFeedLayoutInfo = () => {
+      const width = window.innerWidth;
+      if (width >= 1424) {
+        const gap = 32;
+        const boundedWidth = Math.min(width, 1728);
+        const columnWidth = (boundedWidth - 7 * gap) / 6;
+        return { columns: 5, gapH: gap, gapV: 16, columnWidth };
+      }
+      if (width >= 1192) {
+        const gap = 24;
+        const columnWidth = (width - 6 * gap) / 5;
+        return { columns: 4, gapH: gap, gapV: 12, columnWidth };
+      }
+      if (width >= 960) {
+        const gap = 24;
+        const columnWidth = (width - 5 * gap) / 4;
+        return { columns: 3, gapH: gap, gapV: 12, columnWidth };
+      }
+      if (width >= 696) {
+        const gap = 24;
+        const columnWidth = (width - 4 * gap) / 3;
+        return { columns: 3, gapH: gap, gapV: 12, columnWidth };
+      }
+      const gap = 12;
+      return {
+        columns: 2,
+        gapH: gap,
+        gapV: 6,
+        columnWidth: Math.max(142, (width - 3 * gap) / 2),
+      };
+    };
+
+    const layoutFeed = () => {
+      if (!(feed instanceof HTMLElement)) return;
+      const visibleCards = noteCards.filter((card) => !card.hasAttribute('hidden'));
+      const layout = getFeedLayoutInfo();
+      const feedWidth = layout.columns * layout.columnWidth + (layout.columns - 1) * layout.gapH;
+
+      feed.style.width = `${feedWidth}px`;
+      feed.style.setProperty('--photos-feed-layout-gap', `${layout.gapH}px`);
+      feed.style.setProperty('--photos-feed-layout-width', `${layout.columnWidth}px`);
+
+      if (visibleCards.length === 0) {
+        feed.classList.remove('is-static');
+        feed.style.height = '0px';
+        return;
+      }
+
+      visibleCards.forEach((card) => {
+        card.style.width = `${layout.columnWidth}px`;
+      });
+
+      if (visibleCards.length <= layout.columns) {
+        feed.classList.add('is-static');
+        feed.style.height = 'auto';
+        visibleCards.forEach((card) => {
+          card.style.transform = 'none';
+        });
+        return;
+      }
+
+      feed.classList.remove('is-static');
+      const columnHeights = Array(layout.columns).fill(0);
+
+      visibleCards.forEach((card) => {
+        const minHeight = Math.min(...columnHeights);
+        const columnIndex = columnHeights.indexOf(minHeight);
+        const x = columnIndex * (layout.columnWidth + layout.gapH);
+        const y = columnHeights[columnIndex];
+        card.style.transform = `translate(${x}px, ${y}px)`;
+        columnHeights[columnIndex] = y + card.offsetHeight + layout.gapV;
+      });
+
+      feed.style.height = `${Math.max(...columnHeights) - layout.gapV}px`;
+    };
+
+    const scheduleFeedLayout = () => {
+      if (feedLayoutFrame) cancelAnimationFrame(feedLayoutFrame);
+      feedLayoutFrame = requestAnimationFrame(() => {
+        feedLayoutFrame = 0;
+        layoutFeed();
+      });
+    };
+
+    const filterFeed = () => {
+      noteCards.forEach((card) => {
+        const filters = (card.getAttribute('data-photos-filters') || '').split('||').filter(Boolean);
+        const visible = activeChannel === recommendedChannel || filters.includes(activeChannel);
+        card.toggleAttribute('hidden', !visible);
+      });
+
+      channelButtons.forEach((button) => {
+        const isActive = button.getAttribute('data-photos-channel') === activeChannel;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      scheduleFeedLayout();
+    };
+
+    const renderDots = (images) => {
+      if (!(dotsNode instanceof HTMLElement)) return;
+      if (images.length <= 1) {
+        dotsNode.hidden = true;
+        dotsNode.innerHTML = '';
+        return;
+      }
+      dotsNode.hidden = false;
+      dotsNode.innerHTML = images
+        .map(
+          (_, index) =>
+            `<button type="button" class="photos-note-dot${index === activeImageIndex ? ' is-active' : ''}" data-photos-note-dot="${index}" aria-label="Image ${index + 1}"></button>`,
+        )
+        .join('');
+    };
+
+    const renderModal = () => {
+      const note = notes[activeEntryIndex];
+      if (!note || !(mediaImage instanceof HTMLImageElement)) return;
+
+      const src = note.images[activeImageIndex] || note.cover;
+      mediaImage.src = src;
+      mediaImage.alt = note.title;
+      if (mediaBackdrop instanceof HTMLElement) {
+        mediaBackdrop.style.backgroundImage = `url("${src}")`;
+      }
+
+      if (titleNode instanceof HTMLElement) titleNode.textContent = note.title;
+      if (bodyNode instanceof HTMLElement) bodyNode.textContent = note.description || note.body;
+      if (authorNode instanceof HTMLElement) authorNode.textContent = note.author;
+      if (authorMetaNode instanceof HTMLElement) {
+        authorMetaNode.textContent = '';
+        authorMetaNode.hidden = true;
+      }
+      if (authorAvatarNode instanceof HTMLImageElement) {
+        authorAvatarNode.src = note.authorAvatar;
+        authorAvatarNode.alt = note.author;
+      }
+      if (dateNode instanceof HTMLElement) {
+        dateNode.textContent = [note.date, note.category].filter(Boolean).join(' · ');
+      }
+      if (hashtagsNode instanceof HTMLElement) {
+        const hashtagText = note.tags.length > 0 ? note.tags.map((tag) => `#${tag}`).join(' ') : '';
+        hashtagsNode.hidden = !hashtagText;
+        hashtagsNode.textContent = hashtagText;
+      }
+
+      mountGiscus();
+      renderDots(note.images);
+    };
+
+    const openModal = (entryIndex, imageIndex = 0, { updateUrl = true, replaceUrl = false } = {}) => {
+      if (!(modal instanceof HTMLElement)) return;
       activeEntryIndex = entryIndex;
       activeImageIndex = imageIndex;
-      renderLightbox();
-      lightbox.showModal();
-    };
-
-    const closeLightbox = () => {
-      if (lightbox instanceof HTMLDialogElement && lightbox.open) {
-        lightbox.close();
+      renderModal();
+      modal.hidden = false;
+      requestAnimationFrame(() => modal.classList.add('is-open'));
+      setBodyLock(true);
+      if (updateUrl) {
+        syncUrlForNote(notes[entryIndex]?.id, { replace: replaceUrl });
       }
     };
 
-    const stepLightbox = (delta) => {
-      const totalEntries = lightboxEntries.length;
-      if (totalEntries === 0) return;
-
-      if (delta > 0) {
-        const entry = lightboxEntries[activeEntryIndex];
-        if (activeImageIndex < entry.images.length - 1) {
-          activeImageIndex += 1;
-        } else {
-          activeEntryIndex = (activeEntryIndex + 1) % totalEntries;
-          activeImageIndex = 0;
-        }
-      } else {
-        if (activeImageIndex > 0) {
-          activeImageIndex -= 1;
-        } else {
-          activeEntryIndex = (activeEntryIndex - 1 + totalEntries) % totalEntries;
-          activeImageIndex = Math.max(0, lightboxEntries[activeEntryIndex].images.length - 1);
-        }
+    const closeModal = ({ updateUrl = true, replaceUrl = false } = {}) => {
+      if (!(modal instanceof HTMLElement)) return;
+      modal.classList.remove('is-open');
+      modal.hidden = true;
+      setBodyLock(false);
+      if (updateUrl) {
+        syncUrlForNote(null, { replace: replaceUrl });
       }
-
-      renderLightbox();
     };
 
-    entryButtons.forEach((button) => {
+    const stepModalImage = (direction) => {
+      const note = notes[activeEntryIndex];
+      if (!note || note.images.length <= 1) return;
+      activeImageIndex = (activeImageIndex + direction + note.images.length) % note.images.length;
+      renderModal();
+    };
+
+    channelButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        const entryIndex = Number(button.getAttribute('data-lightbox-entry') || '0');
-        openLightbox(entryIndex);
+        const channel = button.getAttribute('data-photos-channel');
+        if (!channel) return;
+        activeChannel = channel;
+        filterFeed();
       });
     });
 
-    fullscreenButton?.addEventListener('click', async () => {
-      if (!pageRoot) return;
-      if (document.fullscreenElement === pageRoot) {
-        await document.exitFullscreen();
-      } else {
-        await pageRoot.requestFullscreen();
-      }
+    openButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const index = Number(button.getAttribute('data-photos-note-open') || '0');
+        openModal(index);
+      });
     });
 
-    document.addEventListener('fullscreenchange', syncFullscreenButton);
-    lightboxPrev?.addEventListener('click', () => stepLightbox(-1));
-    lightboxNext?.addEventListener('click', () => stepLightbox(1));
-    lightboxClose?.addEventListener('click', closeLightbox);
-    lightboxDots?.addEventListener('click', (event) => {
-      const dot = event.target.closest('[data-photos-lightbox-dot]');
+    closeButton?.addEventListener('click', () => closeModal());
+    modal?.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+    });
+    dotsNode?.addEventListener('click', (event) => {
+      const dot = event.target.closest('[data-photos-note-dot]');
       if (!(dot instanceof HTMLElement)) return;
-      const nextIndex = Number(dot.dataset.photosLightboxDot || '0');
-      if (Number.isNaN(nextIndex)) return;
-      activeImageIndex = nextIndex;
-      renderLightbox();
-    });
-    lightbox?.addEventListener('click', (event) => {
-      const dialog = event.currentTarget;
-      if (event.target === dialog) closeLightbox();
-    });
-    lightbox?.addEventListener(
-      'wheel',
-      (event) => {
-        if (!(lightbox instanceof HTMLDialogElement) || !lightbox.open) return;
-        event.preventDefault();
-        stepLightbox(event.deltaY > 0 ? 1 : -1);
-      },
-      { passive: false },
-    );
-    lightbox?.addEventListener('cancel', (event) => {
-      event.preventDefault();
-      closeLightbox();
+      const index = Number(dot.dataset.photosNoteDot || '0');
+      if (Number.isNaN(index)) return;
+      activeImageIndex = index;
+      renderModal();
     });
 
     document.addEventListener('keydown', (event) => {
-      if (!(lightbox instanceof HTMLDialogElement) || !lightbox.open) return;
-      if (event.key === 'Escape') {
-        closeLightbox();
-        return;
-      }
-      if (event.key === 'ArrowLeft' || event.key === ' ') stepLightbox(-1);
-      if (event.key === 'ArrowRight') stepLightbox(1);
+      if (!(modal instanceof HTMLElement) || modal.hidden) return;
+      if (event.key === 'Escape') closeModal();
+      if (event.key === 'ArrowLeft') stepModalImage(-1);
+      if (event.key === 'ArrowRight') stepModalImage(1);
     });
 
-    syncFullscreenButton();
+    window.addEventListener('popstate', () => {
+      const noteId = getOpenNoteIdFromUrl();
+      if (!noteId) {
+        closeModal({ updateUrl: false });
+        return;
+      }
+      const index = notes.findIndex((note) => note.id === noteId);
+      if (index >= 0) {
+        openModal(index, 0, { updateUrl: false });
+      }
+    });
+
+    window.addEventListener('resize', scheduleFeedLayout);
+
+    noteCards.forEach((card) => {
+      const image = card.querySelector('img');
+      if (image instanceof HTMLImageElement) {
+        if (image.complete) {
+          scheduleFeedLayout();
+        } else {
+          image.addEventListener('load', scheduleFeedLayout, { once: true });
+        }
+      }
+    });
+
+    filterFeed();
+
+    const initialNoteId = getOpenNoteIdFromUrl();
+    if (initialNoteId) {
+      const initialIndex = notes.findIndex((note) => note.id === initialNoteId);
+      if (initialIndex >= 0) {
+        openModal(initialIndex, 0, { updateUrl: false });
+      }
+    }
+
+    scheduleFeedLayout();
   </script>
 </Layout>
 
 <style>
-  .photos-native-page {
-    min-height: calc(100vh - 59px);
-    background: #181818;
-    color: rgba(255, 255, 255, 0.94);
-    position: relative;
-    padding-bottom: 6rem;
-  }
-
-  .photos-stage {
-    min-height: calc(100vh - 59px);
-    padding: 0 0 2rem;
-  }
-
-  .photos-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-    align-items: start;
-  }
-
-  .photo-thumb {
-    position: relative;
-    aspect-ratio: 3 / 2;
+  :global(body.photos-modal-open) {
     overflow: hidden;
-    border-radius: 0;
   }
 
-  .photo-thumb-button {
-    appearance: none;
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: inherit;
-    cursor: zoom-in;
-    text-align: left;
+  .photos-shell {
+    --photos-bg: #070707;
+    --photos-surface: #111111;
+    --photos-surface-2: #1a1a1a;
+    --photos-border: rgba(255, 255, 255, 0.08);
+    --photos-text: rgba(255, 255, 255, 0.96);
+    --photos-subtle: rgba(255, 255, 255, 0.62);
+    --photos-pill: rgba(255, 255, 255, 0.08);
+    --photos-accent: #ff2442;
+    --photos-rail-width: 164px;
+    --photos-gap-v: 16px;
+    --photos-gap-h: 32px;
+    --feeds-columns: 5;
+    --photos-feed-width: calc(1728px - 96px - ((1728px - 7 * 32px) / 6));
+    --photos-page-side: 32px;
+    min-height: 100vh;
+    background: var(--photos-bg);
+    color: var(--photos-text);
   }
 
-  .photo-thumb-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .photos-explore {
+    min-height: 100vh;
   }
 
-  .photo-thumb-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(10, 17, 25, 0.54) 5%, rgba(10, 17, 25, 0) 36%);
-    pointer-events: none;
+  .photos-rail {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--photos-rail-width);
+    padding: 32px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    background: var(--photos-bg);
+    z-index: 40;
   }
 
-  .photo-thumb-copy {
-    position: absolute;
-    inset-inline: 1rem;
-    bottom: 1rem;
-    z-index: 1;
-    pointer-events: none;
+  .photos-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    color: white;
+    text-decoration: none;
+    padding: 0 16px;
+    height: 40px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff2442 0%, #ff4d6d 100%);
+    margin-bottom: 49px;
   }
 
-  .photo-thumb-title {
-    font-size: 1.2rem;
+  .photos-brand-mark {
+    display: none;
+  }
+
+  .photos-brand-copy {
+    font-size: 1.125rem;
     font-weight: 700;
-    line-height: 1.1;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    letter-spacing: -0.01em;
   }
 
-  .photos-empty {
-    min-height: calc(100vh - 160px);
+  .photos-rail-nav {
     display: grid;
-    place-items: center;
-    text-align: center;
-    padding: 2rem 1.5rem;
-    gap: 0.75rem;
+    gap: 8px;
   }
 
-  .photos-empty h1,
-  .photos-empty p {
-    margin: 0;
+  .photos-rail-item,
+  .photos-rail-more {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--photos-subtle);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
   }
 
-  .photos-empty p {
-    color: rgba(255, 255, 255, 0.72);
-  }
-
-  .photos-stage :global(.blog-pagination) {
-    margin: 1.5rem 0 0;
-    justify-content: flex-start;
-  }
-
-  .photos-stage :global(.blog-pagination-link) {
-    color: rgba(255, 255, 255, 0.68);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .photos-stage :global(.blog-pagination-link:hover) {
+  .photos-rail-item.is-active,
+  .photos-rail-item:hover,
+  .photos-rail-more:hover {
     background: rgba(255, 255, 255, 0.08);
     color: white;
   }
 
-  .photos-stage :global(.blog-pagination-current) {
-    background: white;
-    color: #111827;
+  .photos-rail-text {
+    font-size: 1rem;
+    font-weight: 600;
   }
 
-  .photos-toolbar {
-    position: fixed;
-    inset-inline: 0;
-    bottom: 0;
+  .photos-workspace {
+    margin-left: var(--photos-rail-width);
+    min-height: 100vh;
+  }
+
+  .photos-topbar {
+    position: sticky;
+    top: 0;
     z-index: 30;
-    min-height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 72px;
+    padding: 0 var(--photos-page-side);
+    background: #070707;
+  }
+
+  .photos-search-shell {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(32px + calc((1728px - 7 * 32px) / 6 * 2));
+    height: 48px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    color: var(--photos-subtle);
+  }
+
+  .photos-search-shell input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    color: white;
+    font: inherit;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  .photos-search-shell input::placeholder {
+    color: rgba(255, 255, 255, 0.34);
+  }
+
+  .photos-search-icon {
+    margin-right: 12px;
+    flex: 0 0 auto;
+  }
+
+  .photos-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .photos-top-actions a {
+    color: var(--photos-subtle);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .photos-top-actions a:hover {
+    color: white;
+  }
+
+  .photos-feed-page {
+    padding: 0 var(--photos-page-side) 40px;
+  }
+
+  .photos-channel-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 24px;
+    width: min(var(--photos-feed-width), 100%);
+    height: 72px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .photos-channel-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photos-channel {
+    border: 0;
+    background: transparent;
+    color: var(--photos-subtle);
+    padding: 0 16px;
+    height: 40px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .photos-channel:hover,
+  .photos-channel.is-active {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+  }
+
+  .photos-channel.is-active {
+    font-weight: 600;
+  }
+
+  .photos-feed {
+    width: min(var(--photos-feed-width), 100%);
+    margin: 0;
+    position: relative;
+    min-height: 0;
+  }
+
+  .photos-note-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    will-change: transform;
+  }
+
+  .photos-feed.is-static {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--photos-feed-layout-gap, var(--photos-gap-h));
+    flex-wrap: nowrap;
+  }
+
+  .photos-feed.is-static .photos-note-card {
+    position: relative;
+    transform: none !important;
+  }
+
+  .photos-note-trigger {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .photos-note-cover {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #141414;
+    outline: 1px solid rgba(255, 255, 255, 0.06);
+    outline-offset: -1px;
+  }
+
+  .photos-note-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 240ms ease;
+  }
+
+  .photos-note-trigger:hover .photos-note-cover img {
+    transform: scale(1.02);
+  }
+
+  .photos-note-copy {
+    padding: 12px 2px 0;
+  }
+
+  .photos-note-copy h2 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: white;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .photos-note-meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(24, 24, 24, 0.94);
-    backdrop-filter: blur(16px);
+    gap: 12px;
+    min-height: 20px;
+    color: var(--photos-subtle);
+    font-size: 12px;
   }
 
-  .photos-toolbar-brand {
-    min-width: 0;
-    display: flex;
+  .photos-note-author {
+    display: inline-flex;
     align-items: center;
-    gap: 1rem;
+    min-width: 0;
+    gap: 8px;
   }
 
-  .photos-toolbar-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
+  .photos-note-author img {
+    width: 20px;
+    height: 20px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     object-fit: cover;
     flex: 0 0 auto;
   }
 
-  .photos-toolbar-copy {
-    min-width: 0;
-    font-size: 1rem;
-    line-height: 1.25;
-    color: rgba(255, 255, 255, 0.9);
+  .photos-note-author span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .photos-toolbar-copy strong {
-    display: block;
-    font-weight: 500;
-  }
-
-  .photos-toolbar-actions {
-    display: flex;
+  .photos-note-like {
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 4px;
+    flex: 0 0 auto;
   }
 
-  .photos-toolbar-menu {
-    position: relative;
+  .photos-floating-actions {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 35;
   }
 
-  .photos-toolbar-menu > summary,
-  .photos-toolbar-icon-button {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.9);
-    cursor: pointer;
-    padding: 0.5rem 0.65rem;
-    font-size: 1rem;
-    line-height: 1;
+  .photos-floating-actions button {
+    width: 40px;
+    height: 40px;
     border-radius: 999px;
-    transition: background-color 180ms ease, color 180ms ease;
-    list-style: none;
-  }
-
-  .photos-toolbar-menu > summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .photos-toolbar-menu[open] > summary,
-  .photos-toolbar-icon-button:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .photos-toolbar-menu-panel {
-    position: absolute;
-    right: 0;
-    bottom: calc(100% + 0.65rem);
-    min-width: 12rem;
-    display: grid;
-    gap: 0.35rem;
-    padding: 0.55rem;
-    border-radius: 1rem;
-    background: rgba(21, 21, 21, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
-  }
-
-  .photos-toolbar-menu-item {
-    display: flex;
-    align-items: center;
-    min-height: 2.25rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.75rem;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 0.92rem;
-  }
-
-  .photos-toolbar-menu-item.is-active {
-    color: white;
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .photos-lightbox {
-    width: 100vw;
-    max-width: none;
-    height: 100vh;
-    max-height: none;
-    margin: 0;
-    padding: 0;
     border: 0;
-    background: transparent;
-    color: white;
-    overflow: visible;
-  }
-
-  .photos-lightbox[open] {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.88);
     display: grid;
     place-items: center;
+    cursor: pointer;
   }
 
-  .photos-lightbox::backdrop {
-    background: rgba(6, 9, 14, 0.72);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  :global(body.photos-modal-open) .photos-floating-actions {
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .photos-lightbox-frame {
+  .photos-note-modal {
+    --photos-note-panel-width: 488px;
+    --photos-note-max-width: 1216px;
+    --photos-note-media-width: calc(var(--photos-note-max-width) - var(--photos-note-panel-width));
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.66);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .photos-note-modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .photos-note-close-circle {
+    position: fixed;
+    left: 32px;
+    top: 32px;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(49, 49, 49, 0.72);
+    backdrop-filter: saturate(140%) blur(14px);
+    color: rgba(255, 255, 255, 0.92);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  .photos-note-close-circle:hover {
+    background: rgba(64, 64, 64, 0.88);
+    color: white;
+  }
+
+  .photos-note-dialog {
     position: relative;
-    display: inline-block;
-    max-width: calc(100vw - 100px);
-    background: rgba(31, 34, 36, 0.925);
-    box-shadow: 0 1em 3em 0.5em rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: min(calc(100vw - 64px), var(--photos-note-max-width));
+    height: calc(100vh - 64px);
+    border-radius: 20px;
+    overflow: hidden;
+    background: #151515;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32), 0 6px 24px rgba(0, 0, 0, 0.16);
+    transform: translateY(5px);
+    transition: transform 200ms ease, height 600ms ease;
+  }
+
+  .photos-note-modal.is-open .photos-note-dialog {
+    transform: translateY(0);
+  }
+
+  .photos-note-media {
+    position: relative;
+    flex: 0 0 var(--photos-note-media-width);
+    width: var(--photos-note-media-width);
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    min-width: 0;
+    border-radius: 20px 0 0 20px;
     overflow: hidden;
   }
 
-  .photos-lightbox-frame::before {
-    content: '';
+  .photos-note-media-backdrop {
     position: absolute;
-    inset: 0;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
+    inset: -24px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: blur(44px) saturate(145%);
+    transform: scale(1.08);
+    opacity: 0.58;
     pointer-events: none;
-    background-image:
-      linear-gradient(to left, rgba(31, 34, 36, 0.35), rgba(31, 34, 36, 0) 10em, rgba(31, 34, 36, 0)),
-      linear-gradient(to right, rgba(31, 34, 36, 0.35), rgba(31, 34, 36, 0) 10em, rgba(31, 34, 36, 0));
   }
 
-  .photos-lightbox-frame:hover::before {
-    opacity: 1;
-  }
-
-  .photos-lightbox-close,
-  .photos-lightbox-nav {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    color: white;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    z-index: 2;
-    transition: opacity 0.2s ease-in-out;
-  }
-
-  .photos-lightbox-frame:hover .photos-lightbox-close,
-  .photos-lightbox-frame:hover .photos-lightbox-nav {
-    opacity: 0.5;
-  }
-
-  @media (hover: none), (pointer: coarse) {
-    .photos-lightbox-close,
-    .photos-lightbox-nav {
-      opacity: 1;
-    }
-  }
-
-  .photos-lightbox-close:hover,
-  .photos-lightbox-nav:hover {
-    opacity: 1;
-  }
-
-  .photos-lightbox-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 5em;
-    height: 5em;
-  }
-
-  .photos-lightbox-nav {
-    position: absolute;
-    top: 50%;
-    margin-top: -4em;
-    width: 6em;
-    height: 8em;
-  }
-
-  .photos-lightbox-nav-prev {
-    left: 0;
-  }
-
-  .photos-lightbox-nav-next {
-    right: 0;
-  }
-
-  .photos-lightbox-nav:disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-
-  .photos-lightbox-figure {
-    margin: 0;
+  .photos-note-media-image {
     position: relative;
-  }
-
-  .photos-lightbox-image {
-    display: block;
-    max-width: min(calc(100vw - 100px), 1480px);
-    max-height: calc(100vh - 100px);
+    z-index: 1;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
-    border-radius: 0;
+    background: transparent;
   }
 
-  .photos-lightbox-caption {
+  .photos-note-media-nav {
+    display: none;
+  }
+
+  .photos-note-media-nav.is-prev {
+    left: 16px;
+  }
+
+  .photos-note-media-nav.is-next {
+    right: 16px;
+  }
+
+  .photos-note-dots {
     position: absolute;
-    inset-inline: 0;
-    bottom: 0;
     z-index: 2;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(64, 64, 64, 0.25);
+    backdrop-filter: saturate(150%) blur(10px);
+  }
+
+  .photos-note-dots button {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .photos-note-dots button.is-active {
+    width: 18px;
+    background: white;
+  }
+
+  .photos-note-panel {
+    flex: 0 0 var(--photos-note-panel-width);
+    width: var(--photos-note-panel-width);
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    padding: 2rem 2rem 0.1rem;
-    min-height: 13rem;
-    text-align: left;
-    background-image: linear-gradient(to top, rgba(16, 16, 16, 0.45) 25%, rgba(16, 16, 16, 0) 100%);
+    background: #151515;
+    border-radius: 0 20px 20px 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .photos-lightbox-title {
-    margin: 0;
-    font-size: 1.3rem;
-    font-weight: 700;
+  .photos-note-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px 16px;
+    min-height: 80px;
+  }
+
+  .photos-note-panel-author {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .photos-note-panel-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+
+  .photos-note-panel-author strong,
+  .photos-note-panel-author span {
+    display: block;
+  }
+
+  .photos-note-panel-author span[hidden] {
+    display: none;
+  }
+
+  .photos-note-panel-author strong {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .photos-note-panel-author span {
+    margin-top: 2px;
+    color: var(--photos-subtle);
+    font-size: 13px;
     line-height: 1.2;
   }
 
-  .photos-lightbox-description {
+  .photos-note-follow {
+    flex: 0 0 auto;
+    height: 40px;
+    min-width: 112px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--photos-accent);
+    color: white;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .photos-note-panel-scroll {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  .photos-note-panel-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photos-note-content,
+  .photos-note-comments {
+    padding-inline: 24px;
+  }
+
+  .photos-note-content {
+    padding-top: 0;
+    padding-bottom: 20px;
+  }
+
+  .photos-note-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: normal;
+  }
+
+  .photos-note-body,
+  .photos-note-hashtags,
+  .photos-note-date {
     margin: 0;
-    color: #ffffff;
     font-size: 15px;
     line-height: 1.5;
   }
 
-  .photos-lightbox-meta,
-  .photos-lightbox-tags,
-  .photos-lightbox-dots {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.65rem;
+  .photos-note-body {
+    color: rgba(255, 255, 255, 0.92);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
   }
 
-  .photos-lightbox-meta-item,
-  .photos-lightbox-category,
-  .photos-lightbox-taglist {
-    font-size: 0.92rem;
+  .photos-note-hashtags {
+    margin-top: 10px;
     color: rgba(255, 255, 255, 0.86);
   }
 
-  .photos-lightbox-dots {
-    gap: 0.5rem;
+  .photos-note-date-row {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
 
-  .photos-lightbox-dot {
-    appearance: none;
-    width: 8px;
-    height: 8px;
-    padding: 0;
+  .photos-note-date {
+    margin-top: 0;
+    color: var(--photos-subtle);
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .photos-note-more {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
     border: 0;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: var(--photos-subtle);
+    display: grid;
+    place-items: center;
     cursor: pointer;
-    transition: background-color 180ms ease, transform 180ms ease;
   }
 
-  .photos-lightbox-dot.is-active {
-    background: #ffffff;
-    transform: scale(1.15);
+  .photos-note-more:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.92);
   }
 
-  [data-photos-root]:fullscreen,
-  [data-photos-root]:-webkit-full-screen {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background: #181818;
+  .photos-note-divider {
+    margin: 0 24px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
   }
 
-  @media (max-width: 1680px) {
-    .photos-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+  .photos-note-comments {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-bottom: 0;
+  }
+
+  .photos-note-comments-summary {
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .photos-note-giscus {
+    flex: 1;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .photos-note-giscus-placeholder {
+    border: 1px dashed rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    padding: 20px 18px;
+    color: var(--photos-subtle);
+    font-size: 14px;
+    line-height: 1.5;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .photos-note-giscus :global(.giscus),
+  .photos-note-giscus :global(.giscus-frame) {
+    width: 100% !important;
+    flex: 1 1 auto;
+    min-height: 100% !important;
+    height: 100% !important;
+  }
+
+  @media (max-width: 1727px) {
+    .photos-shell .photos-search-shell {
+      width: calc(32px + calc((100vw - 7 * 32px) / 6 * 2));
+    }
+
+    .photos-shell .photos-note-modal {
+      --photos-note-panel-width: 468px;
+      --photos-note-max-width: calc(100vw - 64px);
+      --photos-note-media-width: calc(var(--photos-note-max-width) - var(--photos-note-panel-width));
     }
   }
 
-  @media (max-width: 1280px) {
-    .photos-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+  @media (max-width: 1423px) {
+    .photos-shell {
+      --feeds-columns: 4;
+      --photos-gap-v: 12px;
+      --photos-gap-h: 24px;
+      --photos-feed-width: calc(100vw - 72px - ((100vw - 6 * 24px) / 5));
+      --photos-page-side: 24px;
+    }
+
+    .photos-shell .photos-search-shell {
+      width: calc(24px + calc((100vw - 6 * 24px) / 5 * 2));
+    }
+
+    .photos-shell .photos-note-modal {
+      padding: 24px;
+      --photos-note-panel-width: 408px;
+      --photos-note-max-width: calc(100vw - 48px);
+      --photos-note-media-width: calc(var(--photos-note-max-width) - var(--photos-note-panel-width));
+    }
+
+    .photos-note-dialog {
+      width: min(calc(100vw - 48px), var(--photos-note-max-width));
+      height: calc(100vh - 48px);
     }
   }
 
-  @media (max-width: 980px) {
-    .photos-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (max-width: 1191px) {
+    .photos-shell {
+      --feeds-columns: 3;
+      --photos-feed-width: calc(100vw - 72px - ((100vw - 5 * 24px) / 4));
     }
 
-    .photos-toolbar {
-      padding-inline: 1rem;
+    .photos-topbar {
+      gap: 16px;
     }
 
-    .photos-toolbar-copy {
-      font-size: 0.92rem;
+    .photos-shell .photos-search-shell {
+      width: calc(24px + calc((100vw - 5 * 24px) / 4 * 2));
     }
+
+    .photos-top-actions {
+      gap: 18px;
+    }
+
+    .photos-shell .photos-note-modal {
+      padding: 24px;
+      --photos-note-panel-width: 360px;
+      --photos-note-max-width: calc(100vw - 48px);
+      --photos-note-media-width: calc(var(--photos-note-max-width) - var(--photos-note-panel-width));
+    }
+
+    .photos-note-dialog {
+      width: min(calc(100vw - 48px), var(--photos-note-max-width));
+      height: calc(100vh - 48px);
+    }
+
+    .photos-note-content h2 {
+      font-size: 18px;
+    }
+
+    .photos-note-panel-header {
+      padding: 20px;
+      min-height: 76px;
+    }
+
+    .photos-note-content,
+    .photos-note-comments {
+      padding-inline: 20px;
+    }
+
+    .photos-note-divider {
+      margin-inline: 20px;
+    }
+
   }
 
-  @media (max-width: 720px) {
-    .photos-grid {
-      grid-template-columns: 1fr;
+  @media (max-width: 959px) {
+    .photos-shell {
+      --feeds-columns: 3;
+      --photos-rail-width: 0px;
+      --photos-feed-width: calc(100vw - 24px);
+      --photos-page-side: 16px;
     }
 
-    .photos-lightbox {
-      max-width: 100vw;
-    }
-
-    .photos-lightbox-frame {
-      max-width: 100vw;
-      border-radius: 0;
-      margin-bottom: 120px;
-    }
-
-    .photos-lightbox-frame::before {
+    .photos-rail {
       display: none;
     }
 
-    .photos-lightbox-image {
+    .photos-workspace {
+      margin-left: 0;
+    }
+
+    .photos-topbar {
+      padding-inline: 16px;
+    }
+
+    .photos-search-shell {
+      position: relative;
+      left: 0;
+      transform: none;
+      width: calc(24px + calc((100vw - 4 * 24px) / 3 * 2));
+    }
+
+    .photos-top-actions {
+      display: none;
+    }
+
+    .photos-feed-page {
+      padding: 20px 16px 32px;
+    }
+
+    .photos-note-close-circle {
+      display: none;
+    }
+
+    .photos-shell .photos-note-modal {
+      padding: 16px;
+    }
+
+    .photos-note-dialog {
+      width: calc(100vw - 32px);
+      height: calc(100vh - 32px);
+      flex-direction: column;
+    }
+
+    .photos-note-panel {
       width: 100%;
-      max-width: 100vw;
-    }
-
-    .photos-lightbox-caption {
-      position: fixed;
-      inset-inline: 0;
-      bottom: 0;
-    }
-
-    .photos-lightbox-close,
-    .photos-lightbox-nav {
-      display: none !important;
+      flex-basis: 360px;
+      min-height: 0;
     }
   }
 
-  @media (max-width: 560px) {
-    .photos-toolbar {
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      align-items: flex-start;
+  @media (max-width: 695px) {
+    .photos-shell {
+      --feeds-columns: 2;
+      --photos-gap-v: 6px;
+      --photos-gap-h: 12px;
+      --photos-feed-width: calc(100vw - 24px);
+      --photos-page-side: 12px;
     }
 
-    .photos-toolbar-brand {
-      width: 100%;
+    .photos-topbar {
+      height: 64px;
     }
 
-    .photos-toolbar-actions {
-      width: 100%;
-      justify-content: flex-end;
+    .photos-search-shell {
+      width: 0;
+      height: 42px;
+      padding-inline: 0;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .photo-thumb-copy {
-      inset-inline: 0.85rem;
-      bottom: 0.85rem;
+    .photos-note-dialog {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
     }
 
-    .photo-thumb-title {
-      font-size: 1.05rem;
+    .photos-note-media {
+      border-radius: 0;
     }
 
-    .photo-thumb-description {
-      font-size: 0.88rem;
+    .photos-note-panel {
+      border-radius: 0;
+    }
+
+    .photos-note-content,
+    .photos-note-comments {
+      padding-inline: 16px;
+    }
+
+    .photos-note-divider {
+      margin-inline: 16px;
+    }
+
+    .photos-note-panel-header {
+      padding: 16px;
+      min-height: 72px;
+    }
+
+    .photos-floating-actions {
+      display: none;
     }
   }
 </style>
