@@ -2,6 +2,7 @@ export const fr = {
   nav: {
     blog: 'Blog',
     gallery: 'Photos',
+    directory: 'Annuaire',
     about: 'À propos',
   },
   blog: {

@@ -2,6 +2,7 @@ export const ru = {
   nav: {
     blog: 'Блог',
     gallery: 'Фото',
+    directory: 'Каталог',
     about: 'О нас',
   },
   blog: {

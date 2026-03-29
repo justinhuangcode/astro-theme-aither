@@ -2,6 +2,7 @@ export const de = {
   nav: {
     blog: 'Blog',
     gallery: 'Fotos',
+    directory: 'Verzeichnis',
     about: 'Über',
   },
   blog: {

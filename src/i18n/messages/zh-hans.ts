@@ -2,6 +2,7 @@ export const zhHans = {
   nav: {
     blog: '博客',
     gallery: '照片',
+    directory: '导航',
     about: '关于',
   },
   blog: {
