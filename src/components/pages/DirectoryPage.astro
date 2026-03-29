@@ -131,12 +131,16 @@ const description = content.heroSubtitle;
 
 <script>
   const links = Array.from(
-    document.querySelectorAll('[data-directory-sidebar-link], [data-directory-mobile-link]')
+    document.querySelectorAll<HTMLElement>(
+      '[data-directory-sidebar-link], [data-directory-mobile-link]'
+    )
   );
-  const sections = Array.from(document.querySelectorAll('[data-directory-group-section]'));
+  const sections = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-directory-group-section]')
+  );
 
   if (links.length > 0 && sections.length > 0) {
-    const setActiveLink = (id) => {
+    const setActiveLink = (id: string) => {
       links.forEach((link) => {
         link.classList.toggle('is-active', link.dataset.target === id);
       });
