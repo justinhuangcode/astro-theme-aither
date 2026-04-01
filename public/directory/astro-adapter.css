@@ -1,0 +1,18 @@
+.left_nav_item {
+  justify-content: flex-start;
+}
+
+a.left_nav_link_group_title {
+  gap: 16px;
+  text-align: left;
+}
+
+a.left_nav_link_group_title span {
+  flex: 1;
+  text-align: left;
+  line-height: 1.35;
+}
+
+.link_group_content_item_logo_img {
+  object-fit: contain;
+}

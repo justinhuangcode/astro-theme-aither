@@ -1,316 +1,226 @@
+import { directoryGroupsSource, type LocalizedDirectoryValue } from '@/data/directory-heolink';
+import { siteConfig } from '@/config/site';
 import { getLocalizedPath, type Locale } from '@/i18n';
 
-export type DirectoryIconName =
-  | 'services'
-  | 'design-sites'
-  | 'operations'
-  | 'assets'
-  | 'ai-tools';
-
-type LocalizedValue = string | Partial<Record<Locale, string>>;
-
-interface DirectoryLinkSource {
-  title: LocalizedValue;
-  description: LocalizedValue;
-  href?: string;
-  localPath?: string;
-  logo: string;
-}
-
-interface DirectoryGroupSource {
-  id: string;
-  title: LocalizedValue;
-  icon: DirectoryIconName;
-  items: DirectoryLinkSource[];
-}
-
-interface DirectoryPageCopy {
-  heroTitle: LocalizedValue;
-  heroSubtitle: LocalizedValue;
-  sidebarFooter: LocalizedValue;
-  sidebarThemeAttribution: LocalizedValue;
-}
-
 export interface DirectoryLink {
-  title: string;
-  description: string;
+  spec: {
+    displayName: string;
+    description: string;
+    url: string;
+    logo?: string;
+  };
+  annotations: {
+    show_link_anonymous: 'true' | 'false';
+    to_post_radio: 'true' | 'false';
+  };
   href: string;
   external: boolean;
-  logo: string;
+  displayLogo: string;
 }
 
 export interface DirectoryGroup {
-  id: string;
-  title: string;
-  icon: DirectoryIconName;
-  items: DirectoryLink[];
+  spec: {
+    displayName: string;
+  };
+  annotations: {
+    icon: string;
+    show_on_heolink: 'true' | 'false';
+    show_group_anonymous: 'true' | 'false';
+  };
+  links: DirectoryLink[];
+  anchorId: string;
 }
 
-export interface DirectoryPageContent {
-  heroTitle: string;
-  heroSubtitle: string;
-  heroImage: string;
-  logoImage: string;
-  sidebarFooter: string;
-  sidebarThemeAttribution: string;
+interface DirectorySearchConfig {
+  engine: string;
+  icon: string;
+  placeholder: string;
+  isPostChat: boolean;
+  isLocal: boolean;
+}
+
+export interface DirectoryContent {
+  pageTitle: string;
+  siteTitle: string;
+  siteSubtitle: string;
+  backgroundColor: string;
+  showCoverImage: boolean;
+  coverImage: string;
+  siteLogo: string;
+  footerThemeAttribution: string;
+  footerThemeUrl: string;
+  footerIcp: string;
+  footerIcp2: string;
+  consoleHref: string;
+  consoleTitle: string;
+  postchatEnabled: boolean;
+  postchatButtonText: string;
+  postchatButtonHref: string;
+  search: DirectorySearchConfig;
   groups: DirectoryGroup[];
 }
 
-const pageCopy: DirectoryPageCopy = {
-  heroTitle: {
-    en: "Heo's Living Directory",
-    'zh-hans': 'Heo的生活导航',
-    'zh-hant': 'Heo 的生活導航',
-  },
-  heroSubtitle: {
-    en: 'A curated collection of useful places on the web.',
-    'zh-hans': '分享有趣的站点',
-    'zh-hant': '分享有趣的站點',
-  },
-  sidebarFooter: {
-    en: 'Curated for Aither',
-    'zh-hans': 'Aither 导航目录',
-    'zh-hant': 'Aither 導航目錄',
-  },
-  sidebarThemeAttribution: 'Theme HeoLink by Halo',
-};
+const SEARCH_ICONS = {
+  baidu: '/directory/heolink/images/search/baidu.svg',
+  google: '/directory/heolink/images/search/google.svg',
+  bing: '/directory/heolink/images/search/bing.svg',
+  sougou: '/directory/heolink/images/search/sougou.svg',
+  local: '/directory/heolink/images/search/local.svg',
+  postchat: '/directory/heolink/images/search/postchat.svg',
+} as const;
 
-const groups: DirectoryGroupSource[] = [
-  {
-    id: 'self-hosted-services',
-    title: {
-      en: 'Self-Hosted Services',
-      'zh-hans': '自建服务',
-      'zh-hant': '自建服務',
-    },
-    icon: 'services',
-    items: [
-      {
-        title: {
-          en: 'App Icon Library',
-          'zh-hans': '应用图标库',
-          'zh-hant': '應用圖標庫',
-        },
-        description: {
-          en: 'Quickly fetch polished app icon assets.',
-          'zh-hans': '快速获取应用图标图片',
-          'zh-hant': '快速獲取應用圖標圖片',
-        },
-        href: 'https://icon.zhheo.com/#!/',
-        logo: '/directory/logos/app-icon-library.webp',
-      },
-      {
-        title: 'HeoChat',
-        description: {
-          en: 'A public GPT chat service for lightweight conversations.',
-          'zh-hans': '免费 GPT 对话公益服务',
-          'zh-hant': '免費 GPT 對話公益服務',
-        },
-        href: 'https://chat.zhheo.com/',
-        logo: '/directory/logos/heochat.webp',
-      },
-    ],
-  },
-  {
-    id: 'design-sites',
-    title: {
-      en: 'Design Sites',
-      'zh-hans': '设计网站',
-      'zh-hant': '設計網站',
-    },
-    icon: 'design-sites',
-    items: [
-      {
-        title: 'Behance',
-        description: {
-          en: "Adobe's showcase platform for design work.",
-          'zh-hans': 'Adobe 旗下设计作品发布网站',
-          'zh-hant': 'Adobe 旗下設計作品發布網站',
-        },
-        href: 'https://www.behance.net/',
-        logo: '/directory/logos/behance.png',
-      },
-      {
-        title: 'Dribbble',
-        description: {
-          en: 'A creative community for illustration and UI design.',
-          'zh-hans': '插画与 UI 设计交流社区',
-          'zh-hant': '插畫與 UI 設計交流社區',
-        },
-        href: 'https://dribbble.com/shots',
-        logo: '/directory/logos/dribbble.png',
-      },
-      {
-        title: 'Pinterest',
-        description: {
-          en: 'A giant canvas for collecting and sharing visual references.',
-          'zh-hans': '全球最大的素材管理与分享社区',
-          'zh-hant': '全球最大的素材管理與分享社區',
-        },
-        href: 'https://www.pinterest.com/',
-        logo: '/directory/logos/pinterest.png',
-      },
-      {
-        title: {
-          en: 'Article Demo',
-          'zh-hans': '文章演示',
-          'zh-hant': '文章演示',
-        },
-        description: {
-          en: 'A local article sample inside Aither.',
-          'zh-hans': 'Aither 站内的文章样例',
-          'zh-hant': 'Aither 站內的文章樣例',
-        },
-        localPath: '/posts/hello-world',
-        logo: '/directory/logos/article-demo.jpg',
-      },
-    ],
-  },
-  {
-    id: 'operations-links',
-    title: {
-      en: 'Operations Links',
-      'zh-hans': '运营链接',
-      'zh-hant': '運營鏈接',
-    },
-    icon: 'operations',
-    items: [
-      {
-        title: {
-          en: 'WeChat Official Account',
-          'zh-hans': '微信公众号',
-          'zh-hant': '微信公眾號',
-        },
-        description: {
-          en: 'Tencent’s official platform for running WeChat accounts.',
-          'zh-hans': '腾讯微信公众号开放平台',
-          'zh-hant': '騰訊微信公眾號開放平台',
-        },
-        href: 'https://mp.weixin.qq.com/',
-        logo: '/directory/logos/wechat-official.png',
-      },
-    ],
-  },
-  {
-    id: 'design-assets',
-    title: {
-      en: 'Design Assets',
-      'zh-hans': '设计素材',
-      'zh-hant': '設計素材',
-    },
-    icon: 'assets',
-    items: [
-      {
-        title: 'Iconfont',
-        description: {
-          en: "Alibaba's icon exchange community.",
-          'zh-hans': '阿里旗下的图标交流社区',
-          'zh-hant': '阿里旗下的圖標交流社區',
-        },
-        href: 'https://www.iconfont.cn/',
-        logo: '/directory/logos/iconfont.png',
-      },
-      {
-        title: 'Unsplash',
-        description: {
-          en: 'Free-to-use photography and reference images.',
-          'zh-hans': '摄影师交流社区，免费可商用版权图片',
-          'zh-hant': '攝影師交流社區，免費可商用版權圖片',
-        },
-        href: 'https://unsplash.com/',
-        logo: '/directory/logos/unsplash.png',
-      },
-      {
-        title: 'Pexels',
-        description: {
-          en: 'A broad library of free commercial photo assets.',
-          'zh-hans': '免费可商用图片社区',
-          'zh-hant': '免費可商用圖片社區',
-        },
-        href: 'https://www.pexels.com/zh-cn/',
-        logo: '/directory/logos/pexels.png',
-      },
-    ],
-  },
-  {
-    id: 'ai-tools',
-    title: {
-      en: 'AI Tools',
-      'zh-hans': 'AI 工具',
-      'zh-hant': 'AI 工具',
-    },
-    icon: 'ai-tools',
-    items: [
-      {
-        title: 'Midjourney',
-        description: {
-          en: 'A strong image generation workflow for visual exploration.',
-          'zh-hans': '最强大的 AI 绘画工具',
-          'zh-hant': '最強大的 AI 繪畫工具',
-        },
-        href: 'https://www.midjourney.com/home',
-        logo: '/directory/logos/midjourney.jpg',
-      },
-      {
-        title: 'ChatGPT',
-        description: {
-          en: 'A versatile AI conversation assistant for daily work.',
-          'zh-hans': '最好用的 AI 对话助理',
-          'zh-hant': '最好用的 AI 對話助理',
-        },
-        href: 'https://chatgpt.com/',
-        logo: '/directory/logos/chatgpt.jpg',
-      },
-    ],
-  },
-];
+function createDirectoryAnchorId(input: string, index: number): string {
+  const slug = input
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
-function resolveText(value: LocalizedValue, locale: Locale): string {
-  if (typeof value === 'string') return value;
-  if (value[locale]) return value[locale]!;
-  if (locale === 'zh-hant' && value['zh-hans']) return value['zh-hans']!;
-  return value.en ?? value['zh-hans'] ?? Object.values(value)[0] ?? '';
+  return slug ? `directory-group-${index + 1}-${slug}` : `directory-group-${index + 1}`;
 }
 
-function resolveHref(
-  source: DirectoryLinkSource,
-  locale: Locale,
-): { href: string; external: boolean } {
-  if (source.localPath) {
+function resolveLocalizedValue(locale: Locale, value: LocalizedDirectoryValue): string {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  return value[locale] ?? value.en ?? value['zh-hans'] ?? value['zh-hant'] ?? '';
+}
+
+function resolveSearchConfig(locale: Locale): DirectorySearchConfig {
+  const rawEngine = siteConfig.directoryHeolink?.searchEngine?.trim() ?? '';
+  const normalizedEngine =
+    rawEngine !== ''
+      ? rawEngine
+      : locale === 'zh-hans' || locale === 'zh-hant'
+        ? 'https://www.baidu.com/s?wd='
+        : 'https://www.google.com/search?q=';
+
+  if (normalizedEngine === 'postchat') {
     return {
-      href: getLocalizedPath(source.localPath, locale),
+      engine: normalizedEngine,
+      icon: SEARCH_ICONS.postchat,
+      placeholder: siteConfig.directoryHeolink?.searchPlaceholder ?? '输入搜索内容...',
+      isPostChat: true,
+      isLocal: false,
+    };
+  }
+
+  if (normalizedEngine === 'local') {
+    return {
+      engine: normalizedEngine,
+      icon: SEARCH_ICONS.local,
+      placeholder: siteConfig.directoryHeolink?.searchPlaceholder ?? '输入搜索内容...',
+      isPostChat: false,
+      isLocal: true,
+    };
+  }
+
+  const searchEngineMap = [
+    ['baidu', 'baidu.com/s?wd='],
+    ['google', 'google.com/search?q='],
+    ['bing', 'bing.com/search?q='],
+    ['bing', 'cn.bing.com/search?q='],
+    ['sougou', 'sogou.com/web?query='],
+  ] as const;
+
+  const searchKey =
+    searchEngineMap.find(([, match]) => normalizedEngine.includes(match))?.[0] ?? 'google';
+
+  return {
+    engine: normalizedEngine,
+    icon: SEARCH_ICONS[searchKey],
+    placeholder: siteConfig.directoryHeolink?.searchPlaceholder ?? '输入搜索内容...',
+    isPostChat: false,
+    isLocal: false,
+  };
+}
+
+function resolveDirectoryHref(locale: Locale, url: string): { href: string; external: boolean } {
+  if (url.startsWith('/')) {
+    return {
+      href: getLocalizedPath(url, locale),
       external: false,
     };
   }
 
   return {
-    href: source.href ?? '#',
+    href: url || '#',
     external: true,
   };
 }
 
-export function getDirectoryContent(locale: Locale): DirectoryPageContent {
-  return {
-    heroTitle: resolveText(pageCopy.heroTitle, locale),
-    heroSubtitle: resolveText(pageCopy.heroSubtitle, locale),
-    heroImage: '/directory/cover/index-cover2.jpg',
-    logoImage: '/directory/logo/sidebar-logo.png',
-    sidebarFooter: resolveText(pageCopy.sidebarFooter, locale),
-    sidebarThemeAttribution: resolveText(pageCopy.sidebarThemeAttribution, locale),
-    groups: groups.map((group) => ({
-      id: group.id,
-      title: resolveText(group.title, locale),
-      icon: group.icon,
-      items: group.items.map((item) => {
-        const { href, external } = resolveHref(item, locale);
+function resolveDirectoryLogo(url: string, logo?: string): string {
+  if (logo) {
+    return logo;
+  }
+
+  const iconApi =
+    siteConfig.directoryHeolink?.iconApi?.trim() || 'https://api.zhheo.com/favicon/get.php?url={url}';
+  return iconApi.replace('{url}', url);
+}
+
+export function getDirectoryContent(locale: Locale): DirectoryContent {
+  const siteTitle = siteConfig.directoryHeolink?.siteTitle?.trim() || siteConfig.name;
+  const siteSubtitle = siteConfig.directoryHeolink?.siteSubtitle?.trim() || siteConfig.description;
+  const pageTitle =
+    siteConfig.directoryHeolink?.indexTitle?.trim() || `${siteTitle} | ${siteConfig.name}`;
+
+  const groups: DirectoryGroup[] = directoryGroupsSource.map((group, index) => {
+    const displayName = resolveLocalizedValue(locale, group.spec.displayName);
+
+    return {
+      spec: {
+        displayName,
+      },
+      annotations: {
+        icon: group.annotations.icon,
+        show_on_heolink: group.annotations.show_on_heolink ?? 'true',
+        show_group_anonymous: group.annotations.show_group_anonymous ?? 'false',
+      },
+      links: group.links.map((link) => {
+        const resolved = resolveDirectoryHref(locale, link.spec.url);
         return {
-          title: resolveText(item.title, locale),
-          description: resolveText(item.description, locale),
-          href,
-          external,
-          logo: item.logo,
+          spec: {
+            displayName: resolveLocalizedValue(locale, link.spec.displayName),
+            description: resolveLocalizedValue(locale, link.spec.description),
+            url: link.spec.url,
+            logo: link.spec.logo,
+          },
+          annotations: {
+            show_link_anonymous: link.annotations?.show_link_anonymous ?? 'false',
+            to_post_radio: link.annotations?.to_post_radio ?? 'false',
+          },
+          href: resolved.href,
+          external: resolved.external,
+          displayLogo: resolveDirectoryLogo(link.spec.url, link.spec.logo),
         };
       }),
-    })),
+      anchorId: createDirectoryAnchorId(displayName, index),
+    };
+  });
+
+  return {
+    pageTitle,
+    siteTitle,
+    siteSubtitle,
+    backgroundColor: siteConfig.directoryHeolink?.backgroundColor?.trim() || '#f2f2f2',
+    showCoverImage: siteConfig.directoryHeolink?.showCoverImage ?? true,
+    coverImage:
+      siteConfig.directoryHeolink?.coverImage?.trim() || '/directory/heolink/images/index_cover2.jpg',
+    siteLogo:
+      siteConfig.directoryHeolink?.logoImage?.trim() || '/directory/heolink/upload/logo_cover.png',
+    footerThemeAttribution: 'Theme HeoLink by Halo',
+    footerThemeUrl: 'https://github.com/zhheo/halo-theme-heolink',
+    footerIcp: siteConfig.directoryHeolink?.indexIcp?.trim() || '',
+    footerIcp2: siteConfig.directoryHeolink?.indexIcp2?.trim() || '',
+    consoleHref: siteConfig.directoryHeolink?.consoleHref?.trim() || '',
+    consoleTitle: siteConfig.directoryHeolink?.consoleTitle?.trim() || '管理后台',
+    postchatEnabled: siteConfig.directoryHeolink?.postchatEnable ?? false,
+    postchatButtonText: siteConfig.directoryHeolink?.postchatButtonText?.trim() || '智能对话',
+    postchatButtonHref: siteConfig.directoryHeolink?.postchatButtonHref?.trim() || '',
+    search: resolveSearchConfig(locale),
+    groups,
   };
 }

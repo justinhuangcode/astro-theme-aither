@@ -91,6 +91,26 @@ export interface SitePhotosGalleryConfig {
   ogImage?: string;
 }
 
+export interface SiteDirectoryHeolinkConfig {
+  indexTitle?: string;
+  siteTitle?: string;
+  siteSubtitle?: string;
+  indexIcp?: string;
+  indexIcp2?: string;
+  searchEngine?: string;
+  searchPlaceholder?: string;
+  iconApi?: string;
+  consoleHref?: string;
+  consoleTitle?: string;
+  backgroundColor?: string;
+  showCoverImage?: boolean;
+  coverImage?: string;
+  logoImage?: string;
+  postchatEnable?: boolean;
+  postchatButtonText?: string;
+  postchatButtonHref?: string;
+}
+
 export interface AitherSiteConfig {
   name: string;
   title: string;
@@ -110,6 +130,7 @@ export interface AitherSiteConfig {
   nav: SiteNavItem[];
   footer: SiteFooterConfig;
   photosGallery?: SitePhotosGalleryConfig;
+  directoryHeolink?: SiteDirectoryHeolinkConfig;
 }
 
 export declare function defineAitherSiteConfig<T extends AitherSiteConfig>(config: T): T;

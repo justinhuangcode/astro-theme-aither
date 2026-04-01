@@ -1,0 +1,96 @@
+---
+interface Props {
+  searchEngineUrl: string;
+  searchIcon: string;
+  placeholder: string;
+}
+
+const { searchEngineUrl, searchIcon, placeholder } = Astro.props;
+---
+
+{
+  searchEngineUrl !== '' ? (
+    <div class="widget_search">
+      <div class="search-engine-icon">
+        <img src={searchIcon} alt="" loading="lazy" decoding="async" />
+      </div>
+
+      <form id="searchForm" method="get" role="search" autocomplete="off">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder={placeholder}
+          aria-label={placeholder}
+        />
+        <button type="submit" aria-label={placeholder}>
+          <i class="ri-search-2-line"></i>
+        </button>
+      </form>
+    </div>
+  ) : null
+}
+
+<script is:inline define:vars={{ searchEngineUrl }}>
+  function initDirectorySearch() {
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    const button = form?.querySelector('button');
+
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !(input instanceof HTMLInputElement) ||
+      !(button instanceof HTMLButtonElement)
+    ) {
+      return;
+    }
+
+    input.disabled = false;
+    button.disabled = false;
+    input.onclick = null;
+    form.onsubmit = null;
+
+    if (searchEngineUrl === 'postchat') {
+      if (typeof window.postChatUser === 'undefined') {
+        input.placeholder = '未安装PostChat插件';
+        input.disabled = true;
+        button.disabled = true;
+        return;
+      }
+
+      form.onsubmit = function (event) {
+        event.preventDefault();
+        window.postChatUser.sendSearchMsg(input.value);
+      };
+      return;
+    }
+
+    if (searchEngineUrl === 'local') {
+      if (typeof window.SearchWidget === 'undefined') {
+        input.placeholder = '未安装搜索组件插件';
+        input.disabled = true;
+        button.disabled = true;
+        return;
+      }
+
+      form.onsubmit = function (event) {
+        event.preventDefault();
+        window.SearchWidget.open();
+      };
+      input.onclick = function () {
+        window.SearchWidget.open();
+      };
+      return;
+    }
+
+    const urlParts = searchEngineUrl.split('?');
+    const baseUrl = urlParts[0];
+    const paramName = urlParts.length > 1 ? urlParts[1].split('=')[0] : '';
+
+    form.action = `${baseUrl}?`;
+    input.name = paramName || 'q';
+  }
+
+  document.addEventListener('DOMContentLoaded', initDirectorySearch);
+  document.addEventListener('astro:page-load', initDirectorySearch);
+  document.addEventListener('pjax:complete', initDirectorySearch);
+</script>

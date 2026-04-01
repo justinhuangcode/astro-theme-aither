@@ -1,0 +1,88 @@
+---
+import type { Locale } from '@/i18n';
+import type { DirectoryGroup } from '@/lib/directory';
+import HeolinkNav from '@/components/directory/HeolinkNav.astro';
+
+interface Props {
+  locale: Locale;
+  pageTitle: string;
+  description: string;
+  backgroundColor: string;
+  directoryHref: string;
+  siteTitle: string;
+  logoImage: string;
+  footerThemeAttribution: string;
+  footerThemeUrl: string;
+  footerIcp: string;
+  footerIcp2: string;
+  postchatEnabled: boolean;
+  postchatButtonText: string;
+  postchatButtonHref: string;
+  consoleHref?: string;
+  consoleTitle?: string;
+  groups: DirectoryGroup[];
+}
+
+const {
+  locale,
+  pageTitle,
+  description,
+  backgroundColor,
+  directoryHref,
+  siteTitle,
+  logoImage,
+  footerThemeAttribution,
+  footerThemeUrl,
+  footerIcp,
+  footerIcp2,
+  postchatEnabled,
+  postchatButtonText,
+  postchatButtonHref,
+  consoleHref,
+  consoleTitle,
+  groups,
+} = Astro.props;
+const heroHref = directoryHref;
+---
+
+<!DOCTYPE html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="stylesheet" href="/directory/heolink/css/style.css" />
+    <link rel="stylesheet" href="/directory/astro-adapter.css" />
+    <link rel="stylesheet" href="/directory/heolink/fonts/remixicon.css" />
+    <script is:inline src="/directory/heolink/js/main.js"></script>
+    <script is:inline src="/directory/heolink/js/heolink.js"></script>
+    <script is:inline src="/directory/heolink/js/pjax.min.js"></script>
+  </head>
+  <body style={`background-color: ${backgroundColor}`}>
+    <section>
+      <div class="heolink_site">
+        <HeolinkNav
+          heroHref={heroHref}
+          siteTitle={siteTitle}
+          logoImage={logoImage}
+          footerThemeAttribution={footerThemeAttribution}
+          footerThemeUrl={footerThemeUrl}
+          footerIcp={footerIcp}
+          footerIcp2={footerIcp2}
+          postchatEnabled={postchatEnabled}
+          postchatButtonText={postchatButtonText}
+          postchatButtonHref={postchatButtonHref}
+          consoleHref={consoleHref}
+          consoleTitle={consoleTitle}
+          groups={groups}
+        />
+
+        <div id="web_content">
+          <slot />
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
