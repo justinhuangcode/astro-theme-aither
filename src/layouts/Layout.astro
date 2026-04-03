@@ -385,6 +385,7 @@ const alternateUrls = locales.map((l) => ({
         mediaQuery.addEventListener('change', syncSystemTheme);
       }
     </script>
+    <slot name="head" />
   </head>
   <body
     class:list={['font-body antialiased bg-background text-foreground', bodyClass]}

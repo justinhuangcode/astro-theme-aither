@@ -2,6 +2,7 @@
 import type { Locale } from '@/i18n';
 import type { DirectoryGroup } from '@/lib/directory';
 import HeolinkNav from '@/components/directory/HeolinkNav.astro';
+import Layout from '@/layouts/Layout.astro';
 
 interface Props {
   locale: Locale;
@@ -45,44 +46,79 @@ const {
 const heroHref = directoryHref;
 ---
 
-<!DOCTYPE html>
-<html lang={locale}>
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+<Layout
+  title={pageTitle}
+  description={description}
+  hideFooter={true}
+  hideLocaleBanner={true}
+  hideThemeEffects={true}
+  bodyClass="directory-page"
+  mainClass="directory-main"
+>
+  <Fragment slot="head">
     <link rel="stylesheet" href="/directory/heolink/css/style.css" />
     <link rel="stylesheet" href="/directory/astro-adapter.css" />
     <link rel="stylesheet" href="/directory/heolink/fonts/remixicon.css" />
     <script is:inline src="/directory/heolink/js/main.js"></script>
     <script is:inline src="/directory/heolink/js/heolink.js"></script>
     <script is:inline src="/directory/heolink/js/pjax.min.js"></script>
-  </head>
-  <body style={`background-color: ${backgroundColor}`}>
-    <section>
-      <div class="heolink_site">
-        <HeolinkNav
-          heroHref={heroHref}
-          siteTitle={siteTitle}
-          logoImage={logoImage}
-          footerThemeAttribution={footerThemeAttribution}
-          footerThemeUrl={footerThemeUrl}
-          footerIcp={footerIcp}
-          footerIcp2={footerIcp2}
-          postchatEnabled={postchatEnabled}
-          postchatButtonText={postchatButtonText}
-          postchatButtonHref={postchatButtonHref}
-          consoleHref={consoleHref}
-          consoleTitle={consoleTitle}
-          groups={groups}
-        />
+  </Fragment>
 
-        <div id="web_content">
-          <slot />
-        </div>
+  <section class="directory-shell" style={`background-color: ${backgroundColor}`}>
+    <div class="heolink_site">
+      <HeolinkNav
+        heroHref={heroHref}
+        siteTitle={siteTitle}
+        logoImage={logoImage}
+        footerThemeAttribution={footerThemeAttribution}
+        footerThemeUrl={footerThemeUrl}
+        footerIcp={footerIcp}
+        footerIcp2={footerIcp2}
+        postchatEnabled={postchatEnabled}
+        postchatButtonText={postchatButtonText}
+        postchatButtonHref={postchatButtonHref}
+        consoleHref={consoleHref}
+        consoleTitle={consoleTitle}
+        groups={groups}
+      />
+
+      <div id="web_content">
+        <slot />
       </div>
-    </section>
-  </body>
-</html>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  body.directory-page {
+    overflow: hidden;
+  }
+
+  main.directory-main {
+    display: flex;
+    min-height: 0;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .directory-shell {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .directory-shell .heolink_site {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .directory-shell #web_content {
+    min-height: 0;
+  }
+
+  body.directory-page .site-nav,
+  body.directory-page .site-nav * {
+    box-sizing: border-box;
+    font-family: var(--font-body);
+  }
+ </style>
