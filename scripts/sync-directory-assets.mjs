@@ -1,4 +1,4 @@
-import { access, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
@@ -28,6 +28,7 @@ const skipPatterns = [
   /\/symbol\.html$/i,
   /\/unicode\.html$/i,
 ];
+const TS_NO_CHECK_HEADER = '// @ts-nocheck\n';
 
 function shouldCopy(sourcePath) {
   return !skipPatterns.some((pattern) => pattern.test(sourcePath));
@@ -39,6 +40,35 @@ async function pathExists(targetPath) {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function annotateJavaScriptFiles(rootDir) {
+  if (!(await pathExists(rootDir))) {
+    return;
+  }
+
+  const entries = await readdir(rootDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const entryPath = path.join(rootDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await annotateJavaScriptFiles(entryPath);
+      continue;
+    }
+
+    if (!entry.isFile() || path.extname(entry.name) !== '.js') {
+      continue;
+    }
+
+    const source = await readFile(entryPath, 'utf8');
+
+    if (source.startsWith(TS_NO_CHECK_HEADER)) {
+      continue;
+    }
+
+    await writeFile(entryPath, `${TS_NO_CHECK_HEADER}${source}`, 'utf8');
   }
 }
 
@@ -109,6 +139,7 @@ async function main() {
   const normalizedSidebarLogo = path.join(uploadDestination, 'logo_cover.png');
 
   await cp(legacySidebarLogo, normalizedSidebarLogo, { force: true });
+  await annotateJavaScriptFiles(path.join(destinationRoot, 'js'));
 
   console.log(
     `Synced Directory assets from ${formatRepoPath(sourceRoot)} to ${formatRepoPath(destinationRoot)}`,

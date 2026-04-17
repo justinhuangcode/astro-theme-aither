@@ -13,6 +13,7 @@ const tempModule = path.join(tempDir, 'directory-links.mjs');
 
 const DEFAULT_LOCALE = 'en';
 const LOCALES = ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'];
+const TS_NO_CHECK_HEADER = '// @ts-nocheck\n';
 
 function getOutputPath() {
   const outputFlagIndex = process.argv.indexOf('--output');
@@ -67,6 +68,31 @@ function normalizePagefindLanguage(locale) {
 function buildDirectoryPath(locale, anchorId) {
   const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
   return `${prefix}/directory#${anchorId}`;
+}
+
+async function annotateJavaScriptFiles(rootDir) {
+  const entries = await fs.readdir(rootDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const entryPath = path.join(rootDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await annotateJavaScriptFiles(entryPath);
+      continue;
+    }
+
+    if (!entry.isFile() || path.extname(entry.name) !== '.js') {
+      continue;
+    }
+
+    const source = await fs.readFile(entryPath, 'utf8');
+
+    if (source.startsWith(TS_NO_CHECK_HEADER)) {
+      continue;
+    }
+
+    await fs.writeFile(entryPath, `${TS_NO_CHECK_HEADER}${source}`, 'utf8');
+  }
 }
 
 try {
@@ -130,6 +156,7 @@ try {
   }
 
   await index.writeFiles({ outputPath });
+  await annotateJavaScriptFiles(outputPath);
 } finally {
   await close();
   await fs.rm(tempDir, { force: true, recursive: true });

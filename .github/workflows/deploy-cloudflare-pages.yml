@@ -11,6 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
   CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME || github.event.repository.name }}
   WRANGLER_VERSION: 4.76.0
   PUBLIC_GA_ID: ${{ vars.PUBLIC_GA_ID || '' }}
