@@ -56,7 +56,7 @@ export const it = {
   },
   about: {
     title: 'Chi siamo',
-    description: 'Un blog minimalista realizzato con <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>.',
+    description: 'Un blog minimalista realizzato con <a href="https://github.com/justinhuangai/astro-theme-aither">Astro-Theme-Aither</a>.',
   },
   galleryPage: {
     name: 'Foto',

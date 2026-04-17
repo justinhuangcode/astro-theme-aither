@@ -56,7 +56,7 @@ export const de = {
   },
   about: {
     title: 'Über',
-    description: 'Ein minimalistischer Blog, erstellt mit <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>.',
+    description: 'Ein minimalistischer Blog, erstellt mit <a href="https://github.com/justinhuangai/astro-theme-aither">Astro-Theme-Aither</a>.',
   },
   galleryPage: {
     name: 'Fotos',

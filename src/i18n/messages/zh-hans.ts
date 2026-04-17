@@ -56,7 +56,7 @@ export const zhHans = {
   },
   about: {
     title: '关于',
-    description: '这是一个基于 <a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a> 的极简博客。',
+    description: '这是一个基于 <a href="https://github.com/justinhuangai/astro-theme-aither">Astro-Theme-Aither</a> 的极简博客。',
   },
   galleryPage: {
     name: '照片',

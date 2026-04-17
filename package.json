@@ -5,13 +5,13 @@
   "version": "2026.04.17",
   "description": "An AI-native Astro starter built around beautiful text.",
   "license": "MIT",
-  "homepage": "https://github.com/justinhuangcode/astro-theme-aither",
+  "homepage": "https://github.com/justinhuangai/astro-theme-aither",
   "repository": {
     "type": "git",
-    "url": "https://github.com/justinhuangcode/astro-theme-aither.git"
+    "url": "https://github.com/justinhuangai/astro-theme-aither.git"
   },
   "bugs": {
-    "url": "https://github.com/justinhuangcode/astro-theme-aither/issues"
+    "url": "https://github.com/justinhuangai/astro-theme-aither/issues"
   },
   "engines": {
     "node": "^20.19.1 || >=22.12.0",

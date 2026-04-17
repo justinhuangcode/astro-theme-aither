@@ -2,12 +2,12 @@
 
 [English](./README.md) | [简体中文](./README_ZH-HANS.md) | [繁體中文](./README_ZH-HANT.md) | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | **Español** | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
 
-[![Deploy](https://github.com/justinhuangcode/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangcode/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
+[![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Astro](https://img.shields.io/badge/astro-6.0%2B-BC52EE.svg?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-v4-06B6D4.svg?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![GitHub Stars](https://img.shields.io/github/stars/justinhuangcode/astro-theme-aither?style=flat-square&logo=github)](https://github.com/justinhuangcode/astro-theme-aither/stargazers)
-[![Last Commit](https://img.shields.io/github/last-commit/justinhuangcode/astro-theme-aither?style=flat-square)](https://github.com/justinhuangcode/astro-theme-aither/commits/main)
+[![GitHub Stars](https://img.shields.io/github/stars/justinhuangai/astro-theme-aither?style=flat-square&logo=github)](https://github.com/justinhuangai/astro-theme-aither/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/justinhuangai/astro-theme-aither?style=flat-square)](https://github.com/justinhuangai/astro-theme-aither/commits/main)
 
 **[Vista previa en vivo](https://astro-theme-aither.pages.dev)**
 
@@ -62,7 +62,7 @@ Al mismo tiempo, asume que el sitio será leído por software tanto como por per
 
 ### Usar como plantilla de GitHub
 
-1. Haz clic en **"Use this template"** en [GitHub](https://github.com/justinhuangcode/astro-theme-aither)
+1. Haz clic en **"Use this template"** en [GitHub](https://github.com/justinhuangai/astro-theme-aither)
 2. Clona tu nuevo repositorio:
 
 ```bash
@@ -111,7 +111,7 @@ pnpm dev
 ### Configuración manual
 
 ```bash
-git clone https://github.com/justinhuangcode/astro-theme-aither.git my-blog
+git clone https://github.com/justinhuangai/astro-theme-aither.git my-blog
 cd my-blog
 corepack enable
 pnpm install

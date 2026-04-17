@@ -17,7 +17,7 @@ If you want dependency-style upgrades later, the repo needs a separate published
 Use this flow if you cloned the repo directly and kept the original history.
 
 ```bash
-git remote add upstream https://github.com/justinhuangcode/astro-theme-aither.git
+git remote add upstream https://github.com/justinhuangai/astro-theme-aither.git
 git fetch upstream --tags
 git switch -c codex/upgrade-v2026.04.17
 git log --oneline --left-right --cherry-pick origin/main...upstream/main
@@ -39,8 +39,8 @@ This is the common case. Template repositories usually do not share a clean upst
 Use a side-by-side release diff instead:
 
 ```bash
-git clone --depth 1 --branch v2026.04.17 https://github.com/justinhuangcode/astro-theme-aither.git ../aither-v2026.04.17
-git clone --depth 1 --branch v2026.04.08 https://github.com/justinhuangcode/astro-theme-aither.git ../aither-v2026.04.08
+git clone --depth 1 --branch v2026.04.17 https://github.com/justinhuangai/astro-theme-aither.git ../aither-v2026.04.17
+git clone --depth 1 --branch v2026.04.08 https://github.com/justinhuangai/astro-theme-aither.git ../aither-v2026.04.08
 diff -ru ../aither-v2026.04.08 ../aither-v2026.04.17
 ```
 

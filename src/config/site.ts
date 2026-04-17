@@ -33,7 +33,7 @@ export const siteConfig = defineAitherSiteConfig({
   social: [
     {
       title: 'GitHub',
-      href: 'https://github.com/justinhuangcode/astro-theme-aither',
+      href: 'https://github.com/justinhuangai/astro-theme-aither',
       icon: 'github',
     },
     {
@@ -128,7 +128,7 @@ export const siteConfig = defineAitherSiteConfig({
         items: [
           {
             title: 'GitHub',
-            href: 'https://github.com/justinhuangcode/astro-theme-aither',
+            href: 'https://github.com/justinhuangai/astro-theme-aither',
             external: true,
           },
         ],

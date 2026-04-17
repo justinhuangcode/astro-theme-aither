@@ -56,7 +56,7 @@ export const ko = {
   },
   about: {
     title: '소개',
-    description: '<a href="https://github.com/justinhuangcode/astro-theme-aither">Astro-Theme-Aither</a>로 만든 미니멀 블로그입니다.',
+    description: '<a href="https://github.com/justinhuangai/astro-theme-aither">Astro-Theme-Aither</a>로 만든 미니멀 블로그입니다.',
   },
   galleryPage: {
     name: '사진',
