@@ -1,6 +1,7 @@
 export const zhHant = {
   nav: {
     blog: '部落格',
+    picks: '推薦',
     gallery: '照片',
     directory: '導航',
     translations: '翻譯',
@@ -10,6 +11,7 @@ export const zhHant = {
     title: '部落格',
     description: '思考、故事和想法。',
     allPosts: '所有文章',
+    latestPosts: '最新文章',
     totalPosts: '共 {count} 篇',
     previous: '上一頁',
     next: '下一頁',

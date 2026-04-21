@@ -1,6 +1,7 @@
 export const es = {
   nav: {
     blog: 'Blog',
+    picks: 'Recomendaciones',
     gallery: 'Fotos',
     directory: 'Directorio',
     translations: 'Traducciones',
@@ -10,6 +11,7 @@ export const es = {
     title: 'Blog',
     description: 'Pensamientos, historias e ideas.',
     allPosts: 'Todos los artículos',
+    latestPosts: 'Artículos recientes',
     totalPosts: '{count} en total',
     previous: 'Anterior',
     next: 'Siguiente',

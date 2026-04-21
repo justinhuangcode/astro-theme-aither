@@ -1,6 +1,7 @@
 export const id = {
   nav: {
     blog: 'Blog',
+    picks: 'Pilihan',
     gallery: 'Foto',
     directory: 'Direktori',
     translations: 'Terjemahan',
@@ -10,6 +11,7 @@ export const id = {
     title: 'Blog',
     description: 'Pemikiran, cerita, dan ide.',
     allPosts: 'Semua Artikel',
+    latestPosts: 'Artikel terbaru',
     totalPosts: '{count} total',
     previous: 'Sebelumnya',
     next: 'Berikutnya',

@@ -38,6 +38,7 @@ function isConfiguredSocialLink(link: SocialLink): boolean {
 function isActive(href: string): boolean {
   if (href.includes('#') || /^https?:\/\//.test(href)) return false;
   return isActiveNavPath(currentPath, resolveInternalHref(href), {
+    matchDescendants: href !== '/',
     descendants: href === '/' ? ['posts', 'page'] : [],
   });
 }

@@ -1,6 +1,7 @@
 export const ru = {
   nav: {
     blog: 'Блог',
+    picks: 'Подборка',
     gallery: 'Фото',
     directory: 'Каталог',
     translations: 'Переводы',
@@ -10,6 +11,7 @@ export const ru = {
     title: 'Блог',
     description: 'Мысли, истории и идеи.',
     allPosts: 'Все статьи',
+    latestPosts: 'Последние статьи',
     totalPosts: 'Всего {count}',
     previous: 'Назад',
     next: 'Далее',

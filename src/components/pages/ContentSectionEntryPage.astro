@@ -2,16 +2,26 @@
 import type { CollectionKey } from 'astro:content';
 import { render } from 'astro:content';
 import ArticlePageBody from '@/components/pages/ArticlePageBody.astro';
+import PicksEntryContext from '@/components/picks/PicksEntryContext.astro';
 import TranslationEntryContext from '@/components/translations/TranslationEntryContext.astro';
 import Layout from '@/layouts/Layout.astro';
 import { siteConfig, type ContentSection } from '@/config/site';
 import {
+  getSectionFallbackLocale,
   getSectionContentLang,
   resolveSectionContentLocale,
   sectionHasFixedContentLocale,
 } from '@/lib/content-sections';
-import { getSlug, type LocalizedEntry } from '@/lib/posts';
 import {
+  getAvailableLocalesForSlug,
+  getEntryLocale,
+  getSlug,
+  type LocalizedEntry,
+} from '@/lib/posts';
+import { getPicksUiCopy } from '@/lib/picks-ui';
+import { getTranslationsUiCopy } from '@/lib/translations-ui';
+import {
+  htmlLangs,
   getLocalizedPath,
   getLocaleBasePath,
   translateNav,
@@ -38,10 +48,23 @@ const slug = getSlug(entry.id);
 const basePath = getLocaleBasePath(locale);
 const contentLocale = resolveSectionContentLocale(section, locale);
 const usesFixedContentLocale = sectionHasFixedContentLocale(section);
-const canonicalPath = getLocalizedPath(`/${section.id}/${slug}`, contentLocale);
-const entryUrl = `${siteConfig.url}${usesFixedContentLocale ? `${canonicalPath}/` : `${basePath}/${section.id}/${slug}/`}`;
-const sectionTitle = translateNav(section.labelKey, locale);
-const sectionIndexUrl = `${siteConfig.url}${getLocalizedPath(`/${section.id}`, contentLocale)}`;
+const fallbackLocale = getSectionFallbackLocale(section);
+const entryLocale = getEntryLocale(entry.id);
+const usesSectionFallback = Boolean(fallbackLocale);
+const isFallbackEntry = usesSectionFallback && entryLocale !== locale;
+const canonicalLocale = usesFixedContentLocale ? contentLocale : entryLocale;
+const canonicalPath = getLocalizedPath(`/${section.id}/${slug}`, canonicalLocale);
+const entryUrl = `${siteConfig.url}${canonicalPath}/`;
+const sectionTitleLocale = isFallbackEntry ? entryLocale : locale;
+const sectionTitle = section.id === 'picks'
+  ? getPicksUiCopy(sectionTitleLocale).sectionTitle
+  : section.id === 'translations'
+    ? getTranslationsUiCopy(sectionTitleLocale).sectionTitle
+    : translateNav(section.labelKey, sectionTitleLocale);
+const sectionIndexUrl = `${siteConfig.url}${getLocalizedPath(
+  `/${section.id}`,
+  isFallbackEntry ? entryLocale : contentLocale,
+)}`;
 const prevLink = prevEntry
   ? { href: `${basePath}/${section.id}/${getSlug(prevEntry.id)}/`, title: prevEntry.data.title }
   : null;
@@ -53,12 +76,22 @@ const translationMeta = entry.data as typeof entry.data & {
   sourceTitle?: string;
   sourceUrl?: string;
   translator?: string;
+  sourcePublication?: string;
 };
 const sourceUrl = translationMeta.sourceUrl
   ? new URL(translationMeta.sourceUrl, siteConfig.url).toString()
   : undefined;
 const contentLang = usesFixedContentLocale
   ? getSectionContentLang(section, locale)
+  : htmlLangs[entryLocale];
+const localeAlternates = usesSectionFallback
+  ? (await getAvailableLocalesForSlug(section.id, slug)).map((availableLocale) => ({
+      hreflang: htmlLangs[availableLocale],
+      href: new URL(
+        `${getLocalizedPath(`/${section.id}/${slug}`, availableLocale)}/`,
+        siteConfig.url,
+      ).toString(),
+    }))
   : undefined;
 
 const articleJsonLd = [
@@ -68,7 +101,7 @@ const articleJsonLd = [
     headline: entry.data.title,
     description: entry.data.description,
     datePublished: entry.data.date.toISOString(),
-    inLanguage: contentLang,
+    inLanguage: htmlLangs[entryLocale],
     author: { '@type': 'Person', name: siteConfig.author.name },
     publisher: { '@type': 'Organization', name: siteConfig.name },
     url: entryUrl,
@@ -93,6 +126,7 @@ const articleJsonLd = [
   jsonLd={articleJsonLd}
   canonicalUrl={entryUrl}
   hideLocaleAlternates={usesFixedContentLocale}
+  localeAlternates={localeAlternates}
   article={{
     publishedTime: entry.data.date.toISOString(),
     author: siteConfig.author.name,
@@ -108,6 +142,18 @@ const articleJsonLd = [
     nextLink={nextLink}
     contentLang={contentLang}
   >
+    {
+      section.id === 'picks' && (
+        <PicksEntryContext
+          slot="above-description"
+          locale={locale}
+          sourceTitle={translationMeta.sourceTitle}
+          sourcePublication={translationMeta.sourcePublication}
+          sourceLanguage={translationMeta.sourceLanguage}
+          sourceUrl={sourceUrl}
+        />
+      )
+    }
     {
       section.id === 'translations' && (
         <TranslationEntryContext

@@ -4,12 +4,15 @@ import BlogCard from '@/components/BlogCard.astro';
 import BlogGrid from '@/components/BlogGrid.astro';
 import ContentSectionHeader from '@/components/ContentSectionHeader.astro';
 import Container from '@/components/Container.astro';
+import PicksCard from '@/components/picks/PicksCard.astro';
+import PicksShelfNotice from '@/components/picks/PicksShelfNotice.astro';
 import TranslationShelfNotice from '@/components/translations/TranslationShelfNotice.astro';
 import { siteConfig, type ContentSection } from '@/config/site';
 import {
   getLocaleBasePath,
   getLocalizedPath,
   getMessages,
+  htmlLangs,
   intlLocales,
   translateNav,
   type Locale,
@@ -19,7 +22,9 @@ import {
   resolveSectionContentLocale,
   sectionHasFixedContentLocale,
 } from '@/lib/content-sections';
-import { getSlug, type LocalizedEntry } from '@/lib/posts';
+import { getPicksUiCopy } from '@/lib/picks-ui';
+import { getTranslationsUiCopy } from '@/lib/translations-ui';
+import { getEntryLocale, getSlug, type LocalizedEntry } from '@/lib/posts';
 import Layout from '@/layouts/Layout.astro';
 
 interface Props {
@@ -29,7 +34,13 @@ interface Props {
 }
 
 const { locale, section, entries } = Astro.props;
-const title = translateNav(section.labelKey, locale);
+const isPicksSection = section.id === 'picks';
+const isTranslationsSection = section.id === 'translations';
+const title = isPicksSection
+  ? getPicksUiCopy(locale).sectionTitle
+  : isTranslationsSection
+    ? getTranslationsUiCopy(locale).sectionTitle
+    : translateNav(section.labelKey, locale);
 const basePath = getLocaleBasePath(locale);
 const m = getMessages(locale);
 const totalEntriesLabel = m.blog.totalPosts.replace(
@@ -56,21 +67,38 @@ const canonicalUrl = usesFixedContentLocale
       <section class="content-index-zone">
         <Container class="px-4">
           <div class="content-index-shell">
-            {section.id === 'translations' && <TranslationShelfNotice locale={locale} />}
+            {isPicksSection && <PicksShelfNotice locale={locale} />}
+            {isTranslationsSection && <TranslationShelfNotice locale={locale} />}
             <ContentSectionHeader title={title} countLabel={totalEntriesLabel} headingAs="h1" />
             <BlogGrid>
               {
-                entries.map((entry) => (
-                  <BlogCard
-                    slug={getSlug(entry.id)}
-                    title={entry.data.title}
-                    date={entry.data.date}
-                    basePath={basePath}
-                    section={section.id}
-                    pinned={entry.data.pinned}
-                    titleLang={contentLang}
-                  />
-                ))
+                entries.map((entry) => {
+                  const entryLang = htmlLangs[getEntryLocale(entry.id)];
+
+                  return isPicksSection ? (
+                    <PicksCard
+                      slug={getSlug(entry.id)}
+                      title={entry.data.title}
+                      description={entry.data.description}
+                      date={entry.data.date}
+                      sourcePublication={(entry.data as typeof entry.data & { sourcePublication?: string }).sourcePublication}
+                      basePath={basePath}
+                      section={section.id}
+                      titleLang={entryLang}
+                      descriptionLang={entryLang}
+                    />
+                  ) : (
+                    <BlogCard
+                      slug={getSlug(entry.id)}
+                      title={entry.data.title}
+                      date={entry.data.date}
+                      basePath={basePath}
+                      section={section.id}
+                      pinned={entry.data.pinned}
+                      titleLang={contentLang ?? entryLang}
+                    />
+                  );
+                })
               }
             </BlogGrid>
           </div>
@@ -95,6 +123,10 @@ const canonicalUrl = usesFixedContentLocale
     max-width: none;
     margin-inline: 0;
     margin-bottom: 1.95rem;
+  }
+
+  .content-index-shell :global(.blog-grid) {
+    border-radius: 0;
   }
 
   @media (min-width: 992px) {

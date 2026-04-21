@@ -1,6 +1,7 @@
 export const ptBr = {
   nav: {
     blog: 'Blog',
+    picks: 'Recomendações',
     gallery: 'Fotos',
     directory: 'Diretório',
     translations: 'Traduções',
@@ -10,6 +11,7 @@ export const ptBr = {
     title: 'Blog',
     description: 'Pensamentos, histórias e ideias.',
     allPosts: 'Todos os artigos',
+    latestPosts: 'Artigos recentes',
     totalPosts: '{count} no total',
     previous: 'Anterior',
     next: 'Próximo',

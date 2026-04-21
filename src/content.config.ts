@@ -46,4 +46,22 @@ const translations = defineCollection({
     }),
 });
 
-export const collections = { posts, gallery, translations };
+const picks = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/picks' }),
+  schema: ({ image }) =>
+    createAitherContentSchema({ image }).extend({
+      sourceTitle: z.string().optional(),
+      sourceUrl: z
+        .string()
+        .refine(
+          (value) =>
+            value.startsWith('/') || z.url().safeParse(value).success,
+          'sourceUrl must be an absolute URL or a site-relative path',
+        )
+        .optional(),
+      sourcePublication: z.string().optional(),
+      sourceLanguage: z.string().optional(),
+    }),
+});
+
+export const collections = { posts, gallery, translations, picks };

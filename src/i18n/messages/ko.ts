@@ -1,6 +1,7 @@
 export const ko = {
   nav: {
     blog: '블로그',
+    picks: '추천',
     gallery: '사진',
     directory: '디렉토리',
     translations: '번역',
@@ -10,6 +11,7 @@ export const ko = {
     title: '블로그',
     description: '생각, 이야기, 그리고 아이디어.',
     allPosts: '모든 글',
+    latestPosts: '최신 글',
     totalPosts: '총 {count}개',
     previous: '이전',
     next: '다음',

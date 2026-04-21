@@ -1,6 +1,7 @@
 export const en = {
   nav: {
     blog: 'Blog',
+    picks: 'Picks',
     gallery: 'Photos',
     directory: 'Directory',
     translations: 'Translations',
@@ -10,6 +11,7 @@ export const en = {
     title: 'Blog',
     description: 'Thoughts, stories, and ideas.',
     allPosts: 'All Posts',
+    latestPosts: 'Latest Posts',
     totalPosts: '{count} total',
     previous: 'Previous',
     next: 'Next',

@@ -1,6 +1,7 @@
 import type { Locale } from '@/i18n';
 
 interface TranslationUiCopy {
+  sectionTitle: string;
   shelfEyebrow: string;
   shelfTitle: string;
   shelfDescription: string;
@@ -16,6 +17,7 @@ interface TranslationUiCopy {
 }
 
 const enCopy: TranslationUiCopy = {
+  sectionTitle: 'Latest Translations',
   shelfEyebrow: 'Translation shelf',
   shelfTitle: 'Published in Simplified Chinese',
   shelfDescription:
@@ -32,6 +34,7 @@ const enCopy: TranslationUiCopy = {
 };
 
 const zhHansCopy: TranslationUiCopy = {
+  sectionTitle: '最新翻译',
   shelfEyebrow: '翻译栏目',
   shelfTitle: '本栏目固定发布简体中文译文',
   shelfDescription:
@@ -48,6 +51,7 @@ const zhHansCopy: TranslationUiCopy = {
 };
 
 const zhHantCopy: TranslationUiCopy = {
+  sectionTitle: '最新翻譯',
   shelfEyebrow: '翻譯欄目',
   shelfTitle: '本欄目固定發布簡體中文譯文',
   shelfDescription:

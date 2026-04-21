@@ -1,5 +1,5 @@
 ---
-import { getTranslationsUiCopy } from '@/lib/translations-ui';
+import { getPicksUiCopy } from '@/lib/picks-ui';
 import type { Locale } from '@/i18n';
 
 interface Props {
@@ -7,18 +7,18 @@ interface Props {
 }
 
 const { locale } = Astro.props;
-const copy = getTranslationsUiCopy(locale);
+const copy = getPicksUiCopy(locale);
 ---
 
-<section class="translation-shelf-notice" aria-label={copy.shelfTitle}>
-  <p class="translation-shelf-eyebrow">{copy.shelfEyebrow}</p>
-  <p class="translation-shelf-title">{copy.shelfTitle}</p>
-  <p class="translation-shelf-description">{copy.shelfDescription}</p>
-  <p class="translation-shelf-note">{copy.shelfNote}</p>
+<section class="picks-shelf-notice" aria-label={copy.shelfTitle}>
+  <p class="picks-shelf-eyebrow">{copy.shelfEyebrow}</p>
+  <p class="picks-shelf-title">{copy.shelfTitle}</p>
+  <p class="picks-shelf-description">{copy.shelfDescription}</p>
+  <p class="picks-shelf-note">{copy.shelfNote}</p>
 </section>
 
 <style>
-  .translation-shelf-notice {
+  .picks-shelf-notice {
     margin-bottom: 1.4rem;
     padding: 1.02rem 1.05rem;
     border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
@@ -26,7 +26,7 @@ const copy = getTranslationsUiCopy(locale);
       linear-gradient(180deg, color-mix(in srgb, var(--background) 97%, white 3%), var(--background));
   }
 
-  .translation-shelf-eyebrow {
+  .picks-shelf-eyebrow {
     margin: 0 0 0.42rem;
     color: color-mix(in srgb, var(--muted-foreground) 86%, transparent);
     font-family: var(--font-code);
@@ -36,7 +36,7 @@ const copy = getTranslationsUiCopy(locale);
     text-transform: uppercase;
   }
 
-  .translation-shelf-title {
+  .picks-shelf-title {
     margin: 0;
     color: var(--foreground);
     font-family: var(--font-serif);
@@ -45,15 +45,15 @@ const copy = getTranslationsUiCopy(locale);
     line-height: 1.5;
   }
 
-  .translation-shelf-description,
-  .translation-shelf-note {
+  .picks-shelf-description,
+  .picks-shelf-note {
     margin: 0.48rem 0 0;
     color: var(--muted-foreground);
     font-size: 0.94rem;
     line-height: 1.72;
   }
 
-  .translation-shelf-note {
+  .picks-shelf-note {
     font-size: 0.84rem;
   }
 </style>

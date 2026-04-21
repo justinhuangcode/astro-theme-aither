@@ -1,0 +1,90 @@
+---
+import { formatDate } from '@/lib/formatter';
+
+interface Props {
+  slug: string;
+  title: string;
+  date: Date;
+  description?: string;
+  sourcePublication?: string;
+  basePath?: string;
+  section?: string;
+  titleLang?: string;
+  descriptionLang?: string;
+}
+
+const {
+  slug,
+  title,
+  date,
+  description,
+  sourcePublication,
+  basePath = '',
+  section = 'picks',
+  titleLang,
+  descriptionLang,
+} = Astro.props;
+---
+
+<li class="picks-card border-b border-border last:border-b-0">
+  <a href={`${basePath}/${section}/${slug}`} class="picks-card-link block px-5 py-5 sm:px-6 sm:py-6 hover:bg-[var(--color-bg-hover)]">
+    <div class="picks-card-meta">
+      <span>{formatDate(date)}</span>
+      {sourcePublication && (
+        <Fragment>
+          <span aria-hidden="true">&middot;</span>
+          <span>{sourcePublication}</span>
+        </Fragment>
+      )}
+    </div>
+    <h3 lang={titleLang} class="picks-card-title">
+      {title}
+    </h3>
+    {
+      description && (
+        <p lang={descriptionLang} class="picks-card-note">
+          {description}
+        </p>
+      )
+    }
+  </a>
+</li>
+
+<style>
+  .picks-card-link {
+    text-decoration: none;
+  }
+
+  .picks-card-meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    color: color-mix(in srgb, var(--muted-foreground) 86%, transparent);
+    font-family: var(--font-code);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .picks-card-title {
+    margin: 0.7rem 0 0;
+    color: var(--foreground);
+    font-family: var(--font-serif);
+    font-size: 1.18rem;
+    font-weight: 600;
+    line-height: 1.42;
+  }
+
+  .picks-card-link:hover .picks-card-title {
+    color: var(--color-link-hover);
+  }
+
+  .picks-card-note {
+    margin: 0.55rem 0 0;
+    color: var(--muted-foreground);
+    font-size: 0.96rem;
+    line-height: 1.7;
+  }
+</style>

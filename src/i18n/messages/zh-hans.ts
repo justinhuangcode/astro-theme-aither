@@ -1,6 +1,7 @@
 export const zhHans = {
   nav: {
     blog: '博客',
+    picks: '推荐',
     gallery: '照片',
     directory: '导航',
     translations: '翻译',
@@ -10,6 +11,7 @@ export const zhHans = {
     title: '博客',
     description: '思考、故事和想法。',
     allPosts: '所有文章',
+    latestPosts: '最新文章',
     totalPosts: '共 {count} 篇',
     previous: '上一页',
     next: '下一页',
