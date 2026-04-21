@@ -1,7 +1,7 @@
 export const ko = {
   nav: {
     blog: '블로그',
-    picks: '추천',
+    recommendations: '추천',
     gallery: '사진',
     directory: '디렉토리',
     translations: '번역',

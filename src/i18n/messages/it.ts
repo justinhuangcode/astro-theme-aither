@@ -1,7 +1,7 @@
 export const it = {
   nav: {
     blog: 'Blog',
-    picks: 'Selezioni',
+    recommendations: 'Raccomandazioni',
     gallery: 'Foto',
     directory: 'Directory',
     translations: 'Traduzioni',

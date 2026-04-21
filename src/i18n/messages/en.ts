@@ -1,7 +1,7 @@
 export const en = {
   nav: {
     blog: 'Blog',
-    picks: 'Picks',
+    recommendations: 'Recommendations',
     gallery: 'Photos',
     directory: 'Directory',
     translations: 'Translations',

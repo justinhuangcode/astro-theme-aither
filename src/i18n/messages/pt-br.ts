@@ -1,7 +1,7 @@
 export const ptBr = {
   nav: {
     blog: 'Blog',
-    picks: 'Recomendações',
+    recommendations: 'Recomendações',
     gallery: 'Fotos',
     directory: 'Diretório',
     translations: 'Traduções',

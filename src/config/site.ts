@@ -98,7 +98,7 @@ export const siteConfig = defineAitherSiteConfig({
   // Custom content sections — each one auto-generates list + detail pages
   // Example: { id: 'translations', labelKey: 'translations' }
   sections: [
-    { id: 'picks', labelKey: 'picks', fallbackLocale: 'en' },
+    { id: 'recommendations', labelKey: 'recommendations', fallbackLocale: 'en' },
     { id: 'translations', labelKey: 'translations', contentLocale: 'zh-hans' },
   ] as ContentSection[],
   nav: [
@@ -114,7 +114,7 @@ export const siteConfig = defineAitherSiteConfig({
       {
         title: 'Navigate',
         items: [
-          { title: 'Picks', href: '/picks', labelKey: 'picks' },
+          { title: 'Recommendations', href: '/recommendations', labelKey: 'recommendations' },
           { title: 'Translations', href: '/translations', labelKey: 'translations' },
           { title: 'About', href: '/about', labelKey: 'about' },
         ],

@@ -2,7 +2,7 @@
   "name": "astro-theme-aither",
   "private": true,
   "type": "module",
-  "version": "2026.04.19",
+  "version": "2026.04.21",
   "description": "An AI-native Astro starter built around beautiful text.",
   "license": "MIT",
   "homepage": "https://github.com/justinhuangai/astro-theme-aither",
@@ -40,7 +40,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@aither/astro": "workspace:^2026.4.19",
+    "@aither/astro": "workspace:^2026.4.21",
     "@astrojs/cloudflare": "^13.1.1",
     "@astrojs/mdx": "^5.0.0",
     "@astrojs/react": "^5.0.0",

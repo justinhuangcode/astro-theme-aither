@@ -14,7 +14,6 @@ const copy = getTranslationsUiCopy(locale);
   <p class="translation-shelf-eyebrow">{copy.shelfEyebrow}</p>
   <p class="translation-shelf-title">{copy.shelfTitle}</p>
   <p class="translation-shelf-description">{copy.shelfDescription}</p>
-  <p class="translation-shelf-note">{copy.shelfNote}</p>
 </section>
 
 <style>
@@ -45,15 +44,10 @@ const copy = getTranslationsUiCopy(locale);
     line-height: 1.5;
   }
 
-  .translation-shelf-description,
-  .translation-shelf-note {
+  .translation-shelf-description {
     margin: 0.48rem 0 0;
     color: var(--muted-foreground);
     font-size: 0.94rem;
     line-height: 1.72;
-  }
-
-  .translation-shelf-note {
-    font-size: 0.84rem;
   }
 </style>

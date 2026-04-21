@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [CalVer](https://calver.org/) versioning (`YYYY.0M.0D`).
 
+## astro-theme-aither v2026.04.21
+
+### Added
+- An English-first `Recommendations` section with locale fallback, source metadata fields, and dedicated editorial list/detail UI
+- A localized recommendation-note layer so recommendation blurbs can be translated independently from the original title and body content
+- Editorial shelf notices for `Recommendations` and `Translations` with concise channel framing and locale-aware copy
+
+### Changed
+- Release version to `2026.04.21`
+- Renamed the earlier `Picks` surface to `Recommendations` across routes, navigation, footer links, section config, content collection, and section copy
+- Homepage/blog section headings now use a `Latest ...` framing, and the recommendations experience now uses `Why it matters / 推荐理由` as a consistent editorial label across list and detail pages
+- Recommendation channel copy now explicitly credits 湾区日报 while keeping the external-link styling on the publication name only
+
+### Fixed
+- Restored the locale suggestion banner on `/photos`, keeping it consistent with the rest of the top-level site sections
+- Recommendation fallback routes now preserve English titles while surfacing localized recommendation notes in list cards, article summaries, and page metadata
+- Translation and recommendation notice cards now use a leaner two-block structure with cleaner copy and aligned straight-edge visual treatment
+
 ## astro-theme-aither v2026.04.19
 
 ### Added

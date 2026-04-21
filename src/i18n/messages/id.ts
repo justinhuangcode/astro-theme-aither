@@ -1,7 +1,7 @@
 export const id = {
   nav: {
     blog: 'Blog',
-    picks: 'Pilihan',
+    recommendations: 'Rekomendasi',
     gallery: 'Foto',
     directory: 'Direktori',
     translations: 'Terjemahan',

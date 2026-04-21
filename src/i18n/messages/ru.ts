@@ -1,7 +1,7 @@
 export const ru = {
   nav: {
     blog: 'Блог',
-    picks: 'Подборка',
+    recommendations: 'Рекомендации',
     gallery: 'Фото',
     directory: 'Каталог',
     translations: 'Переводы',

@@ -46,8 +46,8 @@ const translations = defineCollection({
     }),
 });
 
-const picks = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/picks' }),
+const recommendations = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/recommendations' }),
   schema: ({ image }) =>
     createAitherContentSchema({ image }).extend({
       sourceTitle: z.string().optional(),
@@ -64,4 +64,4 @@ const picks = defineCollection({
     }),
 });
 
-export const collections = { posts, gallery, translations, picks };
+export const collections = { posts, gallery, translations, recommendations };

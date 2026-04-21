@@ -2,7 +2,7 @@
 import type { CollectionKey } from 'astro:content';
 import { render } from 'astro:content';
 import ArticlePageBody from '@/components/pages/ArticlePageBody.astro';
-import PicksEntryContext from '@/components/picks/PicksEntryContext.astro';
+import RecommendationsEntryContext from '@/components/recommendations/RecommendationsEntryContext.astro';
 import TranslationEntryContext from '@/components/translations/TranslationEntryContext.astro';
 import Layout from '@/layouts/Layout.astro';
 import { siteConfig, type ContentSection } from '@/config/site';
@@ -18,7 +18,11 @@ import {
   getSlug,
   type LocalizedEntry,
 } from '@/lib/posts';
-import { getPicksUiCopy } from '@/lib/picks-ui';
+import {
+  getLocalizedRecommendationDescription,
+  getLocalizedRecommendationDescriptionLang,
+} from '@/lib/recommendations';
+import { getRecommendationsUiCopy } from '@/lib/recommendations-ui';
 import { getTranslationsUiCopy } from '@/lib/translations-ui';
 import {
   htmlLangs,
@@ -56,11 +60,14 @@ const canonicalLocale = usesFixedContentLocale ? contentLocale : entryLocale;
 const canonicalPath = getLocalizedPath(`/${section.id}/${slug}`, canonicalLocale);
 const entryUrl = `${siteConfig.url}${canonicalPath}/`;
 const sectionTitleLocale = isFallbackEntry ? entryLocale : locale;
-const sectionTitle = section.id === 'picks'
-  ? getPicksUiCopy(sectionTitleLocale).sectionTitle
+const sectionTitle = section.id === 'recommendations'
+  ? getRecommendationsUiCopy(sectionTitleLocale).sectionTitle
   : section.id === 'translations'
     ? getTranslationsUiCopy(sectionTitleLocale).sectionTitle
     : translateNav(section.labelKey, sectionTitleLocale);
+const recommendationsUiCopy = section.id === 'recommendations'
+  ? getRecommendationsUiCopy(locale)
+  : undefined;
 const sectionIndexUrl = `${siteConfig.url}${getLocalizedPath(
   `/${section.id}`,
   isFallbackEntry ? entryLocale : contentLocale,
@@ -78,12 +85,18 @@ const translationMeta = entry.data as typeof entry.data & {
   translator?: string;
   sourcePublication?: string;
 };
-const sourceUrl = translationMeta.sourceUrl
-  ? new URL(translationMeta.sourceUrl, siteConfig.url).toString()
-  : undefined;
 const contentLang = usesFixedContentLocale
   ? getSectionContentLang(section, locale)
   : htmlLangs[entryLocale];
+const resolvedRecommendationDescription = section.id === 'recommendations'
+  ? getLocalizedRecommendationDescription(slug, locale, entry.data.description)
+  : entry.data.description;
+const resolvedRecommendationDescriptionLang = section.id === 'recommendations'
+  ? getLocalizedRecommendationDescriptionLang(slug, locale, contentLang)
+  : contentLang;
+const sourceUrl = translationMeta.sourceUrl
+  ? new URL(translationMeta.sourceUrl, siteConfig.url).toString()
+  : undefined;
 const localeAlternates = usesSectionFallback
   ? (await getAvailableLocalesForSlug(section.id, slug)).map((availableLocale) => ({
       hreflang: htmlLangs[availableLocale],
@@ -99,7 +112,7 @@ const articleJsonLd = [
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: entry.data.title,
-    description: entry.data.description,
+    description: resolvedRecommendationDescription,
     datePublished: entry.data.date.toISOString(),
     inLanguage: htmlLangs[entryLocale],
     author: { '@type': 'Person', name: siteConfig.author.name },
@@ -121,7 +134,7 @@ const articleJsonLd = [
 
 <Layout
   title={`${entry.data.title} | ${siteConfig.name}`}
-  description={entry.data.description}
+  description={resolvedRecommendationDescription}
   image={entry.data.image ?? siteConfig.ogImage}
   jsonLd={articleJsonLd}
   canonicalUrl={entryUrl}
@@ -141,10 +154,13 @@ const articleJsonLd = [
     prevLink={prevLink}
     nextLink={nextLink}
     contentLang={contentLang}
+    descriptionOverride={resolvedRecommendationDescription}
+    descriptionLang={resolvedRecommendationDescriptionLang}
+    descriptionPrefix={recommendationsUiCopy?.detailDescriptionLabel}
   >
     {
-      section.id === 'picks' && (
-        <PicksEntryContext
+      section.id === 'recommendations' && (
+        <RecommendationsEntryContext
           slot="above-description"
           locale={locale}
           sourceTitle={translationMeta.sourceTitle}
