@@ -1,6 +1,6 @@
 # Aither
 
-**English** | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+**English** | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO-KR.md) | [Français](./README_FR-FR.md) | [Deutsch](./README_DE-DE.md) | [Italiano](./README_IT-IT.md) | [Español](./README_ES-ES.md) | [Русский](./README_RU-RU.md) | [Bahasa Indonesia](./README_ID-ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -205,7 +205,7 @@ There is a human-facing guide at `/for-agents/`, but the machine-facing contract
 | `/schemas/agent-protocol.schema.json` | Global | JSON Schema for `protocol.json` |
 | `/schemas/agent-home.schema.json` | Global | JSON Schema for `agent/home.json` |
 
-For the default locale, `en`, the locale prefix is omitted. For example, English article Markdown lives at `/posts/{slug}.md`, while Simplified Chinese lives at `/zh-CN/posts/{slug}.md`.
+For the default locale, `en-US`, the locale prefix is omitted. For example, English article Markdown lives at `/posts/{slug}.md`, while Simplified Chinese lives at `/zh-CN/posts/{slug}.md`.
 
 Best practices:
 
@@ -330,19 +330,19 @@ Language config is in `src/i18n/index.ts`, translations in `src/i18n/messages/*.
 
 | Code | Language |
 |---|---|
-| `en` | English (default) |
+| `en-US` | English (default) |
 | `zh-CN` | 简体中文 |
 | `zh-TW` | 繁體中文 |
-| `ko` | 한국어 |
-| `fr` | Français |
-| `de` | Deutsch |
-| `it` | Italiano |
-| `es` | Español |
-| `ru` | Русский |
-| `id` | Bahasa Indonesia |
+| `ko-KR` | 한국어 |
+| `fr-FR` | Français |
+| `de-DE` | Deutsch |
+| `it-IT` | Italiano |
+| `es-ES` | Español |
+| `ru-RU` | Русский |
+| `id-ID` | Bahasa Indonesia |
 | `pt-BR` | Português (BR) |
 
-The default locale (`en`) has no URL prefix. Other locales use their code as prefix (e.g. `/zh-CN/`, `/ko/`).
+The default locale (`en-US`) has no URL prefix. Other locales use their code as prefix (e.g. `/zh-CN/`, `/ko-KR/`).
 
 Best practice: keep the English slug set as the canonical baseline and use `pnpm check:post-coverage` to catch missing localized articles before deploy.
 

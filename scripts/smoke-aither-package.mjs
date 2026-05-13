@@ -99,23 +99,23 @@ assert.equal(config.vite?.plugins?.length, 1);
 assert.equal(config.markdown?.remarkPlugins?.length, 2);
 assert.equal(config.markdown?.rehypePlugins?.length, 2);
 
-assert.equal(AITHER_DEFAULT_LOCALE, 'en');
+assert.equal(AITHER_DEFAULT_LOCALE, 'en-US');
 assert.equal(AITHER_LOCALES.length, 11);
 assert.equal(AITHER_LOCALE_LABELS['zh-CN'], '简体中文');
 assert.equal(AITHER_INTL_LOCALES['pt-BR'], 'pt-BR');
-assert.equal(AITHER_HTML_LANGS.ru, 'ru');
+assert.equal(AITHER_HTML_LANGS['ru-RU'], 'ru-RU');
 assert.equal(AITHER_CRISP_LOCALES['zh-CN'], 'zh');
 assert.equal(AITHER_GISCUS_LOCALES['zh-TW'], 'zh-TW');
 assert.equal(AITHER_NODE_RANGE, '^20.19.1 || >=22.12.0');
 assert.equal(AGENT_PROTOCOL_VERSION, '2.0.0');
 assert.equal(AITHER_PREFERRED_LOCALE_STORAGE_KEY, 'preferred-locale');
 assert.equal(AITHER_LOCALE_BANNER_DISMISSED_SESSION_KEY, 'locale-banner-dismissed');
-assert.equal(isAitherLocale('en'), true);
+assert.equal(isAitherLocale('en-US'), true);
 assert.equal(isAitherLocale('jp'), false);
 assert.equal(resolveAitherLocale('zh-CN'), 'zh-CN');
-assert.equal(resolveAitherLocale('jp'), 'en');
+assert.equal(resolveAitherLocale('jp'), 'en-US');
 assert.equal(getAitherLocaleFromUrl(new URL('https://example.com/zh-TW/posts/hello-world/')), 'zh-TW');
-assert.equal(getAitherLocaleBasePath('en'), '');
+assert.equal(getAitherLocaleBasePath('en-US'), '');
 assert.equal(getAitherLocaleBasePath('pt-BR'), '/pt-BR');
 assert.equal(stripAitherLocalePrefix('/zh-CN/posts/hello-world/'), '/posts/hello-world/');
 assert.equal(getAitherLocalizedPath('/posts/hello-world/', 'zh-CN'), '/zh-CN/posts/hello-world/');
@@ -179,9 +179,9 @@ assert.equal(stripHtmlTags('<p>Hello <strong>Aither</strong></p>'), 'Hello Aithe
 assert.equal(toAbsoluteSiteUrl('/posts/hello-world/', 'https://example.com'), 'https://example.com/posts/hello-world/');
 
 const samplePostsByLocale = {
-  en: [
+  'en-US': [
     {
-      id: 'en/hello-world',
+      id: 'en-US/hello-world',
       data: {
         title: 'Hello World',
         description: 'First post',
@@ -193,7 +193,7 @@ const samplePostsByLocale = {
       body: 'English body',
     },
     {
-      id: 'en/second-post',
+      id: 'en-US/second-post',
       data: {
         title: 'Second Post',
         description: 'Second',
@@ -222,48 +222,48 @@ const samplePostsByLocale = {
 };
 
 const getLocalizedPath = (pathName, locale) =>
-  locale === 'en' ? pathName : `/${locale}${pathName}`;
+  locale === 'en-US' ? pathName : `/${locale}${pathName}`;
 
 const siteContentRuntime = createAitherSiteContentRuntime({
-  defaultLocale: 'en',
-  getLocaleBasePath: (locale) => (locale === 'en' ? '' : `/${locale}`),
+  defaultLocale: 'en-US',
+  getLocaleBasePath: (locale) => (locale === 'en-US' ? '' : `/${locale}`),
   getLocalizedPath,
   getMessages: (locale) => ({
     about: {
-      title: locale === 'en' ? 'About' : '关于',
-      description: locale === 'en' ? '<p>About Aither</p>' : '<p>关于 Aither</p>',
+      title: locale === 'en-US' ? 'About' : '关于',
+      description: locale === 'en-US' ? '<p>About Aither</p>' : '<p>关于 Aither</p>',
     },
   }),
   getPostSlug: (entryId) => entryId.replace(/^[^/]+\//, ''),
   getPostsByLocale: async (locale) => samplePostsByLocale[locale] ?? [],
-  htmlLangs: { en: 'en', 'zh-CN': 'zh-CN' },
-  localeLabels: { en: 'English', 'zh-CN': '简体中文' },
+  htmlLangs: { 'en-US': 'en-US', 'zh-CN': 'zh-CN' },
+  localeLabels: { 'en-US': 'English', 'zh-CN': '简体中文' },
   pageSize: 1,
   siteDescription: 'An AI-native Astro theme built around beautiful text.',
   siteName: 'Aither',
   siteUrl: 'https://example.com',
 });
 
-assert.equal(siteContentRuntime.getLocaleHomePath('en'), '/');
+assert.equal(siteContentRuntime.getLocaleHomePath('en-US'), '/');
 assert.equal(siteContentRuntime.getLocaleHomePath('zh-CN'), '/zh-CN');
-assert.equal(siteContentRuntime.getPostPath('en', 'hello-world'), '/posts/hello-world/');
+assert.equal(siteContentRuntime.getPostPath('en-US', 'hello-world'), '/posts/hello-world/');
 assert.equal(siteContentRuntime.getPostPath('zh-CN', 'hello-world'), '/zh-CN/posts/hello-world/');
-assert.equal(siteContentRuntime.getPostMarkdownPath('en', 'hello-world'), '/posts/hello-world.md');
+assert.equal(siteContentRuntime.getPostMarkdownPath('en-US', 'hello-world'), '/posts/hello-world.md');
 assert.equal(siteContentRuntime.getPostOgImagePath('zh-CN', 'hello-world'), '/og/zh-CN/hello-world.png');
 assert.equal(siteContentRuntime.buildWebsiteJsonLd('zh-CN').inLanguage, 'zh-CN');
-assert.deepEqual(await siteContentRuntime.getPaginationStaticPaths('en'), [{ params: { num: '2' } }]);
-assert.equal((await siteContentRuntime.getPaginatedPosts('en', 1)).posts.length, 1);
-assert.equal((await siteContentRuntime.getPostStaticPaths('en')).length, 2);
-assert.ok((await siteContentRuntime.createAboutMarkdownResponse('en').text()).includes('About Aither'));
-assert.ok((await siteContentRuntime.createLlmsResponse('en', 'summary').then((response) => response.text())).includes('# Aither'));
-assert.equal((await siteContentRuntime.createRssOptions('en')).items.length, 2);
+assert.deepEqual(await siteContentRuntime.getPaginationStaticPaths('en-US'), [{ params: { num: '2' } }]);
+assert.equal((await siteContentRuntime.getPaginatedPosts('en-US', 1)).posts.length, 1);
+assert.equal((await siteContentRuntime.getPostStaticPaths('en-US')).length, 2);
+assert.ok((await siteContentRuntime.createAboutMarkdownResponse('en-US').text()).includes('About Aither'));
+assert.ok((await siteContentRuntime.createLlmsResponse('en-US', 'summary').then((response) => response.text())).includes('# Aither'));
+assert.equal((await siteContentRuntime.createRssOptions('en-US')).items.length, 2);
 
-const postsApiPayload = JSON.parse(await (await siteContentRuntime.createPostsApiResponse(['en', 'zh-CN'])).text());
-assert.equal(postsApiPayload.en[0].slug, 'hello-world');
+const postsApiPayload = JSON.parse(await (await siteContentRuntime.createPostsApiResponse(['en-US', 'zh-CN'])).text());
+assert.equal(postsApiPayload['en-US'][0].slug, 'hello-world');
 assert.equal(postsApiPayload['zh-CN'][0].markdown, 'https://example.com/zh-CN/posts/hello-world.md');
 
 const agentProtocolRuntime = createAitherAgentProtocolRuntime({
-  defaultLocale: 'en',
+  defaultLocale: 'en-US',
   getAboutMarkdownPath: siteContentRuntime.getAboutMarkdownPath,
   getLocalizedPath,
   getPostMarkdownPath: siteContentRuntime.getPostMarkdownPath,
@@ -271,18 +271,18 @@ const agentProtocolRuntime = createAitherAgentProtocolRuntime({
   getPostSlug: (entryId) => entryId.replace(/^[^/]+\//, ''),
   getPostsByLocale: async (locale) => samplePostsByLocale[locale] ?? [],
   getRssPath: siteContentRuntime.getRssPath,
-  locales: ['en', 'zh-CN'],
+  locales: ['en-US', 'zh-CN'],
   siteDescription: 'An AI-native Astro theme built around beautiful text.',
   siteName: 'Aither',
   siteUrl: 'https://example.com',
   toAbsoluteSiteUrl: siteContentRuntime.toAbsoluteSiteUrl,
 });
 
-assert.equal(agentProtocolRuntime.buildAgentDocumentUrls('en').protocol, 'https://example.com/protocol.json');
+assert.equal(agentProtocolRuntime.buildAgentDocumentUrls('en-US').protocol, 'https://example.com/protocol.json');
 assert.ok((await agentProtocolRuntime.createSkillResponse().text()).includes('protocol.json'));
 assert.equal((await agentProtocolRuntime.createProtocolManifest().json()).protocol, 'aither-agent-v2');
-assert.equal((await agentProtocolRuntime.createAgentHomeResponse('en').then((response) => response.json())).site.default_locale, 'en');
-assert.ok((await agentProtocolRuntime.createPolicyResponse('en').text()).includes('## Discovery Order'));
+assert.equal((await agentProtocolRuntime.createAgentHomeResponse('en-US').then((response) => response.json())).site.default_locale, 'en-US');
+assert.ok((await agentProtocolRuntime.createPolicyResponse('en-US').text()).includes('## Discovery Order'));
 assert.equal((await agentProtocolRuntime.createProtocolSchemaResponse().json()).$schema, 'https://json-schema.org/draft/2020-12/schema');
 assert.equal((await agentProtocolRuntime.createAgentHomeSchemaResponse().json()).title, 'Aither Agent Home Schema');
 

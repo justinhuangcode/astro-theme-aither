@@ -8,15 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Changed
 - Release version to `2026.05.13`
-- Promoted locale identifiers to region-code form across the shipped theme surface: `zh-CN`, `zh-TW`, and `pt-BR`
-- Renamed localized content directories, i18n message modules, README locale filenames, and generated route prefixes to match the new region-code locale scheme
+- Promoted the full locale system to complete region-code identifiers across the shipped theme surface: `en-US`, `zh-CN`, `zh-TW`, `ko-KR`, `fr-FR`, `de-DE`, `it-IT`, `es-ES`, `ru-RU`, `id-ID`, and `pt-BR`
+- Renamed localized content directories, i18n message modules, README locale filenames, and generated route prefixes to match the new canonical locale scheme
 - Updated translation section configuration and locale-aware runtime helpers so section routing, fallback logic, and agent-facing docs all resolve through the canonical region-code locales
 
 ### Fixed
-- Build output, Open Graph assets, RSS, API payloads, language switchers, and schema metadata now emit consistent `zh-CN`, `zh-TW`, and `pt-BR` paths
+- Build output, Open Graph assets, RSS, API payloads, language switchers, and schema metadata now emit consistent locale-specific paths for the complete region-code locale set
 
 ### Breaking
-- Removed `zh-hans`, `zh-hant`, and `pt-br` compatibility aliases and redirects; the canonical locale paths are now strictly `zh-CN`, `zh-TW`, and `pt-BR`
+- Removed old short-code and script-code compatibility paths; canonical locale identifiers and non-default locale routes now use the complete region-code forms such as `zh-CN`, `ko-KR`, `fr-FR`, and `pt-BR`
 
 ## astro-theme-aither v2026.04.21
 

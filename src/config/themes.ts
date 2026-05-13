@@ -169,7 +169,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     westworld: '西部世界 (Host)',
     poi: '疑犯追蹤 (The Machine)',
   },
-  ko: {
+  'ko-KR': {
     rose: '로즈',
     sakura: '사쿠라',
     ocean: '오션',
@@ -192,7 +192,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     threebody: '삼체',
     poi: '퍼슨 오브 인터레스트 (더 머신)',
   },
-  fr: {
+  'fr-FR': {
     rose: 'Rose',
     sakura: 'Fleur de cerisier',
     ocean: 'Grand bleu',
@@ -207,7 +207,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     evolution: 'Réseau Évolution',
     threebody: 'Trois corps',
   },
-  de: {
+  'de-DE': {
     rose: 'Rose',
     sakura: 'Kirschblüte',
     ocean: 'Tiefsee',
@@ -223,7 +223,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     threebody: 'Drei Körper',
     poi: 'Person of Interest (Die Maschine)',
   },
-  it: {
+  'it-IT': {
     rose: 'Rosa',
     sakura: 'Fiore di ciliegio',
     ocean: 'Abisso',
@@ -238,7 +238,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     evolution: 'Rete Evolutiva',
     threebody: 'Tre corpi',
   },
-  es: {
+  'es-ES': {
     rose: 'Rosa',
     sakura: 'Flor de cerezo',
     ocean: 'Océano profundo',
@@ -254,7 +254,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     threebody: 'Tres cuerpos',
     poi: 'Person of Interest (La Máquina)',
   },
-  ru: {
+  'ru-RU': {
     rose: 'Роза',
     sakura: 'Сакура',
     ocean: 'Глубокое море',
@@ -273,7 +273,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     threebody: 'Три тела',
     poi: 'Персона интереса (Машина)',
   },
-  id: {
+  'id-ID': {
     rose: 'Mawar',
     ocean: 'Laut Dalam',
     mint: 'Mint',

@@ -39,18 +39,18 @@ assert.deepEqual(protocol.recommended_discovery_order.slice(0, 5), [
   'policy.md',
   'reading.md',
 ]);
-assert.ok(protocol.localized_documents.en, 'protocol.json should expose English documents');
+assert.ok(protocol.localized_documents['en-US'], 'protocol.json should expose English documents');
 assert.ok(
   protocol.localized_documents['zh-CN'],
   'protocol.json should expose Simplified Chinese documents',
 );
 assert.equal(
-  protocol.localized_documents.en.protocolSchema,
+  protocol.localized_documents['en-US'].protocolSchema,
   protocolSchema.$id,
   'localized English docs should expose protocol schema',
 );
 assert.equal(
-  protocol.localized_documents.en.agentHomeSchema,
+  protocol.localized_documents['en-US'].agentHomeSchema,
   agentHomeSchema.$id,
   'localized English docs should expose agent home schema',
 );

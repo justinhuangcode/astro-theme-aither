@@ -1,6 +1,6 @@
 # Aither
 
-[English](./README.md) | **简体中文** | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+[English](./README.md) | **简体中文** | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO-KR.md) | [Français](./README_FR-FR.md) | [Deutsch](./README_DE-DE.md) | [Italiano](./README_IT-IT.md) | [Español](./README_ES-ES.md) | [Русский](./README_RU-RU.md) | [Bahasa Indonesia](./README_ID-ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -194,7 +194,7 @@ image: ./optional-cover.jpg
 | `/schemas/agent-protocol.schema.json` | 全局 | `protocol.json` 的 JSON Schema |
 | `/schemas/agent-home.schema.json` | 全局 | `agent/home.json` 的 JSON Schema |
 
-默认 locale `en` 不带前缀。例如英文文章 Markdown 是 `/posts/{slug}.md`，简体中文则是 `/zh-CN/posts/{slug}.md`。
+默认 locale `en-US` 不带前缀。例如英文文章 Markdown 是 `/posts/{slug}.md`，简体中文则是 `/zh-CN/posts/{slug}.md`。
 
 最佳实践：
 
@@ -308,19 +308,19 @@ PUBLIC_GISCUS_CATEGORY_ID=
 
 | 代码 | 语言 |
 |---|---|
-| `en` | English（默认） |
+| `en-US` | English（默认） |
 | `zh-CN` | 简体中文 |
 | `zh-TW` | 繁體中文 |
-| `ko` | 한국어 |
-| `fr` | Français |
-| `de` | Deutsch |
-| `it` | Italiano |
-| `es` | Español |
-| `ru` | Русский |
-| `id` | Bahasa Indonesia |
+| `ko-KR` | 한국어 |
+| `fr-FR` | Français |
+| `de-DE` | Deutsch |
+| `it-IT` | Italiano |
+| `es-ES` | Español |
+| `ru-RU` | Русский |
+| `id-ID` | Bahasa Indonesia |
 | `pt-BR` | Português (BR) |
 
-默认 locale `en` 没有 URL 前缀，其余语言使用各自代码前缀，例如 `/zh-CN/`、`/ko/`。
+默认 locale `en-US` 没有 URL 前缀，其余语言使用各自代码前缀，例如 `/zh-CN/`、`/ko-KR/`。
 
 最佳实践：把英文 slug 集合作为规范基线，并在部署前用 `pnpm check:post-coverage` 抓出缺失的本地化文章。
 

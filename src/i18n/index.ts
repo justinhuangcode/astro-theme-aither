@@ -19,31 +19,31 @@ import {
   resolveAitherLocale,
   stripAitherLocalePrefix,
 } from '@aither/astro/locale';
-import { en } from './messages/en';
+import { en } from './messages/en-US';
 import { zhCn } from './messages/zh-CN';
 import { zhTw } from './messages/zh-TW';
-import { ko } from './messages/ko';
-import { fr } from './messages/fr';
-import { de } from './messages/de';
-import { it } from './messages/it';
-import { es } from './messages/es';
-import { ru } from './messages/ru';
-import { id } from './messages/id';
+import { ko } from './messages/ko-KR';
+import { fr } from './messages/fr-FR';
+import { de } from './messages/de-DE';
+import { it } from './messages/it-IT';
+import { es } from './messages/es-ES';
+import { ru } from './messages/ru-RU';
+import { id } from './messages/id-ID';
 import { ptBR } from './messages/pt-BR';
 
 export type Messages = typeof en;
 
 const messages: Record<Locale, Messages> = {
-  en,
+  'en-US': en,
   'zh-CN': zhCn,
   'zh-TW': zhTw,
-  ko,
-  fr,
-  de,
-  it,
-  es,
-  ru,
-  id,
+  'ko-KR': ko,
+  'fr-FR': fr,
+  'de-DE': de,
+  'it-IT': it,
+  'es-ES': es,
+  'ru-RU': ru,
+  'id-ID': id,
   'pt-BR': ptBR,
 };
 

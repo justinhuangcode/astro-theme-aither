@@ -118,7 +118,7 @@ All components read this value via `import.meta.env.SITE`. No need to configure 
 
 ### Create a Post
 
-Create a new `.mdx` file in `src/content/posts/en/`:
+Create a new `.mdx` file in `src/content/posts/en-US/`:
 
 ```markdown
 ---
@@ -172,9 +172,9 @@ The theme supports 11 locales out of the box: English, Simplified Chinese, Tradi
 Create the same filename in the target locale directory:
 
 ```
-src/content/posts/en/my-post.mdx      # English original
+src/content/posts/en-US/my-post.mdx      # English original
 src/content/posts/zh-CN/my-post.mdx  # Chinese translation
-src/content/posts/fr/my-post.mdx       # French translation
+src/content/posts/fr-FR/my-post.mdx       # French translation
 ```
 
 Each file is independent — translate the frontmatter fields too.
@@ -185,9 +185,9 @@ UI strings (navigation, footer, buttons) live in `src/i18n/messages/`. Each loca
 
 ```
 src/i18n/messages/
-├── en.ts
+├── en-US.ts
 ├── zh-CN.ts
-├── fr.ts
+├── fr-FR.ts
 └── ...
 ```
 
@@ -232,7 +232,7 @@ nav: {
 },
 ```
 
-**Step 4** — Create content in `src/content/translations/en/`:
+**Step 4** — Create content in `src/content/translations/en-US/`:
 
 ```markdown
 ---

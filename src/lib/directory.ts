@@ -98,7 +98,7 @@ function resolveLocalizedValue(locale: Locale, value: LocalizedDirectoryValue): 
     return value;
   }
 
-  return value[locale] ?? value.en ?? value['zh-CN'] ?? value['zh-TW'] ?? '';
+  return value[locale] ?? value['en-US'] ?? value['zh-CN'] ?? value['zh-TW'] ?? '';
 }
 
 function resolveSearchConfig(locale: Locale): DirectorySearchConfig {

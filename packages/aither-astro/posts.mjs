@@ -1,16 +1,12 @@
 import { getCollection } from 'astro:content';
+import { AITHER_LOCALES } from './constants.mjs';
+
+const AITHER_LOCALE_BY_LOWERCASE = new Map(
+  AITHER_LOCALES.map((locale) => [locale.toLowerCase(), locale]),
+);
 
 function normalizeContentEntryLocale(entryLocale) {
-  switch (entryLocale?.toLowerCase()) {
-    case 'zh-cn':
-      return 'zh-CN';
-    case 'zh-tw':
-      return 'zh-TW';
-    case 'pt-br':
-      return 'pt-BR';
-    default:
-      return entryLocale;
-  }
+  return AITHER_LOCALE_BY_LOWERCASE.get(entryLocale?.toLowerCase?.() ?? '') ?? entryLocale;
 }
 
 export function isLocalizedEntry(entry, locale) {

@@ -31,7 +31,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
   {
     spec: {
       displayName: {
-        en: "Self-Hosted Services",
+        'en-US': "Self-Hosted Services",
         "zh-CN": "自建服务",
         "zh-TW": "自建服務",
       },
@@ -45,12 +45,12 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
       {
         spec: {
           displayName: {
-            en: "selfh.st Icons",
+            'en-US': "selfh.st Icons",
             "zh-CN": "selfh.st 图标库",
             "zh-TW": "selfh.st 圖標庫",
           },
           description: {
-            en: "Open-source product icons for dashboards and directories.",
+            'en-US': "Open-source product icons for dashboards and directories.",
             "zh-CN": "适合仪表盘与导航站的开源产品图标库",
             "zh-TW": "適合儀表板與導航站的開源產品圖標庫",
           },
@@ -66,7 +66,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
   {
     spec: {
       displayName: {
-        en: "Design Sites",
+        'en-US': "Design Sites",
         "zh-CN": "设计网站",
         "zh-TW": "設計網站",
       },
@@ -81,7 +81,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Pinterest",
           description: {
-            en: "A giant visual library for references and moodboards.",
+            'en-US': "A giant visual library for references and moodboards.",
             "zh-CN": "全球最大的素材管理与分享社区",
             "zh-TW": "全球最大的素材管理與分享社區",
           },
@@ -97,7 +97,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Dribbble",
           description: {
-            en: "A community for illustration and UI design work.",
+            'en-US': "A community for illustration and UI design work.",
             "zh-CN": "插画与UI设计交流社区",
             "zh-TW": "插畫與 UI 設計交流社區",
           },
@@ -113,7 +113,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Behance",
           description: {
-            en: "Adobe's showcase platform for design portfolios.",
+            'en-US': "Adobe's showcase platform for design portfolios.",
             "zh-CN": "Adobe旗下设计作品发布网站",
             "zh-TW": "Adobe 旗下設計作品發布網站",
           },
@@ -130,7 +130,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
   {
     spec: {
       displayName: {
-        en: "Operations Links",
+        'en-US': "Operations Links",
         "zh-CN": "运营链接",
         "zh-TW": "運營鏈接",
       },
@@ -144,12 +144,12 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
       {
         spec: {
           displayName: {
-            en: "WeChat Official Account",
+            'en-US': "WeChat Official Account",
             "zh-CN": "微信公众号",
             "zh-TW": "微信公眾號",
           },
           description: {
-            en: "Tencent's official platform for operating WeChat accounts.",
+            'en-US': "Tencent's official platform for operating WeChat accounts.",
             "zh-CN": "腾讯微信公众号开放平台",
             "zh-TW": "騰訊微信公眾號開放平台",
           },
@@ -166,7 +166,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
   {
     spec: {
       displayName: {
-        en: "Design Assets",
+        'en-US': "Design Assets",
         "zh-CN": "设计素材",
         "zh-TW": "設計素材",
       },
@@ -181,7 +181,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Iconfont",
           description: {
-            en: "Alibaba's icon exchange community.",
+            'en-US': "Alibaba's icon exchange community.",
             "zh-CN": "阿里旗下的图标交流社区",
             "zh-TW": "阿里旗下的圖標交流社區",
           },
@@ -197,7 +197,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Unsplash",
           description: {
-            en: "A free-to-use photography community and image library.",
+            'en-US': "A free-to-use photography community and image library.",
             "zh-CN": "摄影师交流社区，免费可商用版权图片",
             "zh-TW": "攝影師交流社區，免費可商用版權圖片",
           },
@@ -213,7 +213,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Pexels",
           description: {
-            en: "A broad library of free commercial-use photos.",
+            'en-US': "A broad library of free commercial-use photos.",
             "zh-CN": "免费可商用图片社区",
             "zh-TW": "免費可商用圖片社區",
           },
@@ -230,7 +230,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
   {
     spec: {
       displayName: {
-        en: "AI Tools",
+        'en-US': "AI Tools",
         "zh-CN": "AI工具",
         "zh-TW": "AI 工具",
       },
@@ -245,7 +245,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "Midjourney",
           description: {
-            en: "A powerful image-generation workflow for visual exploration.",
+            'en-US': "A powerful image-generation workflow for visual exploration.",
             "zh-CN": "最强大的AI绘画工具",
             "zh-TW": "最強大的 AI 繪畫工具",
           },
@@ -261,7 +261,7 @@ export const directoryGroupsSource: DirectorySourceGroup[] = [
         spec: {
           displayName: "ChatGPT",
           description: {
-            en: "A versatile AI conversation assistant for daily work.",
+            'en-US': "A versatile AI conversation assistant for daily work.",
             "zh-CN": "最好用的AI对话助理",
             "zh-TW": "最好用的 AI 對話助理",
           },

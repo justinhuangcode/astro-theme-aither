@@ -11,8 +11,8 @@ const sourceFile = path.join(repoRoot, 'src/data/directory-links.ts');
 const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'directory-pagefind-'));
 const tempModule = path.join(tempDir, 'directory-links.mjs');
 
-const DEFAULT_LOCALE = 'en';
-const LOCALES = ['en', 'zh-CN', 'zh-TW', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-BR'];
+const DEFAULT_LOCALE = 'en-US';
+const LOCALES = ['en-US', 'zh-CN', 'zh-TW', 'ko-KR', 'fr-FR', 'de-DE', 'it-IT', 'es-ES', 'ru-RU', 'id-ID', 'pt-BR'];
 const TS_NO_CHECK_HEADER = '// @ts-nocheck\n';
 
 function getOutputPath() {

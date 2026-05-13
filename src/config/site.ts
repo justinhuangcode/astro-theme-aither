@@ -98,7 +98,7 @@ export const siteConfig = defineAitherSiteConfig({
   // Custom content sections — each one auto-generates list + detail pages
   // Example: { id: 'translations', labelKey: 'translations' }
   sections: [
-    { id: 'recommendations', labelKey: 'recommendations', fallbackLocale: 'en' },
+    { id: 'recommendations', labelKey: 'recommendations', fallbackLocale: 'en-US' },
     { id: 'translations', labelKey: 'translations', contentLocale: 'zh-CN' },
   ] as ContentSection[],
   nav: [

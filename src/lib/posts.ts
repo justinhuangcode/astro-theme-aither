@@ -6,6 +6,7 @@ import {
   type AitherLocalizedEntry,
   type AitherPostEntry,
 } from '@aither/astro/posts';
+import { AITHER_LOCALES } from '@aither/astro/constants';
 import { getCollection, type CollectionKey } from 'astro:content';
 import {
   getSectionFallbackLocale,
@@ -55,21 +56,16 @@ export function getSlug(postId: string): string {
   return getEntrySlug(postId);
 }
 
+const localeByLowercase = new Map(
+  AITHER_LOCALES.map((locale) => [locale.toLowerCase(), locale]),
+);
+
 function normalizeContentEntryLocale(entryLocale: string): Locale {
-  switch (entryLocale.toLowerCase()) {
-    case 'zh-cn':
-      return 'zh-CN';
-    case 'zh-tw':
-      return 'zh-TW';
-    case 'pt-br':
-      return 'pt-BR';
-    default:
-      return resolveLocale(entryLocale);
-  }
+  return localeByLowercase.get(entryLocale.toLowerCase()) ?? resolveLocale(entryLocale);
 }
 
 export function getEntryLocale(entryId: string): Locale {
-  return normalizeContentEntryLocale(entryId.split('/')[0] ?? 'en');
+  return normalizeContentEntryLocale(entryId.split('/')[0] ?? 'en-US');
 }
 
 export async function getAvailableLocalesForSlug<K extends CollectionKey>(

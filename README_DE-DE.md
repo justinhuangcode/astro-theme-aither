@@ -1,6 +1,6 @@
 # Aither
 
-[English](./README.md) | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO.md) | [Français](./README_FR.md) | **Deutsch** | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+[English](./README.md) | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO-KR.md) | [Français](./README_FR-FR.md) | **Deutsch** | [Italiano](./README_IT-IT.md) | [Español](./README_ES-ES.md) | [Русский](./README_RU-RU.md) | [Bahasa Indonesia](./README_ID-ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -194,7 +194,7 @@ Empfehlungen:
 | `/schemas/agent-protocol.schema.json` | Global | JSON Schema für `protocol.json` |
 | `/schemas/agent-home.schema.json` | Global | JSON Schema für `agent/home.json` |
 
-Für die Default-Locale `en` gibt es keinen Präfix. Englisches Markdown lebt also unter `/posts/{slug}.md`, Deutsch unter `/de/posts/{slug}.md`.
+Für die Default-Locale `en-US` gibt es keinen Präfix. Englisches Markdown lebt also unter `/posts/{slug}.md`, Deutsch unter `/de-DE/posts/{slug}.md`.
 
 Empfehlungen:
 
@@ -308,19 +308,19 @@ Sprachkonfiguration liegt in `src/i18n/index.ts`, Übersetzungen in `src/i18n/me
 
 | Code | Sprache |
 |---|---|
-| `en` | English (default) |
+| `en-US` | English (default) |
 | `zh-CN` | 简体中文 |
 | `zh-TW` | 繁體中文 |
-| `ko` | 한국어 |
-| `fr` | Français |
-| `de` | Deutsch |
-| `it` | Italiano |
-| `es` | Español |
-| `ru` | Русский |
-| `id` | Bahasa Indonesia |
+| `ko-KR` | 한국어 |
+| `fr-FR` | Français |
+| `de-DE` | Deutsch |
+| `it-IT` | Italiano |
+| `es-ES` | Español |
+| `ru-RU` | Русский |
+| `id-ID` | Bahasa Indonesia |
 | `pt-BR` | Português (BR) |
 
-Die Default-Locale `en` hat keinen URL-Präfix. Andere Locales verwenden ihren Code, z. B. `/de/`, `/zh-CN/` oder `/ko/`.
+Die Default-Locale `en-US` hat keinen URL-Präfix. Andere Locales verwenden ihren Code, z. B. `/de-DE/`, `/zh-CN/` oder `/ko-KR/`.
 
 Empfehlung: Englisch als kanonische Baseline für Slugs behandeln und `pnpm check:post-coverage` vor der Bereitstellung laufen lassen.
 

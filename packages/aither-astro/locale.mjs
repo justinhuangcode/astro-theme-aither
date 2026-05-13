@@ -72,13 +72,13 @@ export function detectAitherLocaleFromLanguageTag(languageTag) {
     return 'zh-CN';
   }
 
-  if (languageCode === 'ko') return 'ko';
-  if (languageCode === 'fr') return 'fr';
-  if (languageCode === 'de') return 'de';
-  if (languageCode === 'it') return 'it';
-  if (languageCode === 'es') return 'es';
-  if (languageCode === 'ru') return 'ru';
-  if (languageCode === 'id' || languageCode === 'ms') return 'id';
+  if (languageCode === 'ko') return 'ko-KR';
+  if (languageCode === 'fr') return 'fr-FR';
+  if (languageCode === 'de') return 'de-DE';
+  if (languageCode === 'it') return 'it-IT';
+  if (languageCode === 'es') return 'es-ES';
+  if (languageCode === 'ru') return 'ru-RU';
+  if (languageCode === 'id' || languageCode === 'ms') return 'id-ID';
   if (languageCode === 'pt') return 'pt-BR';
   if (languageCode === defaultLanguageCode) return AITHER_DEFAULT_LOCALE;
 

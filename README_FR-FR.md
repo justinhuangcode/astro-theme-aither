@@ -1,6 +1,6 @@
 # Aither
 
-[English](./README.md) | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO.md) | **Français** | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+[English](./README.md) | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO-KR.md) | **Français** | [Deutsch](./README_DE-DE.md) | [Italiano](./README_IT-IT.md) | [Español](./README_ES-ES.md) | [Русский](./README_RU-RU.md) | [Bahasa Indonesia](./README_ID-ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -194,7 +194,7 @@ Bonnes pratiques :
 | `/schemas/agent-protocol.schema.json` | Global | Schéma JSON de `protocol.json` |
 | `/schemas/agent-home.schema.json` | Global | Schéma JSON de `agent/home.json` |
 
-Pour la locale par défaut `en`, il n'y a pas de préfixe. Le Markdown anglais est donc sous `/posts/{slug}.md`, le français sous `/fr/posts/{slug}.md`.
+Pour la locale par défaut `en-US`, il n'y a pas de préfixe. Le Markdown anglais est donc sous `/posts/{slug}.md`, le français sous `/fr-FR/posts/{slug}.md`.
 
 Bonnes pratiques :
 
@@ -308,16 +308,16 @@ La configuration des langues se trouve dans `src/i18n/index.ts`, les traductions
 
 | Code | Langue |
 |---|---|
-| `en` | English (default) |
+| `en-US` | English (default) |
 | `zh-CN` | 简体中文 |
 | `zh-TW` | 繁體中文 |
-| `ko` | 한국어 |
-| `fr` | Français |
-| `de` | Deutsch |
-| `it` | Italiano |
-| `es` | Español |
-| `ru` | Русский |
-| `id` | Bahasa Indonesia |
+| `ko-KR` | 한국어 |
+| `fr-FR` | Français |
+| `de-DE` | Deutsch |
+| `it-IT` | Italiano |
+| `es-ES` | Español |
+| `ru-RU` | Русский |
+| `id-ID` | Bahasa Indonesia |
 | `pt-BR` | Português (BR) |
 
 Bonnes pratiques : traiter l'anglais comme baseline canonique pour les slugs et utiliser `pnpm check:post-coverage` avant le déploiement.
