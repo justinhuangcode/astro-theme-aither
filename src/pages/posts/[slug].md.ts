@@ -3,6 +3,6 @@ import { getMarkdownStaticPaths, createMarkdownResponse } from '@/lib/markdown-e
 
 export const getStaticPaths = createRootStaticPaths(getMarkdownStaticPaths);
 
-export function GET({ props }: { props: { postId: string } }) {
-  return createMarkdownResponse(props.postId);
+export function GET({ props }: { props: { markdownBody: string } }) {
+  return createMarkdownResponse(props.markdownBody);
 }

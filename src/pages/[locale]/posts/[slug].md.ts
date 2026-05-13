@@ -12,6 +12,6 @@ export async function getStaticPaths() {
   return createLocalizedStaticPaths(getMarkdownStaticPaths);
 }
 
-export const GET = createPropsRouteHandler<{ locale: Locale; postId: string }, Response>(
-  ({ postId }) => createMarkdownResponse(postId),
+export const GET = createPropsRouteHandler<{ locale: Locale; markdownBody: string }, Response>(
+  ({ markdownBody }) => createMarkdownResponse(markdownBody),
 );
