@@ -1,9 +1,11 @@
 ---
 import { render } from 'astro:content';
 import ArticlePageBody from '@/components/pages/ArticlePageBody.astro';
+import PostSourceContext from '@/components/posts/PostSourceContext.astro';
 import Layout from '@/layouts/Layout.astro';
 import { siteConfig } from '@/config/site';
 import { getSlug, type PostEntry } from '@/lib/posts';
+import { buildPostTagHref } from '@/lib/post-taxonomy';
 import {
   getLocaleHomePath,
   getPostMarkdownPath,
@@ -27,6 +29,12 @@ const slug = getSlug(post.id);
 const postPath = getPostPath(locale, slug);
 const postUrl = toAbsoluteSiteUrl(postPath);
 const homeUrl = toAbsoluteSiteUrl(getLocaleHomePath(locale));
+const sourceUrl = post.data.sourceUrl
+  ? new URL(post.data.sourceUrl, siteConfig.url).toString()
+  : undefined;
+const tagHrefs = Object.fromEntries(
+  (post.data.tags ?? []).map((tag) => [tag, buildPostTagHref(tag, locale)]),
+);
 const prevLink = prevPost
   ? { href: getPostPath(locale, getSlug(prevPost.id)), title: prevPost.data.title }
   : null;
@@ -43,6 +51,8 @@ const articleJsonLd = [
     author: { '@type': 'Person', name: siteConfig.author.name },
     publisher: { '@type': 'Organization', name: siteConfig.name },
     url: postUrl,
+    ...(post.data.sourceTitle ? { alternativeHeadline: post.data.sourceTitle } : {}),
+    ...(sourceUrl ? { isBasedOn: sourceUrl } : {}),
   },
   {
     '@context': 'https://schema.org',
@@ -82,5 +92,18 @@ const articleJsonLd = [
     headings={headings}
     prevLink={prevLink}
     nextLink={nextLink}
-  />
+    tagHrefs={tagHrefs}
+  >
+    {
+      (post.data.sourceTitle || post.data.sourcePublication || sourceUrl) && (
+        <PostSourceContext
+          slot="above-description"
+          locale={locale}
+          sourceTitle={post.data.sourceTitle}
+          sourcePublication={post.data.sourcePublication}
+          sourceUrl={sourceUrl}
+        />
+      )
+    }
+  </ArticlePageBody>
 </Layout>

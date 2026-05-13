@@ -33,15 +33,6 @@ const translations = defineCollection({
   schema: ({ image }) =>
     createAitherContentSchema({ image }).extend({
       sourceLanguage: z.string().optional(),
-      sourceTitle: z.string().optional(),
-      sourceUrl: z
-        .string()
-        .refine(
-          (value) =>
-            value.startsWith('/') || z.url().safeParse(value).success,
-          'sourceUrl must be an absolute URL or a site-relative path',
-        )
-        .optional(),
       translator: z.string().optional(),
     }),
 });
@@ -50,16 +41,6 @@ const recommendations = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/recommendations' }),
   schema: ({ image }) =>
     createAitherContentSchema({ image }).extend({
-      sourceTitle: z.string().optional(),
-      sourceUrl: z
-        .string()
-        .refine(
-          (value) =>
-            value.startsWith('/') || z.url().safeParse(value).success,
-          'sourceUrl must be an absolute URL or a site-relative path',
-        )
-        .optional(),
-      sourcePublication: z.string().optional(),
       sourceLanguage: z.string().optional(),
     }),
 });
