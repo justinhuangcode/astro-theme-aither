@@ -1,6 +1,6 @@
 # Aither
 
-[English](./README.md) | [简体中文](./README_ZH-HANS.md) | **繁體中文** | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+[English](./README.md) | [简体中文](./README_ZH-CN.md) | **繁體中文** | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -194,7 +194,7 @@ image: ./optional-cover.jpg
 | `/schemas/agent-protocol.schema.json` | 全域 | `protocol.json` 的 JSON Schema |
 | `/schemas/agent-home.schema.json` | 全域 | `agent/home.json` 的 JSON Schema |
 
-預設 locale `en` 不帶前綴。例如英文文章 Markdown 是 `/posts/{slug}.md`，繁體中文則是 `/zh-hant/posts/{slug}.md`。
+預設 locale `en` 不帶前綴。例如英文文章 Markdown 是 `/posts/{slug}.md`，繁體中文則是 `/zh-TW/posts/{slug}.md`。
 
 最佳實務：
 
@@ -309,8 +309,8 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | 代碼 | 語言 |
 |---|---|
 | `en` | English（預設） |
-| `zh-hans` | 简体中文 |
-| `zh-hant` | 繁體中文 |
+| `zh-CN` | 简体中文 |
+| `zh-TW` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -318,9 +318,9 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | `es` | Español |
 | `ru` | Русский |
 | `id` | Bahasa Indonesia |
-| `pt-br` | Português (BR) |
+| `pt-BR` | Português (BR) |
 
-預設 locale `en` 沒有 URL 前綴，其餘語言使用各自代碼前綴，例如 `/zh-hans/`、`/ko/`。
+預設 locale `en` 沒有 URL 前綴，其餘語言使用各自代碼前綴，例如 `/zh-CN/`、`/ko/`。
 
 最佳實務：把英文 slug 集合作為規範基線，並在部署前用 `pnpm check:post-coverage` 找出缺失的本地化文章。
 

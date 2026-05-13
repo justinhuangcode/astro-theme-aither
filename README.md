@@ -1,6 +1,6 @@
 # Aither
 
-**English** | [简体中文](./README_ZH-HANS.md) | [繁體中文](./README_ZH-HANT.md) | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+**English** | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | [한국어](./README_KO.md) | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -205,7 +205,7 @@ There is a human-facing guide at `/for-agents/`, but the machine-facing contract
 | `/schemas/agent-protocol.schema.json` | Global | JSON Schema for `protocol.json` |
 | `/schemas/agent-home.schema.json` | Global | JSON Schema for `agent/home.json` |
 
-For the default locale, `en`, the locale prefix is omitted. For example, English article Markdown lives at `/posts/{slug}.md`, while Simplified Chinese lives at `/zh-hans/posts/{slug}.md`.
+For the default locale, `en`, the locale prefix is omitted. For example, English article Markdown lives at `/posts/{slug}.md`, while Simplified Chinese lives at `/zh-CN/posts/{slug}.md`.
 
 Best practices:
 
@@ -253,7 +253,7 @@ export const siteConfig = {
   },
   sections: [
     // Optional extra collections beyond posts
-    // { id: 'translations', labelKey: 'translations', contentLocale: 'zh-hans' },
+    // { id: 'translations', labelKey: 'translations', contentLocale: 'zh-CN' },
   ],
   giscus: {
     repo: '...',
@@ -281,7 +281,7 @@ The project is already wired for more than one collection. To add a new section:
 
 ```typescript
 // src/config/site.ts
-sections: [{ id: 'translations', labelKey: 'translations', contentLocale: 'zh-hans' }]
+sections: [{ id: 'translations', labelKey: 'translations', contentLocale: 'zh-CN' }]
 
 // src/content.config.ts
 const translations = defineCollection({
@@ -292,7 +292,7 @@ const translations = defineCollection({
 export const collections = { posts, translations };
 ```
 
-Then create content under `src/content/translations/{locale}/`. If you set `contentLocale`, store the content only in that locale directory, for example `src/content/translations/zh-hans/`. List and detail routes are generated automatically at `/translations/`, `/{locale}/translations/`, and their nested slug pages.
+Then create content under `src/content/translations/{locale}/`. If you set `contentLocale`, store the content only in that locale directory, for example `src/content/translations/zh-CN/`. List and detail routes are generated automatically at `/translations/`, `/{locale}/translations/`, and their nested slug pages.
 
 Use `contentLocale` when a section should publish one canonical content language while still reusing the surrounding site shell in every locale. The built-in translations shelf uses this pattern so the interface stays localized but the translated article body remains Simplified Chinese everywhere.
 
@@ -331,8 +331,8 @@ Language config is in `src/i18n/index.ts`, translations in `src/i18n/messages/*.
 | Code | Language |
 |---|---|
 | `en` | English (default) |
-| `zh-hans` | 简体中文 |
-| `zh-hant` | 繁體中文 |
+| `zh-CN` | 简体中文 |
+| `zh-TW` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -340,9 +340,9 @@ Language config is in `src/i18n/index.ts`, translations in `src/i18n/messages/*.
 | `es` | Español |
 | `ru` | Русский |
 | `id` | Bahasa Indonesia |
-| `pt-br` | Português (BR) |
+| `pt-BR` | Português (BR) |
 
-The default locale (`en`) has no URL prefix. Other locales use their code as prefix (e.g. `/zh-hans/`, `/ko/`).
+The default locale (`en`) has no URL prefix. Other locales use their code as prefix (e.g. `/zh-CN/`, `/ko/`).
 
 Best practice: keep the English slug set as the canonical baseline and use `pnpm check:post-coverage` to catch missing localized articles before deploy.
 

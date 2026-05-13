@@ -2,8 +2,8 @@ export const AITHER_DEFAULT_LOCALE = 'en';
 
 export const AITHER_LOCALES = [
   'en',
-  'zh-hans',
-  'zh-hant',
+  'zh-CN',
+  'zh-TW',
   'ko',
   'fr',
   'de',
@@ -11,15 +11,15 @@ export const AITHER_LOCALES = [
   'es',
   'ru',
   'id',
-  'pt-br',
+  'pt-BR',
 ];
 
 export const AITHER_NODE_RANGE = '^20.19.1 || >=22.12.0';
 
 export const AITHER_LOCALE_LABELS = {
   en: 'English',
-  'zh-hans': '简体中文',
-  'zh-hant': '繁體中文',
+  'zh-CN': '简体中文',
+  'zh-TW': '繁體中文',
   ko: '한국어',
   fr: 'Français',
   de: 'Deutsch',
@@ -27,13 +27,13 @@ export const AITHER_LOCALE_LABELS = {
   es: 'Español',
   ru: 'Русский',
   id: 'Bahasa Indonesia',
-  'pt-br': 'Português (BR)',
+  'pt-BR': 'Português (BR)',
 };
 
 export const AITHER_INTL_LOCALES = {
   en: 'en-US',
-  'zh-hans': 'zh-Hans',
-  'zh-hant': 'zh-Hant',
+  'zh-CN': 'zh-CN',
+  'zh-TW': 'zh-TW',
   ko: 'ko-KR',
   fr: 'fr-FR',
   de: 'de-DE',
@@ -41,13 +41,13 @@ export const AITHER_INTL_LOCALES = {
   es: 'es-ES',
   ru: 'ru-RU',
   id: 'id-ID',
-  'pt-br': 'pt-BR',
+  'pt-BR': 'pt-BR',
 };
 
 export const AITHER_HTML_LANGS = {
   en: 'en',
-  'zh-hans': 'zh-Hans',
-  'zh-hant': 'zh-Hant',
+  'zh-CN': 'zh-CN',
+  'zh-TW': 'zh-TW',
   ko: 'ko',
   fr: 'fr',
   de: 'de',
@@ -55,13 +55,13 @@ export const AITHER_HTML_LANGS = {
   es: 'es',
   ru: 'ru',
   id: 'id',
-  'pt-br': 'pt-BR',
+  'pt-BR': 'pt-BR',
 };
 
 export const AITHER_CRISP_LOCALES = {
   en: 'en',
-  'zh-hans': 'zh',
-  'zh-hant': 'zh',
+  'zh-CN': 'zh',
+  'zh-TW': 'zh',
   ko: 'ko',
   fr: 'fr',
   de: 'de',
@@ -69,13 +69,13 @@ export const AITHER_CRISP_LOCALES = {
   es: 'es',
   ru: 'ru',
   id: 'id',
-  'pt-br': 'pt',
+  'pt-BR': 'pt',
 };
 
 export const AITHER_GISCUS_LOCALES = {
   en: 'en',
-  'zh-hans': 'zh-CN',
-  'zh-hant': 'zh-TW',
+  'zh-CN': 'zh-CN',
+  'zh-TW': 'zh-TW',
   ko: 'ko',
   fr: 'fr',
   de: 'de',
@@ -83,5 +83,5 @@ export const AITHER_GISCUS_LOCALES = {
   es: 'es',
   ru: 'ru',
   id: 'id',
-  'pt-br': 'pt',
+  'pt-BR': 'pt',
 };

@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [CalVer](https://calver.org/) versioning (`YYYY.0M.0D`).
 
+## astro-theme-aither v2026.05.13
+
+### Changed
+- Release version to `2026.05.13`
+- Promoted locale identifiers to region-code form across the shipped theme surface: `zh-CN`, `zh-TW`, and `pt-BR`
+- Renamed localized content directories, i18n message modules, README locale filenames, and generated route prefixes to match the new region-code locale scheme
+- Updated translation section configuration and locale-aware runtime helpers so section routing, fallback logic, and agent-facing docs all resolve through the canonical region-code locales
+
+### Fixed
+- Build output, Open Graph assets, RSS, API payloads, language switchers, and schema metadata now emit consistent `zh-CN`, `zh-TW`, and `pt-BR` paths
+
+### Breaking
+- Removed `zh-hans`, `zh-hant`, and `pt-br` compatibility aliases and redirects; the canonical locale paths are now strictly `zh-CN`, `zh-TW`, and `pt-BR`
+
 ## astro-theme-aither v2026.04.21
 
 ### Added
@@ -129,7 +143,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 ### Added
 - Initial public release of Astro-Theme-Aither
 - Astro 6 + React 19 + Tailwind CSS v4
-- 11-language i18n support (en, zh-hans, zh-hant, ko, fr, de, it, es, ru, id, pt-br)
+- 11-language i18n support (en, zh-CN, zh-TW, ko, fr, de, it, es, ru, id, pt-BR)
 - Blog with pagination, categories, tags
 - Dark/light/system theme with View Transitions animation
 - OG image generation with Satori

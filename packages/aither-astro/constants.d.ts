@@ -2,8 +2,8 @@ export declare const AITHER_DEFAULT_LOCALE: 'en';
 
 export declare const AITHER_LOCALES: readonly [
   'en',
-  'zh-hans',
-  'zh-hant',
+  'zh-CN',
+  'zh-TW',
   'ko',
   'fr',
   'de',
@@ -11,7 +11,7 @@ export declare const AITHER_LOCALES: readonly [
   'es',
   'ru',
   'id',
-  'pt-br',
+  'pt-BR',
 ];
 
 export type AitherLocale = (typeof AITHER_LOCALES)[number];

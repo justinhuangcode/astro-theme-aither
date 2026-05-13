@@ -1,4 +1,4 @@
-export const ptBr = {
+export const ptBR = {
   nav: {
     blog: 'Blog',
     recommendations: 'Recomendações',

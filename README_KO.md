@@ -1,6 +1,6 @@
 # Aither
 
-[English](./README.md) | [简体中文](./README_ZH-HANS.md) | [繁體中文](./README_ZH-HANT.md) | **한국어** | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
+[English](./README.md) | [简体中文](./README_ZH-CN.md) | [繁體中文](./README_ZH-TW.md) | **한국어** | [Français](./README_FR.md) | [Deutsch](./README_DE.md) | [Italiano](./README_IT.md) | [Español](./README_ES.md) | [Русский](./README_RU.md) | [Bahasa Indonesia](./README_ID.md) | [Português (BR)](./README_PT-BR.md)
 
 [![Deploy](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml/badge.svg)](https://github.com/justinhuangai/astro-theme-aither/actions/workflows/deploy-cloudflare-pages.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -309,8 +309,8 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | 코드 | 언어 |
 |---|---|
 | `en` | English (default) |
-| `zh-hans` | 简体中文 |
-| `zh-hant` | 繁體中文 |
+| `zh-CN` | 简体中文 |
+| `zh-TW` | 繁體中文 |
 | `ko` | 한국어 |
 | `fr` | Français |
 | `de` | Deutsch |
@@ -318,7 +318,7 @@ PUBLIC_GISCUS_CATEGORY_ID=
 | `es` | Español |
 | `ru` | Русский |
 | `id` | Bahasa Indonesia |
-| `pt-br` | Português (BR) |
+| `pt-BR` | Português (BR) |
 
 권장 사항: 영어 slug 집합을 기준 슬러그 집합으로 보고 `pnpm check:post-coverage`를 배포 전에 실행하세요.
 

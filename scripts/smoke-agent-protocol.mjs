@@ -41,7 +41,7 @@ assert.deepEqual(protocol.recommended_discovery_order.slice(0, 5), [
 ]);
 assert.ok(protocol.localized_documents.en, 'protocol.json should expose English documents');
 assert.ok(
-  protocol.localized_documents['zh-hans'],
+  protocol.localized_documents['zh-CN'],
   'protocol.json should expose Simplified Chinese documents',
 );
 assert.equal(
@@ -73,16 +73,16 @@ assert.ok(
   'agent/home.json should expose latest posts',
 );
 
-const zhHansAgentHome = await readJson(path.join('zh-hans', 'agent', 'home.json'));
+const zhCnAgentHome = await readJson(path.join('zh-CN', 'agent', 'home.json'));
 
-assert.equal(zhHansAgentHome.site.locale, 'zh-hans');
+assert.equal(zhCnAgentHome.site.locale, 'zh-CN');
 assert.equal(
-  zhHansAgentHome.documents.policy,
-  protocol.localized_documents['zh-hans'].policy,
+  zhCnAgentHome.documents.policy,
+  protocol.localized_documents['zh-CN'].policy,
 );
-assert.equal(zhHansAgentHome.documents.protocol, protocol.canonical_documents.protocol);
+assert.equal(zhCnAgentHome.documents.protocol, protocol.canonical_documents.protocol);
 assert.equal(
-  zhHansAgentHome.documents.agentHomeSchema,
+  zhCnAgentHome.documents.agentHomeSchema,
   agentHomeSchema.$id,
 );
 

@@ -19,11 +19,14 @@ const localePrefixPattern = new RegExp(
 );
 
 export function isAitherLocale(value) {
+  if (!value) return false;
   return AITHER_LOCALES.includes(value);
 }
 
 export function resolveAitherLocale(value) {
-  return value && isAitherLocale(value) ? value : AITHER_DEFAULT_LOCALE;
+  if (!value) return AITHER_DEFAULT_LOCALE;
+  if (AITHER_LOCALES.includes(value)) return value;
+  return AITHER_DEFAULT_LOCALE;
 }
 
 export function getAitherLocaleFromUrl(url) {
@@ -63,10 +66,10 @@ export function detectAitherLocaleFromLanguageTag(languageTag) {
       normalizedTag.includes('hk') ||
       normalizedTag.includes('hant')
     ) {
-      return 'zh-hant';
+      return 'zh-TW';
     }
 
-    return 'zh-hans';
+    return 'zh-CN';
   }
 
   if (languageCode === 'ko') return 'ko';
@@ -76,7 +79,7 @@ export function detectAitherLocaleFromLanguageTag(languageTag) {
   if (languageCode === 'es') return 'es';
   if (languageCode === 'ru') return 'ru';
   if (languageCode === 'id' || languageCode === 'ms') return 'id';
-  if (languageCode === 'pt') return 'pt-br';
+  if (languageCode === 'pt') return 'pt-BR';
   if (languageCode === defaultLanguageCode) return AITHER_DEFAULT_LOCALE;
 
   return null;

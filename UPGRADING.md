@@ -6,7 +6,7 @@ That means:
 
 - New sites should start from the GitHub template or a fresh clone.
 - Existing sites do **not** upgrade with `pnpm up astro-theme-aither`.
-- The safe upgrade unit today is a tagged release, for example `v2026.04.19 -> v2026.04.21`.
+- The safe upgrade unit today is a tagged release, for example `v2026.04.21 -> v2026.05.13`.
 
 If you want dependency-style upgrades later, the repo needs a separate published package or Astro integration layer. That is not the shipped distribution model today, so this guide focuses on the upgrade path that works with the current project.
 
@@ -19,9 +19,9 @@ Use this flow if you cloned the repo directly and kept the original history.
 ```bash
 git remote add upstream https://github.com/justinhuangai/astro-theme-aither.git
 git fetch upstream --tags
-git switch -c codex/upgrade-v2026.04.21
+git switch -c codex/upgrade-v2026.05.13
 git log --oneline --left-right --cherry-pick origin/main...upstream/main
-pnpm upgrade:diff -- --from v2026.04.19 --to v2026.04.21
+pnpm upgrade:diff -- --from v2026.04.21 --to v2026.05.13
 ```
 
 Then either:
@@ -39,9 +39,9 @@ This is the common case. Template repositories usually do not share a clean upst
 Use a side-by-side release diff instead:
 
 ```bash
+git clone --depth 1 --branch v2026.05.13 https://github.com/justinhuangai/astro-theme-aither.git ../aither-v2026.05.13
 git clone --depth 1 --branch v2026.04.21 https://github.com/justinhuangai/astro-theme-aither.git ../aither-v2026.04.21
-git clone --depth 1 --branch v2026.04.19 https://github.com/justinhuangai/astro-theme-aither.git ../aither-v2026.04.19
-diff -ru ../aither-v2026.04.19 ../aither-v2026.04.21
+diff -ru ../aither-v2026.04.21 ../aither-v2026.05.13
 ```
 
 Then port the relevant theme changes into your site on an upgrade branch.
@@ -51,7 +51,7 @@ Best practice: compare upstream release to upstream release first, then apply on
 If you keep one clean upstream clone locally, you can also run:
 
 ```bash
-pnpm upgrade:diff -- --from v2026.04.19 --to v2026.04.21
+pnpm upgrade:diff -- --from v2026.04.21 --to v2026.05.13
 ```
 
 That command groups changed files into `site-owned`, `theme/runtime`, and `other` buckets so it is easier to review upgrade impact.

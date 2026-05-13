@@ -37,7 +37,7 @@ src/
 ├── config/site.ts     # Site name, nav, footer, social links
 ├── content/posts/     # Blog posts organized by locale
 │   ├── en/            # English posts
-│   ├── zh-hans/       # Simplified Chinese posts
+│   ├── zh-CN/       # Simplified Chinese posts
 │   └── .../           # Other locales
 ├── i18n/              # Translations for UI text
 ├── layouts/           # Page layout (Layout.astro)
@@ -173,7 +173,7 @@ Create the same filename in the target locale directory:
 
 ```
 src/content/posts/en/my-post.mdx      # English original
-src/content/posts/zh-hans/my-post.mdx  # Chinese translation
+src/content/posts/zh-CN/my-post.mdx  # Chinese translation
 src/content/posts/fr/my-post.mdx       # French translation
 ```
 
@@ -186,7 +186,7 @@ UI strings (navigation, footer, buttons) live in `src/i18n/messages/`. Each loca
 ```
 src/i18n/messages/
 ├── en.ts
-├── zh-hans.ts
+├── zh-CN.ts
 ├── fr.ts
 └── ...
 ```

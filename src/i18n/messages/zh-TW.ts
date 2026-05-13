@@ -1,4 +1,4 @@
-export const zhHant = {
+export const zhTw = {
   nav: {
     blog: '部落格',
     recommendations: '推薦',

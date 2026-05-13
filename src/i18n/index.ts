@@ -20,8 +20,8 @@ import {
   stripAitherLocalePrefix,
 } from '@aither/astro/locale';
 import { en } from './messages/en';
-import { zhHans } from './messages/zh-hans';
-import { zhHant } from './messages/zh-hant';
+import { zhCn } from './messages/zh-CN';
+import { zhTw } from './messages/zh-TW';
 import { ko } from './messages/ko';
 import { fr } from './messages/fr';
 import { de } from './messages/de';
@@ -29,14 +29,14 @@ import { it } from './messages/it';
 import { es } from './messages/es';
 import { ru } from './messages/ru';
 import { id } from './messages/id';
-import { ptBr } from './messages/pt-br';
+import { ptBR } from './messages/pt-BR';
 
 export type Messages = typeof en;
 
 const messages: Record<Locale, Messages> = {
   en,
-  'zh-hans': zhHans,
-  'zh-hant': zhHant,
+  'zh-CN': zhCn,
+  'zh-TW': zhTw,
   ko,
   fr,
   de,
@@ -44,7 +44,7 @@ const messages: Record<Locale, Messages> = {
   es,
   ru,
   id,
-  'pt-br': ptBr,
+  'pt-BR': ptBR,
 };
 
 export const locales = AITHER_LOCALES;

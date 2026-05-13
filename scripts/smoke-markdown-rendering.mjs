@@ -19,7 +19,7 @@ assert.match(
   'Expected Markmap placeholder output in English markdown guide.',
 );
 
-for (const locale of ['zh-hans', 'zh-hant']) {
+for (const locale of ['zh-CN', 'zh-TW']) {
   const localizedGuide = await readBuiltPage(path.join(locale, 'posts', 'markdown-guide', 'index.html'));
   assert.match(localizedGuide, /class="katex"/, `Expected KaTeX output in ${locale} markdown guide.`);
   assert.match(localizedGuide, /id="mermaid-\d+"/, `Expected Mermaid SVG output in ${locale} markdown guide.`);

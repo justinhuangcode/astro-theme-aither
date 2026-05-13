@@ -99,7 +99,7 @@ export const siteConfig = defineAitherSiteConfig({
   // Example: { id: 'translations', labelKey: 'translations' }
   sections: [
     { id: 'recommendations', labelKey: 'recommendations', fallbackLocale: 'en' },
-    { id: 'translations', labelKey: 'translations', contentLocale: 'zh-hans' },
+    { id: 'translations', labelKey: 'translations', contentLocale: 'zh-CN' },
   ] as ContentSection[],
   nav: [
     { labelKey: 'blog' as const, href: '/' },

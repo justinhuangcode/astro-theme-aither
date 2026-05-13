@@ -55,8 +55,21 @@ export function getSlug(postId: string): string {
   return getEntrySlug(postId);
 }
 
+function normalizeContentEntryLocale(entryLocale: string): Locale {
+  switch (entryLocale.toLowerCase()) {
+    case 'zh-cn':
+      return 'zh-CN';
+    case 'zh-tw':
+      return 'zh-TW';
+    case 'pt-br':
+      return 'pt-BR';
+    default:
+      return resolveLocale(entryLocale);
+  }
+}
+
 export function getEntryLocale(entryId: string): Locale {
-  return resolveLocale(entryId.split('/')[0] ?? 'en');
+  return normalizeContentEntryLocale(entryId.split('/')[0] ?? 'en');
 }
 
 export async function getAvailableLocalesForSlug<K extends CollectionKey>(

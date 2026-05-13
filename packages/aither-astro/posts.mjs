@@ -1,7 +1,21 @@
 import { getCollection } from 'astro:content';
 
+function normalizeContentEntryLocale(entryLocale) {
+  switch (entryLocale?.toLowerCase()) {
+    case 'zh-cn':
+      return 'zh-CN';
+    case 'zh-tw':
+      return 'zh-TW';
+    case 'pt-br':
+      return 'pt-BR';
+    default:
+      return entryLocale;
+  }
+}
+
 export function isLocalizedEntry(entry, locale) {
-  return entry.id.startsWith(`${locale}/`);
+  const [entryLocale] = entry.id.split('/');
+  return normalizeContentEntryLocale(entryLocale) === locale;
 }
 
 export function sortEntriesByPinnedDate(a, b) {

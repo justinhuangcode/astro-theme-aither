@@ -113,7 +113,7 @@ export const defaultThemeLabels: ThemeLabels = {
 };
 
 const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>> = {
-  'zh-hans': {
+  'zh-CN': {
     wechat: '微信',
     feishu: '飞书效率',
     rose: '玫瑰',
@@ -141,7 +141,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     westworld: '西部世界 (Host)',
     poi: '疑犯追踪 (The Machine)',
   },
-  'zh-hant': {
+  'zh-TW': {
     wechat: '微信',
     feishu: '飛書效率',
     rose: '玫瑰',
@@ -286,7 +286,7 @@ const localizedThemeLabelOverrides: Partial<Record<Locale, Partial<ThemeLabels>>
     evolution: 'Jaringan Evolusi',
     threebody: 'Tiga Tubuh',
   },
-  'pt-br': {
+  'pt-BR': {
     rose: 'Rosa',
     sakura: 'Flor de Cerejeira',
     ocean: 'Mar Profundo',

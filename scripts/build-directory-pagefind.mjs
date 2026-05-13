@@ -12,7 +12,7 @@ const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'directory-pagefind-'));
 const tempModule = path.join(tempDir, 'directory-links.mjs');
 
 const DEFAULT_LOCALE = 'en';
-const LOCALES = ['en', 'zh-hans', 'zh-hant', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-br'];
+const LOCALES = ['en', 'zh-CN', 'zh-TW', 'ko', 'fr', 'de', 'it', 'es', 'ru', 'id', 'pt-BR'];
 const TS_NO_CHECK_HEADER = '// @ts-nocheck\n';
 
 function getOutputPath() {
@@ -29,7 +29,7 @@ function resolveLocalizedValue(locale, value) {
     return value;
   }
 
-  return value?.[locale] ?? value?.[DEFAULT_LOCALE] ?? value?.['zh-hans'] ?? value?.['zh-hant'] ?? '';
+  return value?.[locale] ?? value?.[DEFAULT_LOCALE] ?? value?.['zh-CN'] ?? value?.['zh-TW'] ?? '';
 }
 
 function slugify(input) {
@@ -58,7 +58,7 @@ function normalizePagefindLanguage(locale) {
     return 'zh';
   }
 
-  if (locale === 'pt-br') {
+  if (locale === 'pt-BR') {
     return 'pt';
   }
 
